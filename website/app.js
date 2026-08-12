@@ -140,6 +140,17 @@ function networkStateFor(v2Data, state) {
  const node=current||systemNodes[0]||null;
  return {systems,systemId:node?.systemId||systemId,node,path:Array.isArray(requested.explorePath)?requested.explorePath.filter(id=>networkNodeFor(v2Data,id)):[]};
 }
+function selectNetworkSystem(state, v2Data, systemId, preservePath) {
+ const current=isPlainObject(state)?state:{};
+ const unchanged={networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[]};
+ const next=networkStateFor(v2Data,{networkSystem:systemId,networkNode:null,explorePath:[]});
+ if(!next.node||next.systemId!==systemId) return unchanged;
+ const selected=networkNodeFor(v2Data,current.networkNode);
+ const path=preservePath&&selected&&unchanged.explorePath[unchanged.explorePath.length-1]!==selected.id
+  ? [...unchanged.explorePath,selected.id]
+  : preservePath?unchanged.explorePath:[];
+ return {networkSystem:next.systemId,networkNode:next.node.id,explorePath:path};
+}
 function renderNetworkContent(v2Data, graphApi, state) {
  if(!isUsableV2Graph(v2Data,graphApi)||!isNetworkReady(v2Data,graphApi)||typeof graphApi.nodesForSystem!=='function'||typeof graphApi.explorableRelations!=='function') return '<div class="emptyState"><div><b>知识网络暂不可用</b><p class="mini">请继续使用知识树查看课程。</p></div></div>';
  const current=networkStateFor(v2Data,state);
@@ -158,7 +169,7 @@ function renderNetworkContent(v2Data, graphApi, state) {
    const action=relation.targetNode?'select-network-node':'select-network-system';
    const attribute=relation.targetNode?'data-node-id':'data-system-id';
    const targetLabel=relation.targetNode?.word||relation.targetSystem?.title||relation.target;
-   return `<div class="mini"><b>${html(relation.label)}</b><p>${html(relation.explanation)}</p><button type="button" class="tag" data-action="${action}" ${attribute}="${html(relation.target)}">查看 ${html(targetLabel)}</button></div>`;
+   return `<div class="mini"><b>${html(relation.label)}</b><p>${html(relation.explanation)}</p><button type="button" class="tag" data-action="${action}" ${attribute}="${html(relation.target)}"${relation.targetNode?'':' data-preserve-path="true"'}>查看 ${html(targetLabel)}</button></div>`;
   }).join('')}</section>`;
  }).join('');
  const back=current.path.length?'<p><button type="button" class="backBtn" data-action="network-back">← 返回上一步</button></p>':'';
@@ -185,7 +196,7 @@ function sceneGroupsFor(scenes) {
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectNetworkNode,selectNetworkBack,networkStateFor,renderNetworkContent,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectNetworkNode,selectNetworkBack,networkStateFor,selectNetworkSystem,renderNetworkContent,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -299,11 +310,11 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{state.view=button.dataset.view; render();}));
  app.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;
-  const {action,word,view,day,feedback,nodeId,systemId}=target.dataset;
+  const {action,word,view,day,feedback,nodeId,systemId,preservePath}=target.dataset;
   if(action==='open-word') openWord(word);
   else if(action==='view') { if(view==='network'&&nodeId) Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.view=view; render(); }
   else if(action==='select-network-node') { Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.view='network'; render(); }
-  else if(action==='select-network-system') { const next=networkStateFor(V2,{networkSystem:systemId,explorePath:[]}); if(next.node) Object.assign(state,{networkSystem:next.systemId,networkNode:next.node.id,explorePath:[]}); state.view='network'; render(); }
+  else if(action==='select-network-system') { Object.assign(state,selectNetworkSystem(state,V2,systemId,preservePath==='true')); state.view='network'; render(); }
   else if(action==='network-back') { Object.assign(state,selectNetworkBack(state,V2,V2Network)); state.view='network'; render(); }
   else if(action==='select-day') { state.day=Number(day); state.view='today'; render(); }
   else if(action==='continue-day') { const planDay=D.plan.find(item=>item.day===Number(day)); const next=planDay?.words.find(item=>(state.progress.words[item]?.mastery||0)<1)||planDay?.words[0]; if(next) openWord(next); }

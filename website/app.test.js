@@ -240,6 +240,15 @@ test('selectNetworkBack restores the last explored node and removes it from the 
   });
 });
 
+test('selectNetworkSystem preserves the current node in the path for a system relation', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const start = { networkSystem: 'space-relations', networkNode: 'at', explorePath: [] };
+  const selected = core.selectNetworkSystem(start, v2, 'space-relations', true);
+  assert.deepEqual(selected, { networkSystem: 'space-relations', networkNode: 'at', explorePath: ['at'] });
+  assert.deepEqual(core.selectNetworkBack(selected, v2, network), start);
+});
+
 test('renderNetworkContent shows only relations verified as explorable', () => {
   const v2 = structuredClone(require('./v2-data.js'));
   const network = require('./v2-network.js');
