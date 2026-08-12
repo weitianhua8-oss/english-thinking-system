@@ -205,3 +205,76 @@ test('parseStoredProgress normalizes malformed word record fields before feedbac
   const next = core.applyFeedback(progress, 'I', 'understood', new Date('2026-08-12T08:00:00Z'));
   assert.deepEqual([next.words.I.mastery, next.words.I.reviewCount, next.words.I.nextReview], [4, 1, '2026-08-26']);
 });
+
+test('V2 graph contains thirteen complete nodes across the four learning systems', () => {
+  const data = require('./v2-data.js');
+  assert.equal(data.nodes.length, 13);
+  assert.deepEqual(data.systems.map(system => system.id).sort(), [
+    'attention',
+    'information-structure',
+    'space-relations',
+    'state-action',
+  ]);
+  data.nodes.forEach(node => {
+    assert.ok(node.id);
+    assert.ok(node.word);
+    assert.ok(node.systemId);
+    assert.ok(node.coreMeaning);
+    assert.ok(node.coreImage);
+    assert.ok(node.quick.origin);
+    assert.ok(node.quick.example);
+    assert.ok(node.quick.memoryHook);
+    assert.ok(node.deep.logic);
+    assert.ok(node.deep.scenes);
+    assert.ok(node.deep.structures);
+    assert.ok(node.deep.chineseTrap);
+    assert.ok(node.deep.studyTip);
+    assert.ok(Array.isArray(node.relations));
+  });
+});
+
+test('V2 graph relations use supported types, explanations, and required learning links', () => {
+  const data = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const relationKeys = data.nodes.flatMap(node => node.relations.map(relation => `${node.id}:${relation.type}:${relation.target}`));
+  data.nodes.flatMap(node => node.relations).forEach(relation => {
+    assert.ok(['system', 'growth', 'combination', 'contrast'].includes(relation.type));
+    assert.ok(relation.explanation.trim());
+  });
+  assert.ok(relationKeys.includes('in:combination:into'));
+  assert.ok(relationKeys.includes('to:contrast:at'));
+  assert.ok(relationKeys.includes('in:contrast:into'));
+  assert.ok(relationKeys.includes('see:contrast:look'));
+  assert.ok(relationKeys.includes('look:contrast:watch'));
+  assert.ok(relationKeys.includes('be:growth:ing'));
+  assert.ok(relationKeys.includes('too-to:combination:to'));
+  assert.deepEqual(network.validateGraph(data).errors, []);
+});
+
+test('validateGraph reports an unknown relation target and blank explanation', () => {
+  const data = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const invalid = structuredClone(data);
+  invalid.nodes[0].relations.push(
+    { type: 'contrast', target: 'missing-node', explanation: '指向不存在节点。' },
+    { type: 'growth', target: 'be', explanation: '   ' },
+  );
+  const errors = network.validateGraph(invalid).errors;
+  assert.ok(errors.some(error => error.includes('missing-node')));
+  assert.ok(errors.some(error => error.includes('explanation')));
+});
+
+test('V2 network helpers return nodes, relations, and immutable explore paths', () => {
+  const data = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const inNode = network.nodeById(data, 'in');
+  assert.equal(inNode.word, 'IN');
+  assert.equal(network.nodeById(data, 'missing'), null);
+  assert.deepEqual(network.nodesForSystem(data, 'attention').map(node => node.id), ['see', 'look', 'watch']);
+  assert.ok(network.explorableRelations(data, inNode).some(relation => relation.target === 'into' && relation.targetNode.word === 'INTO'));
+  const path = ['in'];
+  const nextPath = network.pushExplorePath(path, 'into');
+  assert.deepEqual(nextPath, ['in', 'into']);
+  assert.deepEqual(network.popExplorePath(nextPath), ['in']);
+  assert.deepEqual(path, ['in']);
+});
