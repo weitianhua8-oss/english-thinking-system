@@ -11,6 +11,11 @@
     return typeof value === 'string' && value.trim().length > 0;
   }
 
+  function isSceneGroups(value) {
+    return Array.isArray(value) && value.length > 0 && value.every(scene => isPlainObject(scene)
+      && ['title', 'body', 'example'].every(field => isNonEmptyString(scene[field])));
+  }
+
   function display(value) {
     try { return String(value); } catch { return '<unprintable>'; }
   }
@@ -113,7 +118,10 @@
         }
         fields.forEach(field => {
           const value = node[group][field];
-          if (!(isNonEmptyString(value) || (Array.isArray(value) && value.length > 0))) errors.push(`${label} is missing valid ${group}.${field}`);
+          const valid = group === 'deep' && field === 'scenes'
+            ? isSceneGroups(value)
+            : isNonEmptyString(value);
+          if (!valid) errors.push(`${label} is missing valid ${group}.${field}`);
         });
       });
       if (!Array.isArray(node.relations)) errors.push(`${label} relations must be an array`);
