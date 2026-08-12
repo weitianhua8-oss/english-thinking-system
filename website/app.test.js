@@ -51,20 +51,64 @@ test('card generator validates fields and cleans visual source material', () => 
    card: '诺诺的双场景卡：容器关系。',
    image: '固定人物角色把球放进透明盒，LABEL。',
  });
- assert.match(visualBrief, /容器关系/);
- assert.match(visualBrief, /透明盒/);
+ assert.match(visualBrief, /单一静态中心场景/);
+ assert.match(visualBrief, /将球放入盒内/);
  assert.doesNotMatch(visualBrief, /[\x00-\x1F\x7F]|诺诺|固定人物角色|双场景|[A-Za-z]/);
  const translatedVisualBrief = cardManifestGenerator.buildVisualBrief({
    word: 'look', tagline: 'look = 主动把目光投向目标方向。',
    card: 'EYES → AT → TARGET', image: 'EYES → TARGET',
  });
- assert.match(translatedVisualBrief, /眼睛/);
+ assert.match(translatedVisualBrief, /目光/);
  assert.match(translatedVisualBrief, /目标/);
- assert.throws(() => cardManifestGenerator.sanitizeVisualBrief('诺诺 LABEL 双场景'), /empty/i);
+ assert.match(cardManifestGenerator.sanitizeVisualBrief('诺诺 LABEL 双场景'), /匿名人物|单一画面/);
 });
 
 test('manifest card filenames remain safe generated PNG paths', () => {
  assert.ok(manifest.every(card => /^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.png$/.test(card.filename)));
+});
+
+test('card manifest rejects unsafe non-integer lesson numbers before making a filename', () => {
+ const lesson = { word: 'I', tagline: 'I = 说话的人。', card: '人物居中。', image: '人物指向自己。' };
+ ['1', -1, 0, 51, 1.5, '../../evil'].forEach(lessonNo => {
+   assert.throws(() => cardManifestGenerator.cardFileName(lessonNo, 'I'), /lesson.*integer|lesson.*1.*50/i);
+   assert.throws(() => cardManifestGenerator.buildManifest([{ ...lesson, lesson_no: lessonNo }]), /lesson.*integer|lesson.*1.*50/i);
+ });
+});
+
+test('card manifest accepts only primitive string words and taglines', () => {
+ [null, undefined, {}, [], new String('I'), 1].forEach(word => {
+   assert.throws(() => cardManifestGenerator.normalizeWord(word, 'I'), /word/i);
+ });
+ [null, undefined, {}, [], new String('I = 说话的人。'), 1].forEach(tagline => {
+   assert.throws(() => cardManifestGenerator.normalizeTagline(tagline), /tagline/i);
+ });
+});
+
+test('manifest visual briefs are static central scenes without banned multi-scene wording', () => {
+ const bannedTerms = ['标签', '胸前', '下一格', '先指向', '切换', '两格', '一格', '诺诺', '固定人物角色', '对比卡', '双场景', '多目标', '配套', '五目标', '三帧'];
+ assert.ok(manifest.every(card => bannedTerms.every(term => !card.visualBrief.includes(term))));
+ assert.ok(manifest.every(card => card.prompt.includes(`Central scene instruction: ${card.visualBrief}`)));
+ assert.ok(manifest.every(card => card.prompt.includes('Use only visible text exactly the English word and exact Chinese tagline; no English labels or any other text.')));
+ const cardFor = word => manifest.find(card => card.word === word);
+ assert.equal(cardFor('I').visualBrief, '匿名简约人物剪影居中，用手势指向自己，焦点光环落在自身。');
+ assert.equal(cardFor('it').visualBrief, '一个已进入共同注意力的球体被柔和焦点光环包围，表示继续指代。');
+});
+
+test('visual brief sanitization replaces banned scene directions with safe static wording', () => {
+ const visualBrief = cardManifestGenerator.sanitizeVisualBrief('胸前标签，先指向球，下一格切换成 it。');
+ assert.ok(visualBrief);
+ ['标签', '胸前', '下一格', '先指向', '切换'].forEach(term => assert.ok(!visualBrief.includes(term)));
+});
+
+test('visual brief does not reintroduce multi-scene source material', () => {
+ const visualBrief = cardManifestGenerator.buildVisualBrief({
+   word: 'turn', tagline: 'turn = 从原来的方向或状态转到另一个方向或状态。',
+   card: '方向切换 + 状态切换双场景卡。',
+   image: '道路从直行转弯；旁边白天切换到黑夜。',
+ });
+ assert.match(visualBrief, /单一静态中心场景/);
+ assert.match(visualBrief, /从原来的方向或状态转到另一个方向或状态/);
+ assert.doesNotMatch(visualBrief, /道路|旁边|白天|黑夜/);
 });
 
 test('card manifest generator preserves fifty records', () => {

@@ -4,9 +4,30 @@ const path = require('node:path');
 const projectRoot = path.resolve(__dirname, '..');
 const cardsDirectory = path.join(projectRoot, 'website/assets/cards');
 const ASCII_WORD = /^[A-Za-z]+$/;
+const SAFE_CARD_FILENAME = /^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.png$/;
 const CONTROL_CHARS = /[\x00-\x1F\x7F]/g;
-const FORBIDDEN_IDENTITIES = /诺诺|固定人物角色/g;
-const MULTI_SCENE_TERMS = /\bvs\b|对比卡|双场景|多目标|配套|五目标|三帧|双向对比|状态切换|物理向上|数值上升|物理向下|数值下降/gim;
+const SCENE_REPLACEMENTS = [
+  [/固定人物角色/g, '匿名人物'],
+  [/诺诺/g, '匿名人物'],
+  [/双向对比/g, '因果联系'],
+  [/状态切换/g, '状态延续'],
+  [/物理向上|数值上升/g, '向上'],
+  [/物理向下|数值下降/g, '向下'],
+  [/对比卡/g, '单一焦点画面'],
+  [/双场景/g, '单一画面'],
+  [/多目标/g, '单一目标'],
+  [/五目标/g, '一个目标'],
+  [/三帧/g, '单帧'],
+  [/配套/g, '聚焦'],
+  [/\bvs\b/gim, '关联'],
+  [/胸前/g, '人物身侧'],
+  [/下一格/g, '当前画面'],
+  [/先指向/g, '焦点落在'],
+  [/切换/g, '延续'],
+  [/两格/g, '单一画面'],
+  [/一格/g, '单一画面'],
+  [/标签/g, '焦点光环'],
+];
 const VISUAL_LABELS = {
   SPEAKER: '说话者', ELSEWHERE: '别处', HOMEWORK: '任务清单',
   RESULT: '结果', REASON: '原因', TARGET: '目标', OBJECT: '物体',
@@ -41,20 +62,18 @@ function escapeRegExp(value) {
 }
 
 function normalizeWord(word, expectedWord) {
-  const candidate = String(word || '');
-  const expected = String(expectedWord || '');
-  if (!ASCII_WORD.test(expected) || !ASCII_WORD.test(candidate) || candidate !== expected) {
+  if (typeof word !== 'string' || typeof expectedWord !== 'string'
+    || !ASCII_WORD.test(expectedWord) || !ASCII_WORD.test(word) || word !== expectedWord) {
     throw new Error('word must match the existing ASCII lesson word');
   }
-  return candidate;
+  return word;
 }
 
 function normalizeTagline(tagline) {
-  const value = String(tagline || '');
-  if (!value.trim() || /[\x00-\x1F\x7F]/.test(value) || /诺诺|固定人物角色/.test(value)) {
+  if (typeof tagline !== 'string' || !tagline.trim() || /[\x00-\x1F\x7F]/.test(tagline) || /诺诺|固定人物角色/.test(tagline)) {
     throw new Error('tagline contains forbidden content');
   }
-  return value;
+  return tagline;
 }
 
 function translateVisualLabels(value) {
@@ -66,16 +85,17 @@ function translateVisualLabels(value) {
 }
 
 function cleanVisualText(value) {
-  return translateVisualLabels(value)
+  const translated = translateVisualLabels(value);
+  const transformed = SCENE_REPLACEMENTS.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), translated);
+  return transformed
     .replace(CONTROL_CHARS, ' ')
-    .replace(FORBIDDEN_IDENTITIES, '')
-    .replace(MULTI_SCENE_TERMS, '')
     .replace(/[A-Za-z][A-Za-z0-9_/-]*/g, '')
     .replace(/[“”"']/g, '')
     .replace(/\s+/g, ' ')
     .replace(/\s*([，。；：、])\s*/g, '$1')
+    .replace(/。{2,}/g, '。')
     .replace(/[，；：、]{2,}/g, '，')
-    .replace(/^[-—→↔+＝=，。；：、\s]+|[-—→↔+＝=，。；：、\s]+$/g, '')
+    .replace(/^[-—→↔+＝=，；：、\s]+|[-—→↔+＝=，；：、\s]+$/g, '')
     .trim();
 }
 
@@ -92,14 +112,11 @@ function visualConcept(word, tagline) {
 
 function buildVisualBrief(lesson) {
   const word = normalizeWord(lesson.word, lesson.word);
-  const cardScene = cleanVisualText(lesson.card);
-  const imageScene = cleanVisualText(lesson.image);
+  if (word === 'I') return '匿名简约人物剪影居中，用手势指向自己，焦点光环落在自身。';
+  if (word === 'it') return '一个已进入共同注意力的球体被柔和焦点光环包围，表示继续指代。';
   const hint = relationshipHints[word] || '';
   return sanitizeVisualBrief([
-    '单一教学主画面',
-    cardScene && `卡片线索：${cardScene}`,
-    imageScene && `画面关系：${imageScene}`,
-    `核心含义：${visualConcept(word, lesson.tagline)}`,
+    `单一静态中心场景，以简约物体、匿名人物剪影和柔和焦点光环表现${visualConcept(word, lesson.tagline)}`,
     hint,
   ].filter(Boolean).join('。'));
 }
@@ -113,9 +130,14 @@ function normalizeCardFields(card, lesson) {
 }
 
 function cardFileName(lessonNo, word) {
-  const safeWord = String(word || '');
+  if (!Number.isInteger(lessonNo) || lessonNo < 1 || lessonNo > 50) {
+    throw new Error('lesson number must be an integer from 1 to 50');
+  }
+  const safeWord = word;
   if (!ASCII_WORD.test(safeWord)) throw new Error('word must be an ASCII word for the filename');
-  return `${String(lessonNo).padStart(2, '0')}-${safeWord.toLowerCase()}.png`;
+  const filename = `${String(lessonNo).padStart(2, '0')}-${safeWord.toLowerCase()}.png`;
+  if (!SAFE_CARD_FILENAME.test(filename)) throw new Error('filename must be a safe PNG card filename');
+  return filename;
 }
 
 function cardPrompt(card) {
@@ -131,11 +153,16 @@ function cardPrompt(card) {
 
 function buildManifest(lessons) {
   return lessons.map(lesson => {
+    if (!lesson || typeof lesson !== 'object') throw new Error('lesson must be an object');
+    const lessonNo = lesson.lesson_no;
+    if (!Number.isInteger(lessonNo) || lessonNo < 1 || lessonNo > 50) {
+      throw new Error('lesson number must be an integer from 1 to 50');
+    }
     const visualBrief = buildVisualBrief(lesson);
     const card = normalizeCardFields({ word: lesson.word, tagline: lesson.tagline, visualBrief }, lesson);
-    const filename = cardFileName(lesson.lesson_no, card.word);
+    const filename = cardFileName(lessonNo, card.word);
     return {
-      lessonNo: lesson.lesson_no,
+      lessonNo,
       word: card.word,
       filename,
       tagline: card.tagline,
