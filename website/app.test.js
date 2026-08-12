@@ -4,6 +4,7 @@ const { execFileSync } = require('node:child_process');
 const path = require('node:path');
 const core = require('./app.js');
 const manifest = require('./assets/cards/manifest.json');
+const cardManifestGenerator = require('../scripts/build_level1_card_manifest.js');
 
 test('manifest covers fifty unique cards', () => {
  assert.equal(manifest.length,50); assert.equal(new Set(manifest.map(c=>c.filename)).size,50); assert.equal(manifest[0].filename,'01-i.png'); assert.equal(manifest.at(-1).filename,'50-because.png'); assert.ok(manifest.every(c=>!(/诺诺|固定人物角色/.test(c.prompt))));
@@ -16,6 +17,54 @@ test('manifest sanitizes identities and multi-scene instructions', () => {
  assert.ok(manifest.every(card => forbiddenMultiScene.every(token => !card.prompt.toLowerCase().includes(token.toLowerCase()))));
  assert.ok(manifest.every(card => card.prompt.includes('single central teaching scene')));
  assert.ok(manifest.every(card => card.prompt.includes('only visible text exactly the English word and exact Chinese tagline; no English labels or any other text')));
+});
+
+test('each prompt preserves a distinct cleaned word-specific visual scene', () => {
+ const cardFor = word => manifest.find(card => card.word === word);
+ assert.ok(manifest.every(card => card.prompt.includes(`Central scene instruction: ${card.visualBrief}`)));
+ assert.ok(manifest.every(card => card.prompt.includes(card.visualBrief)));
+ assert.ok(new Set(manifest.map(card => card.visualBrief)).size >= 40);
+ assert.ok(new Set(manifest.map(card => card.prompt
+   .replace(`"${card.word}"`, '"<word>"')
+   .replace(`"${card.tagline}"`, '"<tagline>"'))).size >= 40);
+ assert.match(cardFor('I').visualBrief, /焦点|镜头/);
+ assert.match(cardFor('I').visualBrief, /自己|说话者/);
+ assert.match(cardFor('get').visualBrief, /过程/);
+ assert.match(cardFor('get').visualBrief, /目标/);
+ assert.match(cardFor('look').visualBrief, /目光|注意力/);
+ assert.match(cardFor('look').visualBrief, /方向|目标/);
+ assert.match(cardFor('in').visualBrief, /边界/);
+ assert.match(cardFor('in').visualBrief, /内部/);
+ assert.match(cardFor('because').visualBrief, /原因/);
+ assert.match(cardFor('because').visualBrief, /结果/);
+});
+
+test('card generator validates fields and cleans visual source material', () => {
+ assert.throws(() => cardManifestGenerator.normalizeCardFields({
+   word: 'not a word', tagline: 'I = 说话者。', visualBrief: '人物视角。',
+ }, { word: 'I' }), /word/i);
+ assert.throws(() => cardManifestGenerator.normalizeCardFields({
+   word: 'I', tagline: '诺诺\u0000说话者。', visualBrief: '人物视角。',
+ }, { word: 'I' }), /tagline/i);
+ const visualBrief = cardManifestGenerator.buildVisualBrief({
+   word: 'demo', tagline: 'demo = 将球放入盒内。',
+   card: '诺诺的双场景卡：容器关系。',
+   image: '固定人物角色把球放进透明盒，LABEL。',
+ });
+ assert.match(visualBrief, /容器关系/);
+ assert.match(visualBrief, /透明盒/);
+ assert.doesNotMatch(visualBrief, /[\x00-\x1F\x7F]|诺诺|固定人物角色|双场景|[A-Za-z]/);
+ const translatedVisualBrief = cardManifestGenerator.buildVisualBrief({
+   word: 'look', tagline: 'look = 主动把目光投向目标方向。',
+   card: 'EYES → AT → TARGET', image: 'EYES → TARGET',
+ });
+ assert.match(translatedVisualBrief, /眼睛/);
+ assert.match(translatedVisualBrief, /目标/);
+ assert.throws(() => cardManifestGenerator.sanitizeVisualBrief('诺诺 LABEL 双场景'), /empty/i);
+});
+
+test('manifest card filenames remain safe generated PNG paths', () => {
+ assert.ok(manifest.every(card => /^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.png$/.test(card.filename)));
 });
 
 test('card manifest generator preserves fifty records', () => {
