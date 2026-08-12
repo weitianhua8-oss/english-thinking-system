@@ -105,6 +105,65 @@ function isUsableV2Graph(v2Data, graphApi) {
 function isNetworkReady(v2Data, graphApi) {
  return Boolean(v2Data)&&isPlainObject(graphApi)&&typeof graphApi.validateGraph==='function';
 }
+function networkNodeFor(v2Data, nodeId) {
+ if(!isPlainObject(v2Data)||!Array.isArray(v2Data.nodes)||!Array.isArray(v2Data.systems)||typeof nodeId!=='string'||!nodeId.trim()) return null;
+ const systemIds=new Set(v2Data.systems.filter(system=>isPlainObject(system)&&typeof system.id==='string'&&system.id.trim()).map(system=>system.id));
+ const node=v2Data.nodes.find(item=>isCompleteV2Node(item)&&item.id===nodeId&&typeof item.systemId==='string'&&systemIds.has(item.systemId));
+ return node||null;
+}
+function selectNetworkNode(state, v2Data, targetId) {
+ const current=isPlainObject(state)?state:{};
+ const unchanged={networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[]};
+ const target=networkNodeFor(v2Data,targetId);
+ if(!target) return unchanged;
+ const selected=networkNodeFor(v2Data,current.networkNode);
+ const path=selected&&selected.id!==target.id&&unchanged.explorePath[unchanged.explorePath.length-1]!==selected.id
+  ? [...unchanged.explorePath,selected.id]
+  : unchanged.explorePath;
+ return {networkSystem:target.systemId,networkNode:target.id,explorePath:path};
+}
+function selectNetworkBack(state, v2Data, graphApi) {
+ const current=isPlainObject(state)?state:{};
+ const path=Array.isArray(current.explorePath)?current.explorePath:[];
+ if(!path.length||!isPlainObject(graphApi)||typeof graphApi.popExplorePath!=='function') return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:[...path]};
+ const targetId=path[path.length-1], target=networkNodeFor(v2Data,targetId);
+ if(!target) return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:[...path]};
+ return {networkSystem:target.systemId,networkNode:target.id,explorePath:graphApi.popExplorePath(path)};
+}
+function networkStateFor(v2Data, state) {
+ const systems=Array.isArray(v2Data?.systems)?v2Data.systems.filter(system=>isPlainObject(system)&&typeof system.id==='string'&&system.id.trim()&&typeof system.title==='string'&&system.title.trim()):[];
+ const systemIds=new Set(systems.map(system=>system.id));
+ const requested=isPlainObject(state)?state:{};
+ const systemId=systemIds.has(requested.networkSystem)?requested.networkSystem:systems[0]?.id;
+ const systemNodes=Array.isArray(v2Data?.nodes)?v2Data.nodes.filter(node=>isPlainObject(node)&&node.systemId===systemId&&typeof node.id==='string'&&node.id.trim()):[];
+ const current=networkNodeFor(v2Data,requested.networkNode);
+ const node=current||systemNodes[0]||null;
+ return {systems,systemId:node?.systemId||systemId,node,path:Array.isArray(requested.explorePath)?requested.explorePath.filter(id=>networkNodeFor(v2Data,id)):[]};
+}
+function renderNetworkContent(v2Data, graphApi, state) {
+ if(!isUsableV2Graph(v2Data,graphApi)||!isNetworkReady(v2Data,graphApi)||typeof graphApi.nodesForSystem!=='function'||typeof graphApi.explorableRelations!=='function') return '<div class="emptyState"><div><b>知识网络暂不可用</b><p class="mini">请继续使用知识树查看课程。</p></div></div>';
+ const current=networkStateFor(v2Data,state);
+ if(!current.node||!current.systemId) return '<div class="emptyState"><div><b>知识网络暂不可用</b><p class="mini">暂时无法读取可探索的词条。</p></div></div>';
+ const relationTypes={system:'所属系统',growth:'延展关系',combination:'组合关系',contrast:'对比关系'};
+ const systems=current.systems.map(system=>`<button type="button" class="tag" data-action="select-network-system" data-system-id="${html(system.id)}"${system.id===current.systemId?' aria-pressed="true"':''}>${html(system.title)}</button>`).join('');
+ const nodes=graphApi.nodesForSystem(v2Data,current.systemId).filter(node=>networkNodeFor(v2Data,node?.id)).map(node=>`<button type="button" class="wordCard" data-action="select-network-node" data-node-id="${html(node.id)}"${node.id===current.node.id?' aria-pressed="true"':''}><div class="word">${html(node.word)}</div><div class="mini">${html(node.coreMeaning)}</div></button>`).join('');
+ const relations=graphApi.explorableRelations(v2Data,current.node).reduce((groups,relation)=>{
+  if(!relationTypes[relation.type]) return groups;
+  (groups[relation.type]||=[]).push(relation); return groups;
+ },{});
+ const relationMarkup=Object.entries(relationTypes).map(([type,title])=>{
+  const group=relations[type]||[]; if(!group.length) return '';
+  return `<section class="block"><h4>${html(title)}</h4>${group.map(relation=>{
+   const target=relation.targetNode||relation.targetSystem;
+   const action=relation.targetNode?'select-network-node':'select-network-system';
+   const attribute=relation.targetNode?'data-node-id':'data-system-id';
+   const targetLabel=relation.targetNode?.word||relation.targetSystem?.title||relation.target;
+   return `<div class="mini"><b>${html(relation.label)}</b><p>${html(relation.explanation)}</p><button type="button" class="tag" data-action="${action}" ${attribute}="${html(relation.target)}">查看 ${html(targetLabel)}</button></div>`;
+  }).join('')}</section>`;
+ }).join('');
+ const back=current.path.length?'<p><button type="button" class="backBtn" data-action="network-back">← 返回上一步</button></p>':'';
+ return `<div class="networkLayout"><section class="panel networkSystems"><h3>知识系统</h3><div class="tags">${systems}</div></section><section class="panel networkNodes"><h3>系统词条</h3><div class="grid contentGrid">${nodes||'<p class="mini">该系统暂未提供词条。</p>'}</div></section><section class="panel networkExplain">${back}<h2>${html(current.node.word)}</h2><p><b>${html(current.node.coreMeaning)}</b></p>${relationMarkup||'<p class="mini">暂未提供可探索关系。</p>'}</section></div>`;
+}
 function isCompleteV2Node(node) {
  return isPlainObject(node)
   && ['id','word','systemId','coreMeaning','coreImage'].every(field=>typeof node[field]==='string'&&node[field].trim())
@@ -126,7 +185,7 @@ function sceneGroupsFor(scenes) {
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectNetworkNode,selectNetworkBack,networkStateFor,renderNetworkContent,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -142,7 +201,8 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  }
  function saveProgress(progress) { memoryProgress=progress; try { window.localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); } catch(error) { state.storageNotice='学习记录暂未保存，已保留在当前页面。'; } return memoryProgress; }
  const initialProgress=loadProgress();
- let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
+ const initialNetwork=networkStateFor(V2,{networkSystem:'space-relations',networkNode:'to',explorePath:[]});
+ let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
  const vocabularyByWord=new Map((D.vocabulary||[]).map(item=>[item.word,item]));
  const safe=value=>html(value);
  const wordButton=(word,className='tag')=>`<button type="button" class="${className}" data-action="open-word" data-word="${safe(word)}">${safe(word)}</button>`;
@@ -181,7 +241,7 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  function renderV2Lesson(x) {
   title.textContent=x.word; sub.textContent=`三层学习 · ${v2SystemTitle(x.systemId)}`;
   const quick=isPlainObject(x.quick)?x.quick:{}, deep=isPlainObject(x.deep)?x.deep:{};
-  app.innerHTML=`<button type="button" class="backBtn" data-action="view" data-view="library">← 返回词库</button><div class="lesson lessonEntry"><div class="lessonTop"><div><h2>${safe(x.word)}</h2><span class="chip">三层学习</span></div></div><div class="block"><h3>Layer 1 · 快速理解</h3><p><b>${safe(x.coreMeaning||'暂未提供核心含义。')}</b></p><p>${safe(x.coreImage||'暂未提供核心画面。')}</p><p>${safe(quick.origin||'暂未提供来源说明。')}</p><p>${safe(quick.example||'暂未提供例句。')}</p><p><b>${safe(quick.memoryHook||'暂未提供记忆钩子。')}</b></p></div><div class="block"><h3>Layer 2 · 深度学习</h3><p>${safe(deep.logic||'暂未提供底层逻辑。')}</p><h4>Scene Group</h4>${renderV2Scenes(deep.scenes)}<h4>常用结构</h4><p>${safe(deep.structures||'暂未提供常用结构。')}</p><h4>中文易错点</h4><p>${safe(deep.chineseTrap||'暂未提供提示。')}</p><h4>学习建议</h4><p>${safe(deep.studyTip||'暂未提供学习建议。')}</p></div><div class="block"><h3>Layer 3 · 知识网络</h3><p>所属系统：${safe(v2SystemTitle(x.systemId))}</p><button type="button" class="tag" data-action="view" data-view="network">进入知识网络</button></div><div class="block"><h3>这次学习感觉如何？</h3><p class="mini">选择后会更新下一次复习日期。</p>${feedbackButtons(state.word)}</div></div>`;
+  app.innerHTML=`<button type="button" class="backBtn" data-action="view" data-view="library">← 返回词库</button><div class="lesson lessonEntry"><div class="lessonTop"><div><h2>${safe(x.word)}</h2><span class="chip">三层学习</span></div></div><div class="block"><h3>Layer 1 · 快速理解</h3><p><b>${safe(x.coreMeaning||'暂未提供核心含义。')}</b></p><p>${safe(x.coreImage||'暂未提供核心画面。')}</p><p>${safe(quick.origin||'暂未提供来源说明。')}</p><p>${safe(quick.example||'暂未提供例句。')}</p><p><b>${safe(quick.memoryHook||'暂未提供记忆钩子。')}</b></p></div><div class="block"><h3>Layer 2 · 深度学习</h3><p>${safe(deep.logic||'暂未提供底层逻辑。')}</p><h4>Scene Group</h4>${renderV2Scenes(deep.scenes)}<h4>常用结构</h4><p>${safe(deep.structures||'暂未提供常用结构。')}</p><h4>中文易错点</h4><p>${safe(deep.chineseTrap||'暂未提供提示。')}</p><h4>学习建议</h4><p>${safe(deep.studyTip||'暂未提供学习建议。')}</p></div><div class="block"><h3>Layer 3 · 知识网络</h3><p>所属系统：${safe(v2SystemTitle(x.systemId))}</p><button type="button" class="tag" data-action="view" data-view="network" data-node-id="${safe(x.id)}">进入知识网络</button></div><div class="block"><h3>这次学习感觉如何？</h3><p class="mini">选择后会更新下一次复习日期。</p>${feedbackButtons(state.word)}</div></div>`;
  }
  function renderLesson() {
   const v2Lesson=v2LessonFor(V2,state.word);
@@ -224,8 +284,9 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  }
  function renderNetwork() {
   title.textContent='知识网络'; sub.textContent='从系统关系查看词义连接。';
-  const ready=isNetworkReady(V2,V2Network);
-  app.innerHTML=`<div class="emptyState"><div><b>知识网络正在准备中</b><p class="mini">${ready?'知识网络数据已准备好，可从三层课程进入。':'知识网络暂不可用，请继续使用知识树查看课程。'}</p></div></div>`;
+  const current=networkStateFor(V2,state);
+  if(current.node) Object.assign(state,{networkSystem:current.systemId,networkNode:current.node.id,explorePath:current.path});
+  app.innerHTML=renderNetworkContent(V2,V2Network,state);
  }
  function renderProgress() {
   const today=localDate(new Date()), counts=masteryCounts(state.progress), due=dueWords(state.progress,today).length, days=streak(state.progress.studyDates,today);
@@ -238,9 +299,12 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{state.view=button.dataset.view; render();}));
  app.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;
-  const {action,word,view,day,feedback}=target.dataset;
+  const {action,word,view,day,feedback,nodeId,systemId}=target.dataset;
   if(action==='open-word') openWord(word);
-  else if(action==='view') { state.view=view; render(); }
+  else if(action==='view') { if(view==='network'&&nodeId) Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.view=view; render(); }
+  else if(action==='select-network-node') { Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.view='network'; render(); }
+  else if(action==='select-network-system') { const next=networkStateFor(V2,{networkSystem:systemId,explorePath:[]}); if(next.node) Object.assign(state,{networkSystem:next.systemId,networkNode:next.node.id,explorePath:[]}); state.view='network'; render(); }
+  else if(action==='network-back') { Object.assign(state,selectNetworkBack(state,V2,V2Network)); state.view='network'; render(); }
   else if(action==='select-day') { state.day=Number(day); state.view='today'; render(); }
   else if(action==='continue-day') { const planDay=D.plan.find(item=>item.day===Number(day)); const next=planDay?.words.find(item=>(state.progress.words[item]?.mastery||0)<1)||planDay?.words[0]; if(next) openWord(next); }
   else if(action==='feedback') recordFeedback(word,feedback);

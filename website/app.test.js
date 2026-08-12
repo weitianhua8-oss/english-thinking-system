@@ -218,6 +218,46 @@ test('network readiness requires usable V2 data and a valid graph API', () => {
   assert.equal(core.isNetworkReady(v2, {}), false);
 });
 
+test('selectNetworkNode follows an explorable V2 node and ignores an unknown target', () => {
+  const v2 = require('./v2-data.js');
+  const start = { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] };
+  assert.deepEqual(core.selectNetworkNode(start, v2, 'into'), {
+    networkSystem: 'space-relations', networkNode: 'into', explorePath: ['to'],
+  });
+  const unchanged = core.selectNetworkNode(start, v2, 'missing');
+  assert.deepEqual(unchanged, start);
+  assert.notEqual(unchanged, start);
+  const invalid = structuredClone(v2);
+  invalid.nodes.find(node => node.id === 'into').deep.scenes = [];
+  assert.deepEqual(core.selectNetworkNode(start, invalid, 'into'), start);
+});
+
+test('selectNetworkBack restores the last explored node and removes it from the path', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  assert.deepEqual(core.selectNetworkBack({ networkSystem: 'space-relations', networkNode: 'into', explorePath: ['to'] }, v2, network), {
+    networkSystem: 'space-relations', networkNode: 'to', explorePath: [],
+  });
+});
+
+test('renderNetworkContent shows only relations verified as explorable', () => {
+  const v2 = structuredClone(require('./v2-data.js'));
+  const network = require('./v2-network.js');
+  v2.nodes.find(node => node.id === 'to').relations.push({
+    type: 'contrast', target: 'missing-node', label: '不应出现的关系', explanation: '目标不存在。',
+  });
+  const markup = core.renderNetworkContent(v2, { ...network, validateGraph: () => ({ errors: [] }) }, { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] });
+  assert.match(markup, /方向箭头 vs 定位点/);
+  assert.doesNotMatch(markup, /不应出现的关系|目标不存在/);
+});
+
+test('renderNetworkContent safely falls back when V2 data is invalid', () => {
+  const v2 = structuredClone(require('./v2-data.js'));
+  v2.nodes = [];
+  const markup = core.renderNetworkContent(v2, require('./v2-network.js'), { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] });
+  assert.match(markup, /知识网络暂不可用/);
+});
+
 test('v2LessonFor rejects a malformed matching V2 node so V1 can render it', () => {
   const invalid = structuredClone(require('./v2-data.js'));
   invalid.nodes.find(node => node.id === 'to').deep.scenes = [];
