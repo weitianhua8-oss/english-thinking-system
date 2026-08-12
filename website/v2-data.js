@@ -118,7 +118,7 @@ const payload = {
     {
       id: 'too-to', word: 'TOO...TO...', systemId: 'state-action',
       coreMeaning: '程度超过界限，以至于后面的动作无法发生。',
-      coreImage: '温度计越过红线，通向 TO 的行动箭头被挡住。',
+      coreImage: '程度量表越过阈值，后接一个尚未能够完成的动作。',
       quick: { origin: '把“过度”与后续行动连接成一个结果结构。', example: 'It is too late to call.', memoryHook: 'TOO...TO... = 太过头，后面做不了。' },
       deep: { logic: 'TOO 提供超出界限的程度，to 是不定式标记；整个结构表示程度过高以致后续动作无法实现。', scenes: 'too tired to walk、too small to read、too late to call。', structures: 'too + 形容词/副词 + to + 动词。', chineseTrap: '它常带负向结果，不等于单纯“很”；这里的 to 是不定式标记。', studyTip: '先找“超出什么界限”，再找因程度过高而无法实现的后续动作。' },
       relations: [
