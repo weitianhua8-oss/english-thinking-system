@@ -251,6 +251,9 @@ test('V2 graph relations use supported types, explanations, and required learnin
   assert.ok(relationKeys.includes('look:contrast:watch'));
   assert.ok(relationKeys.includes('be:growth:ing'));
   assert.ok(relationKeys.includes('too-to:combination:to'));
+  const tooToLabel = 'TOO + adj./adv. + to do → TOO...TO...';
+  assert.equal(network.nodeById(data, 'to').relations.find(relation => relation.target === 'too-to').label, tooToLabel);
+  assert.equal(network.nodeById(data, 'too-to').relations.find(relation => relation.target === 'to').label, tooToLabel);
   assert.equal(network.nodeById(data, 'too-to').systemId, 'state-action');
   assert.equal(network.nodeById(data, 'the').relations.some(relation => relation.target === 'if'), false);
   assert.deepEqual(network.validateGraph(data).errors, []);
