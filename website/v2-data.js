@@ -51,12 +51,12 @@ const payload = {
       coreMeaning: '朝一个目标点移动或延伸。',
       coreImage: '一支箭头从起点指向发光目标。',
       quick: { origin: '来自“朝目标去”的方向感。', example: 'Go to school.', memoryHook: 'TO = 箭头指向目标。' },
-      deep: { logic: 'TO 给出方向和终点；在 to do 中，它把后面的动作指向一个待完成的目标。', scenes: 'go to school、give it to me、listen to music、too tired to walk。', structures: '动词 + to + 目标；too + 形容词 + to + 动词。', chineseTrap: 'TO 不等于静态“在”；to do 也不是移动介词，而是把动作指向目标。', studyTip: '用箭头标出从哪里朝哪里去；遇到 to do 时标出要完成的动作。' },
+      deep: { logic: 'TO 可给出方向和终点；在 TOO...TO... 的 to do 中，to 是不定式标记，整个结构表示程度过高以致后续动作无法实现。', scenes: 'go to school、give it to me、listen to music、too tired to walk。', structures: '动词 + to + 目标；too + 形容词/副词 + to + 动词。', chineseTrap: 'TO 不等于静态“在”；在 TOO...TO... 中，to 是不定式标记，不是移动介词。', studyTip: '用箭头标出空间方向；遇到 TOO...TO... 时找出因程度过高而无法实现的后续动作。' },
       relations: [
         { type: 'system', target: 'space-relations', label: '所属：空间关系', explanation: 'TO 在空间关系系统中表达方向与终点。' },
         { type: 'contrast', target: 'at', label: '方向箭头 vs 定位点', explanation: 'TO 是朝目标的箭头；AT 是已经锁定的目标点。' },
         { type: 'combination', target: 'into', label: 'TO + IN → INTO', explanation: 'TO 的方向感进入 IN 的边界内部，就得到 INTO 的动态进入。' },
-        { type: 'combination', target: 'too-to', label: 'TOO + adj./adv. + to do → TOO...TO...', explanation: 'TOO 后接形容词或副词，to do 把动作指向目标；TOO...TO... 表示程度过头，令该动作无法实现，而不是简单的移动介词。' },
+        { type: 'combination', target: 'too-to', label: 'TOO + adj./adv. + to do → TOO...TO...', explanation: 'TOO 后接形容词或副词，to 是不定式标记；TOO...TO... 表示程度过高以致后续动作无法实现，而不是简单的移动介词。' },
       ],
     },
     {
@@ -120,10 +120,10 @@ const payload = {
       coreMeaning: '程度超过界限，以至于后面的动作无法发生。',
       coreImage: '温度计越过红线，通向 TO 的行动箭头被挡住。',
       quick: { origin: '把“过度”与后续行动连接成一个结果结构。', example: 'It is too late to call.', memoryHook: 'TOO...TO... = 太过头，后面做不了。' },
-      deep: { logic: 'TOO 提供超出界限的程度，TO 引出因此无法完成的动作。', scenes: 'too tired to walk、too small to read、too late to call。', structures: 'too + 形容词/副词 + to + 动词。', chineseTrap: '它常带负向结果，不等于单纯“很”。', studyTip: '先找“超出什么界限”，再找被阻断的动作。' },
+      deep: { logic: 'TOO 提供超出界限的程度，to 是不定式标记；整个结构表示程度过高以致后续动作无法实现。', scenes: 'too tired to walk、too small to read、too late to call。', structures: 'too + 形容词/副词 + to + 动词。', chineseTrap: '它常带负向结果，不等于单纯“很”；这里的 to 是不定式标记。', studyTip: '先找“超出什么界限”，再找因程度过高而无法实现的后续动作。' },
       relations: [
         { type: 'system', target: 'state-action', label: '所属：状态与动作', explanation: 'TOO...TO... 在状态与动作系统中表达程度造成的动作结果。' },
-        { type: 'combination', target: 'to', label: 'TOO + adj./adv. + to do → TOO...TO...', explanation: 'TOO 后接形容词或副词，此处的 to do 把动作指向目标；TOO...TO... 表示程度过头，令该动作无法实现，不是简单的移动介词。' },
+        { type: 'combination', target: 'to', label: 'TOO + adj./adv. + to do → TOO...TO...', explanation: 'TOO 后接形容词或副词，此处的 to 是不定式标记；TOO...TO... 表示程度过高以致后续动作无法实现，不是简单的移动介词。' },
         { type: 'contrast', target: 'if', label: '过度结果 vs 条件空间', explanation: 'TOO...TO... 给出已经形成的过度结果；IF 只提出一个可能条件。' },
       ],
     },
