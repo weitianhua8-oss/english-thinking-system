@@ -2,6 +2,12 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { execFileSync } = require('node:child_process');
 const core = require('./app.js');
+const manifest = require('./assets/cards/manifest.json');
+
+test('manifest covers fifty unique cards', () => {
+ assert.equal(manifest.length,50); assert.equal(new Set(manifest.map(c=>c.filename)).size,50); assert.equal(manifest[0].filename,'01-i.png'); assert.equal(manifest.at(-1).filename,'50-because.png'); assert.ok(manifest.every(c=>!(/诺诺|固定人物角色/.test(c.prompt))));
+});
+test('cardFileName is stable',()=>{ assert.equal(core.cardFileName(1,'I'),'01-i.png'); assert.equal(core.cardFileName(50,'because'),'50-because.png'); });
 
 test('marking a new word understood sets mastery 3 and schedules seven days later', () => {
   const progress = core.emptyProgress();

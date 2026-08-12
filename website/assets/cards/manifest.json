@@ -1,0 +1,452 @@
+[
+  {
+    "lessonNo": 1,
+    "word": "I",
+    "filename": "01-i.png",
+    "tagline": "I = 说话者把镜头对准自己。",
+    "imagePath": "assets/cards/01-i.png",
+    "visualBrief": "人物视角卡：诺诺居中，胸前 I / SPEAKER 标签。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"I\" at top; exact Chinese tagline \"I = 说话者把镜头对准自己。\" at bottom. One clear scene based on this card direction: 人物视角卡：anonymous learner居中，胸前 I / SPEAKER 标签。 Scene detail: anonymous learner手指自己；镜头中心就是“当前说话者”。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 2,
+    "word": "you",
+    "filename": "02-you.png",
+    "tagline": "you = 说话者把镜头转向正在交流的对象。",
+    "imagePath": "assets/cards/02-you.png",
+    "visualBrief": "对话站位卡：I → YOU。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"you\" at top; exact Chinese tagline \"you = 说话者把镜头转向正在交流的对象。\" at bottom. One clear scene based on this card direction: 对话站位卡：I → YOU。 Scene detail: I 的箭头指向对面的人：YOU。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 3,
+    "word": "he",
+    "filename": "03-he.png",
+    "tagline": "he = 指向一个男性第三方。",
+    "imagePath": "assets/cards/03-he.png",
+    "visualBrief": "第三方站位卡：I / YOU / HE。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"he\" at top; exact Chinese tagline \"he = 指向一个男性第三方。\" at bottom. One clear scene based on this card direction: 第三方站位卡：I / YOU / HE。 Scene detail: I 与 YOU 在前景，远处另一个男性被聚光灯圈住。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 4,
+    "word": "she",
+    "filename": "04-she.png",
+    "tagline": "she = 指向一个女性第三方。",
+    "imagePath": "assets/cards/04-she.png",
+    "visualBrief": "第三方站位卡：I / YOU / SHE。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"she\" at top; exact Chinese tagline \"she = 指向一个女性第三方。\" at bottom. One clear scene based on this card direction: 第三方站位卡：I / YOU / SHE。 Scene detail: I 与 YOU 在前景，远处一个女性被聚光灯圈住。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 5,
+    "word": "it",
+    "filename": "05-it.png",
+    "tagline": "it = 给已知的事物、动物或当前情况一个“继续指代的代号”。",
+    "imagePath": "assets/cards/05-it.png",
+    "visualBrief": "THIS → IT 指代切换卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"it\" at top; exact Chinese tagline \"it = 给已知的事物、动物或当前情况一个“继续指代的代号”。\" at bottom. One clear scene based on this card direction: THIS → IT 指代切换卡。 Scene detail: 先指向一个球 THIS BALL，下一格把标签换成 IT。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 6,
+    "word": "we",
+    "filename": "06-we.png",
+    "tagline": "we = I + 其他人，被圈成同一个群体。",
+    "imagePath": "assets/cards/06-we.png",
+    "visualBrief": "群体圆圈卡：I + others = WE。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"we\" at top; exact Chinese tagline \"we = I + 其他人，被圈成同一个群体。\" at bottom. One clear scene based on this card direction: 群体圆圈卡：I + others = WE。 Scene detail: anonymous learner和其他人一起站进一个透明圆圈。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 7,
+    "word": "they",
+    "filename": "07-they.png",
+    "tagline": "they = 把多个第三方对象打包成一组。",
+    "imagePath": "assets/cards/07-they.png",
+    "visualBrief": "第三方群体卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"they\" at top; exact Chinese tagline \"they = 把多个第三方对象打包成一组。\" at bottom. One clear scene based on this card direction: 第三方群体卡。 Scene detail: I / YOU 在前景，远处多人被一个圆圈框住。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 8,
+    "word": "this",
+    "filename": "08-this.png",
+    "tagline": "this = 指向心理或物理距离“近”的单个对象。",
+    "imagePath": "assets/cards/08-this.png",
+    "visualBrief": "近距离指向卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"this\" at top; exact Chinese tagline \"this = 指向心理或物理距离“近”的单个对象。\" at bottom. One clear scene based on this card direction: 近距离指向卡。 Scene detail: anonymous learner手里拿着一本书，书被 THIS 光圈标记。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 9,
+    "word": "that",
+    "filename": "09-that.png",
+    "tagline": "that = 指向心理或物理距离“较远”的单个对象。",
+    "imagePath": "assets/cards/09-that.png",
+    "visualBrief": "远距离指向卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"that\" at top; exact Chinese tagline \"that = 指向心理或物理距离“较远”的单个对象。\" at bottom. One clear scene based on this card direction: 远距离指向卡。 Scene detail: anonymous learner指向远处一个物体，目标被 THAT 标记。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 10,
+    "word": "here",
+    "filename": "10-here.png",
+    "tagline": "here = 把当前焦点位置标成“这里”。",
+    "imagePath": "assets/cards/10-here.png",
+    "visualBrief": "HERE 地面焦点卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"here\" at top; exact Chinese tagline \"here = 把当前焦点位置标成“这里”。\" at bottom. One clear scene based on this card direction: HERE 地面焦点卡。 Scene detail: anonymous learner脚下出现发光 HERE 圆点。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 11,
+    "word": "there",
+    "filename": "11-there.png",
+    "tagline": "there = 指向“不是当前这里”的另一个位置。",
+    "imagePath": "assets/cards/11-there.png",
+    "visualBrief": "HERE ↔ THERE 双点卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"there\" at top; exact Chinese tagline \"there = 指向“不是当前这里”的另一个位置。\" at bottom. One clear scene based on this card direction: HERE ↔ THERE 双点卡。 Scene detail: HERE 点在脚下，远处另一个点被标成 THERE。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 12,
+    "word": "who",
+    "filename": "12-who.png",
+    "tagline": "who = 在“人物槽位”放一个未知问号。",
+    "imagePath": "assets/cards/12-who.png",
+    "visualBrief": "? PERSON 问号人物卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"who\" at top; exact Chinese tagline \"who = 在“人物槽位”放一个未知问号。\" at bottom. One clear scene based on this card direction: ? PERSON 问号人物卡。 Scene detail: 人物剪影的脸部是一个问号。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 13,
+    "word": "be",
+    "filename": "13-be.png",
+    "tagline": "be = 把主语连接到它当前所处的身份、状态、位置或过程。",
+    "imagePath": "assets/cards/13-be.png",
+    "visualBrief": "主卡：Subject → BE → State；配套 be/do、be/get 对比卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"be\" at top; exact Chinese tagline \"be = 把主语连接到它当前所处的身份、状态、位置或过程。\" at bottom. One clear scene based on this card direction: 主卡：Subject → BE → State；配套 be/do、be/get 对比卡。 Scene detail: 人物通过一根连接线接到 HAPPY / AT SCHOOL / A STUDENT 三个状态块。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 14,
+    "word": "have",
+    "filename": "14-have.png",
+    "tagline": "have = 某物、关系或经历处在主语的“拥有/经历范围”里。",
+    "imagePath": "assets/cards/14-have.png",
+    "visualBrief": "GET → 进圈；HAVE → 已在圈内。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"have\" at top; exact Chinese tagline \"have = 某物、关系或经历处在主语的“拥有/经历范围”里。\" at bottom. One clear scene based on this card direction: GET → 进圈；HAVE → 已在圈内。 Scene detail: 人物周围有一个透明“我的范围圈”，里面放 DOG / PHONE / TIME。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 15,
+    "word": "do",
+    "filename": "15-do.png",
+    "tagline": "do = 把一件事情、任务或活动执行出来。",
+    "imagePath": "assets/cards/15-do.png",
+    "visualBrief": "任务清单卡；配套 DO vs MAKE。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"do\" at top; exact Chinese tagline \"do = 把一件事情、任务或活动执行出来。\" at bottom. One clear scene based on this card direction: 任务清单卡；配套 DO vs MAKE。 Scene detail: 任务卡 HOMEWORK 被anonymous learner逐项完成。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 16,
+    "word": "get",
+    "filename": "16-get.png",
+    "tagline": "get = 经过一个过程，最终触达到目标。",
+    "imagePath": "assets/cards/16-get.png",
+    "visualBrief": "五目标主卡 + get in/out/up/back/into/over/through 空间扩展卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"get\" at top; exact Chinese tagline \"get = 经过一个过程，最终触达到目标。\" at bottom. One clear scene based on this card direction: 五目标主卡 + get in/out/up/back/into/over/through 空间扩展卡。 Scene detail: 起点 → 发光目标；目标可换成 BOOK / HOME / MESSAGE / IDEA / TIRED。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 17,
+    "word": "go",
+    "filename": "17-go.png",
+    "tagline": "go = 从当前参照点离开，朝别处移动。",
+    "imagePath": "assets/cards/17-go.png",
+    "visualBrief": "HERE → ELSEWHERE 方向卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"go\" at top; exact Chinese tagline \"go = 从当前参照点离开，朝别处移动。\" at bottom. One clear scene based on this card direction: HERE → ELSEWHERE 方向卡。 Scene detail: HERE 起点上的人物沿箭头离开。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 18,
+    "word": "come",
+    "filename": "18-come.png",
+    "tagline": "come = 朝说话者、听话者或当前心理焦点靠近。",
+    "imagePath": "assets/cards/18-come.png",
+    "visualBrief": "远处 → HERE；配套 GO vs COME。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"come\" at top; exact Chinese tagline \"come = 朝说话者、听话者或当前心理焦点靠近。\" at bottom. One clear scene based on this card direction: 远处 → HERE；配套 GO vs COME。 Scene detail: 人物从远处沿箭头进入 HERE 光圈。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 19,
+    "word": "take",
+    "filename": "19-take.png",
+    "tagline": "take = 把某人/物纳入控制，并带离原来的参照点。",
+    "imagePath": "assets/cards/19-take.png",
+    "visualBrief": "桌面 → 手 → 远处。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"take\" at top; exact Chinese tagline \"take = 把某人/物纳入控制，并带离原来的参照点。\" at bottom. One clear scene based on this card direction: 桌面 → 手 → 远处。 Scene detail: 手抓住桌上的书，然后箭头把书带离桌面。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 20,
+    "word": "give",
+    "filename": "20-give.png",
+    "tagline": "give = 把某物从自己的控制范围转移到别人那里。",
+    "imagePath": "assets/cards/20-give.png",
+    "visualBrief": "控制权转移卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"give\" at top; exact Chinese tagline \"give = 把某物从自己的控制范围转移到别人那里。\" at bottom. One clear scene based on this card direction: 控制权转移卡。 Scene detail: 礼物盒从“我”沿箭头移动到“你”。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 21,
+    "word": "put",
+    "filename": "21-put.png",
+    "tagline": "put = 让一个东西进入指定的位置或状态。",
+    "imagePath": "assets/cards/21-put.png",
+    "visualBrief": "多目标落点卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"put\" at top; exact Chinese tagline \"put = 让一个东西进入指定的位置或状态。\" at bottom. One clear scene based on this card direction: 多目标落点卡。 Scene detail: 手里的球沿箭头落到 IN BOX / ON TABLE / HERE 三个目标位。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 22,
+    "word": "make",
+    "filename": "22-make.png",
+    "tagline": "make = 通过作用，让一个结果出现。",
+    "imagePath": "assets/cards/22-make.png",
+    "visualBrief": "TASK vs RESULT 对比卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"make\" at top; exact Chinese tagline \"make = 通过作用，让一个结果出现。\" at bottom. One clear scene based on this card direction: TASK vs RESULT 对比卡。 Scene detail: 原料/动作 → 发光 RESULT。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 23,
+    "word": "keep",
+    "filename": "23-keep.png",
+    "tagline": "keep = 让某物或某状态继续留住，不让它离开或改变。",
+    "imagePath": "assets/cards/23-keep.png",
+    "visualBrief": "KEEP 力场卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"keep\" at top; exact Chinese tagline \"keep = 让某物或某状态继续留住，不让它离开或改变。\" at bottom. One clear scene based on this card direction: KEEP 力场卡。 Scene detail: 一个状态球被透明 KEEP 力场保护。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 24,
+    "word": "bring",
+    "filename": "24-bring.png",
+    "tagline": "bring = 带着人或物，朝“这里/当前焦点”移动。",
+    "imagePath": "assets/cards/24-bring.png",
+    "visualBrief": "远处 + BOOK → HERE。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"bring\" at top; exact Chinese tagline \"bring = 带着人或物，朝“这里/当前焦点”移动。\" at bottom. One clear scene based on this card direction: 远处 + BOOK → HERE。 Scene detail: 人物抱着书从远处走向 HERE。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 25,
+    "word": "turn",
+    "filename": "25-turn.png",
+    "tagline": "turn = 从原来的方向或状态转到另一个方向或状态。",
+    "imagePath": "assets/cards/25-turn.png",
+    "visualBrief": "方向切换 + 状态切换双场景卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"turn\" at top; exact Chinese tagline \"turn = 从原来的方向或状态转到另一个方向或状态。\" at bottom. One clear scene based on this card direction: 方向切换 + 状态切换双场景卡。 Scene detail: 道路从直行转弯；旁边白天切换到黑夜。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 26,
+    "word": "see",
+    "filename": "26-see.png",
+    "tagline": "see = 某物进入视觉范围，视觉结果已经发生。",
+    "imagePath": "assets/cards/26-see.png",
+    "visualBrief": "OBJECT → EYES 结果卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"see\" at top; exact Chinese tagline \"see = 某物进入视觉范围，视觉结果已经发生。\" at bottom. One clear scene based on this card direction: OBJECT → EYES 结果卡。 Scene detail: OBJECT → EYES。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 27,
+    "word": "look",
+    "filename": "27-look.png",
+    "tagline": "look = 主动把目光和注意力投向某个方向。",
+    "imagePath": "assets/cards/27-look.png",
+    "visualBrief": "EYES → AT → TARGET。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"look\" at top; exact Chinese tagline \"look = 主动把目光和注意力投向某个方向。\" at bottom. One clear scene based on this card direction: EYES → AT → TARGET。 Scene detail: EYES → TARGET。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 28,
+    "word": "watch",
+    "filename": "28-watch.png",
+    "tagline": "watch = 把注意力持续放在会变化的对象或过程上。",
+    "imagePath": "assets/cards/28-watch.png",
+    "visualBrief": "三帧连续动作卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"watch\" at top; exact Chinese tagline \"watch = 把注意力持续放在会变化的对象或过程上。\" at bottom. One clear scene based on this card direction: 三帧连续动作卡。 Scene detail: 眼睛持续跟随 bird₁ → bird₂ → bird₃。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 29,
+    "word": "hear",
+    "filename": "29-hear.png",
+    "tagline": "hear = 声音进入耳朵，听觉结果发生。",
+    "imagePath": "assets/cards/29-hear.png",
+    "visualBrief": "声波 → 耳朵。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"hear\" at top; exact Chinese tagline \"hear = 声音进入耳朵，听觉结果发生。\" at bottom. One clear scene based on this card direction: 声波 → 耳朵。 Scene detail: SOUND → EAR。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 30,
+    "word": "listen",
+    "filename": "30-listen.png",
+    "tagline": "listen = 主动把听觉注意力投向声音目标。",
+    "imagePath": "assets/cards/30-listen.png",
+    "visualBrief": "EAR → TO → SOUND。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"listen\" at top; exact Chinese tagline \"listen = 主动把听觉注意力投向声音目标。\" at bottom. One clear scene based on this card direction: EAR → TO → SOUND。 Scene detail: EAR → SOUND。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 31,
+    "word": "feel",
+    "filename": "31-feel.png",
+    "tagline": "feel = 直接感知身体、情绪或接触带来的内部体验。",
+    "imagePath": "assets/cards/31-feel.png",
+    "visualBrief": "BODY/HEART 内部体验卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"feel\" at top; exact Chinese tagline \"feel = 直接感知身体、情绪或接触带来的内部体验。\" at bottom. One clear scene based on this card direction: BODY/HEART 内部体验卡。 Scene detail: 温度、触觉、情绪的箭头都进入人物内部。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 32,
+    "word": "know",
+    "filename": "32-know.png",
+    "tagline": "know = 信息已经稳定存在于你的认知范围里。",
+    "imagePath": "assets/cards/32-know.png",
+    "visualBrief": "已点亮知识块。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"know\" at top; exact Chinese tagline \"know = 信息已经稳定存在于你的认知范围里。\" at bottom. One clear scene based on this card direction: 已点亮知识块。 Scene detail: 大脑中 ANSWER 知识块已经点亮。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 33,
+    "word": "think",
+    "filename": "33-think.png",
+    "tagline": "think = 大脑正在处理信息、形成想法或判断。",
+    "imagePath": "assets/cards/33-think.png",
+    "visualBrief": "INPUT → BRAIN → IDEA。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"think\" at top; exact Chinese tagline \"think = 大脑正在处理信息、形成想法或判断。\" at bottom. One clear scene based on this card direction: INPUT → BRAIN → IDEA。 Scene detail: 信息 A + B → 脑内齿轮 → IDEA。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 34,
+    "word": "in",
+    "filename": "34-in.png",
+    "tagline": "in = 处在一个边界的内部。",
+    "imagePath": "assets/cards/34-in.png",
+    "visualBrief": "透明容器卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"in\" at top; exact Chinese tagline \"in = 处在一个边界的内部。\" at bottom. One clear scene based on this card direction: 透明容器卡。 Scene detail: 透明盒子里有一个球。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 35,
+    "word": "on",
+    "filename": "35-on.png",
+    "tagline": "on = 与表面接触，并处于依附/支撑关系。",
+    "imagePath": "assets/cards/35-on.png",
+    "visualBrief": "接触表面 + ON 开关双场景。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"on\" at top; exact Chinese tagline \"on = 与表面接触，并处于依附/支撑关系。\" at bottom. One clear scene based on this card direction: 接触表面 + ON 开关双场景。 Scene detail: 球接触桌面；接触点发光。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 36,
+    "word": "at",
+    "filename": "36-at.png",
+    "tagline": "at = 把地点、时间或目标当成一个点来精准定位。",
+    "imagePath": "assets/cards/36-at.png",
+    "visualBrief": "点定位卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"at\" at top; exact Chinese tagline \"at = 把地点、时间或目标当成一个点来精准定位。\" at bottom. One clear scene based on this card direction: 点定位卡。 Scene detail: 地图 pin 落在 SCHOOL；时间线 pin 落在 6:00。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 37,
+    "word": "to",
+    "filename": "37-to.png",
+    "tagline": "to = 朝一个目标点移动或延伸。",
+    "imagePath": "assets/cards/37-to.png",
+    "visualBrief": "起点 → TARGET。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"to\" at top; exact Chinese tagline \"to = 朝一个目标点移动或延伸。\" at bottom. One clear scene based on this card direction: 起点 → TARGET。 Scene detail: 起点 → 发光目标。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 38,
+    "word": "from",
+    "filename": "38-from.png",
+    "tagline": "from = 从某个起点、来源或原点出发。",
+    "imagePath": "assets/cards/38-from.png",
+    "visualBrief": "SOURCE → 外部。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"from\" at top; exact Chinese tagline \"from = 从某个起点、来源或原点出发。\" at bottom. One clear scene based on this card direction: SOURCE → 外部。 Scene detail: 箭头从一个发光源点向外长出。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 39,
+    "word": "into",
+    "filename": "39-into.png",
+    "tagline": "into = 朝内部移动，并真正跨过边界进入其中。",
+    "imagePath": "assets/cards/39-into.png",
+    "visualBrief": "外 → 穿界 → 内。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"into\" at top; exact Chinese tagline \"into = 朝内部移动，并真正跨过边界进入其中。\" at bottom. One clear scene based on this card direction: 外 → 穿界 → 内。 Scene detail: 球从盒外穿过边界进入透明盒。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 40,
+    "word": "out",
+    "filename": "40-out.png",
+    "tagline": "out = 从内部越过边界，到外面。",
+    "imagePath": "assets/cards/40-out.png",
+    "visualBrief": "内 → 穿界 → 外。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"out\" at top; exact Chinese tagline \"out = 从内部越过边界，到外面。\" at bottom. One clear scene based on this card direction: 内 → 穿界 → 外。 Scene detail: 球从盒内冲出边界。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 41,
+    "word": "up",
+    "filename": "41-up.png",
+    "tagline": "up = 朝上方，或朝更高、更多、更完整的方向发展。",
+    "imagePath": "assets/cards/41-up.png",
+    "visualBrief": "物理向上 + 数值上升。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"up\" at top; exact Chinese tagline \"up = 朝上方，或朝更高、更多、更完整的方向发展。\" at bottom. One clear scene based on this card direction: 物理向上 + 数值上升。 Scene detail: 人物从坐姿到站姿；箭头向上。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 42,
+    "word": "down",
+    "filename": "42-down.png",
+    "tagline": "down = 朝下方，或朝更低、更少、更弱的方向发展。",
+    "imagePath": "assets/cards/42-down.png",
+    "visualBrief": "物理向下 + 数值下降。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"down\" at top; exact Chinese tagline \"down = 朝下方，或朝更低、更少、更弱的方向发展。\" at bottom. One clear scene based on this card direction: 物理向下 + 数值下降。 Scene detail: 人物站 → 坐；箭头向下。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 43,
+    "word": "over",
+    "filename": "43-over.png",
+    "tagline": "over = 位于上方，并带有跨越、覆盖一个范围的关系。",
+    "imagePath": "assets/cards/43-over.png",
+    "visualBrief": "抛物线跨越卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"over\" at top; exact Chinese tagline \"over = 位于上方，并带有跨越、覆盖一个范围的关系。\" at bottom. One clear scene based on this card direction: 抛物线跨越卡。 Scene detail: 人物沿抛物线越过箱子。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 44,
+    "word": "under",
+    "filename": "44-under.png",
+    "tagline": "under = 位于下方，并处在上方事物的覆盖、控制或压力范围下。",
+    "imagePath": "assets/cards/44-under.png",
+    "visualBrief": "覆盖阴影区卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"under\" at top; exact Chinese tagline \"under = 位于下方，并处在上方事物的覆盖、控制或压力范围下。\" at bottom. One clear scene based on this card direction: 覆盖阴影区卡。 Scene detail: 猫在桌子下，桌面形成覆盖区域。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 45,
+    "word": "back",
+    "filename": "45-back.png",
+    "tagline": "back = 回到原来的位置、方向、状态或关系。",
+    "imagePath": "assets/cards/45-back.png",
+    "visualBrief": "A → B → A 回旋卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"back\" at top; exact Chinese tagline \"back = 回到原来的位置、方向、状态或关系。\" at bottom. One clear scene based on this card direction: A → B → A 回旋卡。 Scene detail: A → B，再用回旋箭头返回 A。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 46,
+    "word": "and",
+    "filename": "46-and.png",
+    "tagline": "and = 把两个同方向的信息连接、追加在一起。",
+    "imagePath": "assets/cards/46-and.png",
+    "visualBrief": "A + B。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"and\" at top; exact Chinese tagline \"and = 把两个同方向的信息连接、追加在一起。\" at bottom. One clear scene based on this card direction: A + B。 Scene detail: A 与 B 被一个 + 连接件扣住。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 47,
+    "word": "but",
+    "filename": "47-but.png",
+    "tagline": "but = 后面的信息让前面建立的预期发生转向。",
+    "imagePath": "assets/cards/47-but.png",
+    "visualBrief": "直路 → 转弯。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"but\" at top; exact Chinese tagline \"but = 后面的信息让前面建立的预期发生转向。\" at bottom. One clear scene based on this card direction: 直路 → 转弯。 Scene detail: 道路直行后在 BUT 路牌处突然转弯。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 48,
+    "word": "or",
+    "filename": "48-or.png",
+    "tagline": "or = 在两个或多个可能之间打开选择分叉。",
+    "imagePath": "assets/cards/48-or.png",
+    "visualBrief": "Y 型分叉路。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"or\" at top; exact Chinese tagline \"or = 在两个或多个可能之间打开选择分叉。\" at bottom. One clear scene based on this card direction: Y 型分叉路。 Scene detail: 岔路左 TEA、右 COFFEE。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 49,
+    "word": "so",
+    "filename": "49-so.png",
+    "tagline": "so = 前面的情况向前推出一个结果。",
+    "imagePath": "assets/cards/49-so.png",
+    "visualBrief": "CAUSE → RESULT。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"so\" at top; exact Chinese tagline \"so = 前面的情况向前推出一个结果。\" at bottom. One clear scene based on this card direction: CAUSE → RESULT。 Scene detail: A 多米诺倒下推动 B。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  },
+  {
+    "lessonNo": 50,
+    "word": "because",
+    "filename": "50-because.png",
+    "tagline": "because = 为已经说出的事情向后补上原因。",
+    "imagePath": "assets/cards/50-because.png",
+    "visualBrief": "因果双向对比卡。",
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. English word \"because\" at top; exact Chinese tagline \"because = 为已经说出的事情向后补上原因。\" at bottom. One clear scene based on this card direction: 因果双向对比卡。 Scene detail: 从 RESULT 沿箭头回溯到 REASON。. Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background."
+  }
+]

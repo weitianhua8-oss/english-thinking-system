@@ -5,6 +5,7 @@ function calendarDate(date) {
  }
  return date instanceof Date ? new Date(date.getTime()) : new Date(date);
 }
+function cardFileName(lessonNo, word) { return `${String(lessonNo).padStart(2,'0')}-${String(word).toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`; }
 function localDate(date) {
  const value=calendarDate(date);
  return `${value.getFullYear()}-${String(value.getMonth()+1).padStart(2,'0')}-${String(value.getDate()).padStart(2,'0')}`;
@@ -99,7 +100,7 @@ function lessonFor(lessons, word) { return isPlainObject(lessons?.[word]) ? less
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
