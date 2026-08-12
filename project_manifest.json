@@ -1,0 +1,13 @@
+{
+  "project": "英语思维850",
+  "version": "1.0",
+  "vocabulary_count": 850,
+  "grade_counts": {
+    "S": 80,
+    "A": 200,
+    "B": 570
+  },
+  "level1_full_lessons": 50,
+  "learning_days": 170,
+  "website_entry": "website/index.html"
+}
