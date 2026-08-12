@@ -1,6 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { execFileSync } = require('node:child_process');
+const fs = require('node:fs');
+const vm = require('node:vm');
 const core = require('./app.js');
 
 test('marking a new word understood sets mastery 3 and schedules seven days later', () => {
@@ -239,6 +241,7 @@ test('V2 graph relations use supported types, explanations, and required learnin
   const relationKeys = data.nodes.flatMap(node => node.relations.map(relation => `${node.id}:${relation.type}:${relation.target}`));
   data.nodes.flatMap(node => node.relations).forEach(relation => {
     assert.ok(['system', 'growth', 'combination', 'contrast'].includes(relation.type));
+    assert.ok(relation.label.trim());
     assert.ok(relation.explanation.trim());
   });
   assert.ok(relationKeys.includes('in:combination:into'));
@@ -248,6 +251,8 @@ test('V2 graph relations use supported types, explanations, and required learnin
   assert.ok(relationKeys.includes('look:contrast:watch'));
   assert.ok(relationKeys.includes('be:growth:ing'));
   assert.ok(relationKeys.includes('too-to:combination:to'));
+  assert.equal(network.nodeById(data, 'too-to').systemId, 'state-action');
+  assert.equal(network.nodeById(data, 'the').relations.some(relation => relation.target === 'if'), false);
   assert.deepEqual(network.validateGraph(data).errors, []);
 });
 
@@ -277,4 +282,50 @@ test('V2 network helpers return nodes, relations, and immutable explore paths', 
   assert.deepEqual(nextPath, ['in', 'into']);
   assert.deepEqual(network.popExplorePath(nextPath), ['in']);
   assert.deepEqual(path, ['in']);
+});
+
+test('V2 browser scripts load after Level 1 data without CommonJS globals', () => {
+  const context = vm.createContext({});
+  ['data.js', 'v2-data.js', 'v2-network.js'].forEach(file => {
+    vm.runInContext(fs.readFileSync(require.resolve(`./${file}`), 'utf8'), context, { filename: file });
+  });
+  assert.ok(context.ENGLISH850_DATA);
+  assert.ok(context.ENGLISH850_V2_DATA);
+  assert.ok(context.ENGLISH850_V2_NETWORK);
+  assert.equal(typeof context.ENGLISH850_V2_NETWORK.validateGraph, 'function');
+});
+
+test('V2 validation reports malformed relation values without throwing', () => {
+  const data = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const invalid = {
+    systems: data.systems.map(system => ({ ...system })),
+    nodes: data.nodes.map(node => ({ ...node, relations: [...node.relations] })),
+  };
+  invalid.nodes[0].relations = {};
+  invalid.nodes[1].relations = [
+    null,
+    { type: Symbol('contrast'), target: Symbol('target'), label: Symbol('label'), explanation: Symbol('explanation') },
+    { type: 'contrast', target: 'in', explanation: '缺少标签。' },
+    { type: 'contrast', target: 42, label: '数字目标', explanation: '目标必须是字符串。' },
+  ];
+  let result;
+  assert.doesNotThrow(() => { result = network.validateGraph(invalid); });
+  assert.ok(result.errors.length >= 5);
+  assert.ok(result.errors.some(error => error.includes('relations')));
+  assert.ok(result.errors.some(error => error.includes('label')));
+  assert.ok(result.errors.some(error => error.includes('target')));
+});
+
+test('V2 relation exploration ignores null, unknown, and incomplete relations', () => {
+  const data = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  assert.deepEqual(network.explorableRelations(data, null), []);
+  assert.deepEqual(network.explorableRelations(data, 'missing'), []);
+  const node = { relations: [null, { type: 'contrast', target: 'missing', label: '未知', explanation: '不存在。' }, { type: 'contrast', target: 'in', explanation: '缺标签。' }] };
+  assert.deepEqual(network.explorableRelations(data, node), []);
+  assert.deepEqual(network.nodeById({ nodes: {} }, 'in'), null);
+  assert.deepEqual(network.nodesForSystem({ nodes: {} }, 'attention'), []);
+  assert.deepEqual(network.pushExplorePath(Symbol('path'), Symbol('id')), []);
+  assert.deepEqual(network.popExplorePath({}), []);
 });
