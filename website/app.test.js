@@ -87,6 +87,7 @@ test('nextStudyDay returns the first day that has an unstarted word',()=>{
 test('viewKind routes every main navigation view to its renderer', () => {
   assert.equal(core.viewKind('review'), 'review');
   assert.equal(core.viewKind('progress'), 'progress');
+  assert.equal(core.viewKind('network'), 'network');
   assert.equal(core.viewKind('lesson'), 'lesson');
 });
 
@@ -119,6 +120,7 @@ test('libraryWords uses the shared trimmed word filters', () => {
 test('activeNavView marks only main navigation views as current', () => {
   assert.equal(core.activeNavView('lesson'), null);
   assert.equal(core.activeNavView('library'), 'library');
+  assert.equal(core.activeNavView('network'), 'network');
 });
 
 test('escapeHtml encodes text before it enters rendered HTML', () => {
@@ -199,6 +201,27 @@ test('v2LessonFor returns a V2 lesson only when the word matches a V2 node', () 
   assert.equal(core.v2LessonFor(v2, 'go'), null);
 });
 
+test('v2 scene groups keep each title, explanation, and example together', () => {
+  const v2 = require('./v2-data.js');
+  v2.nodes.forEach(node => {
+    assert.ok(Array.isArray(node.deep.scenes));
+    assert.ok(node.deep.scenes.length > 0);
+    node.deep.scenes.forEach(scene => {
+      assert.equal(typeof scene.title, 'string');
+      assert.ok(scene.title.trim());
+      assert.equal(typeof scene.body, 'string');
+      assert.ok(scene.body.trim());
+      assert.equal(typeof scene.example, 'string');
+      assert.ok(scene.example.trim());
+    });
+  });
+});
+
+test('sceneGroupsFor returns an empty list for malformed scene data', () => {
+  assert.deepEqual(core.sceneGroupsFor('at school、at six'), []);
+  assert.deepEqual(core.sceneGroupsFor([{ title: '定位', body: '把地点看作点。', example: 'Meet me at the door.' }]), [{ title: '定位', body: '把地点看作点。', example: 'Meet me at the door.' }]);
+});
+
 test('safePlanDay returns null when the plan has no selectable day', () => {
   assert.equal(core.safePlanDay([], 1), null);
 });
@@ -233,7 +256,12 @@ test('V2 graph contains thirteen complete nodes across the four learning systems
     assert.ok(node.quick.example);
     assert.ok(node.quick.memoryHook);
     assert.ok(node.deep.logic);
-    assert.ok(node.deep.scenes);
+    assert.ok(Array.isArray(node.deep.scenes));
+    node.deep.scenes.forEach(scene => {
+      assert.ok(scene.title);
+      assert.ok(scene.body);
+      assert.ok(scene.example);
+    });
     assert.ok(node.deep.structures);
     assert.ok(node.deep.chineseTrap);
     assert.ok(node.deep.studyTip);
@@ -282,9 +310,11 @@ test('validateGraph reports an unknown relation target and blank explanation', (
     { type: 'contrast', target: 'missing-node', explanation: '指向不存在节点。' },
     { type: 'growth', target: 'be', explanation: '   ' },
   );
+  invalid.nodes[0].deep.scenes = 'at school';
   const errors = network.validateGraph(invalid).errors;
   assert.ok(errors.some(error => error.includes('missing-node')));
   assert.ok(errors.some(error => error.includes('explanation')));
+  assert.ok(errors.some(error => error.includes('deep.scenes')));
 });
 
 test('V2 network helpers return nodes, relations, and immutable explore paths', () => {

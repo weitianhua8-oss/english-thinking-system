@@ -103,10 +103,14 @@ function v2LessonFor(v2Data, word) {
   return node||null;
  } catch(error) { return null; }
 }
+function sceneGroupsFor(scenes) {
+ if(!Array.isArray(scenes)) return [];
+ return scenes.filter(scene=>isPlainObject(scene)&&['title','body','example'].every(field=>typeof scene[field]==='string'&&scene[field].trim()));
+}
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,v2LessonFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -150,11 +154,11 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
   return system ? system.title : '暂未标注';
  }
  function renderV2Scenes(scenes) {
-  if(Array.isArray(scenes)) return scenes.map(scene=>{
-   if(!isPlainObject(scene)) return '';
+  const groups=sceneGroupsFor(scenes);
+  if(groups.length) return groups.map(scene=>{
    return `<div class="block sceneGroup"><h4>${safe(scene.title||'学习场景')}</h4><p>${safe(scene.body||'暂未提供场景说明。')}</p><p class="mini">${safe(scene.example||'暂未提供示例。')}</p></div>`;
-  }).join('')||'<p class="mini">暂未提供场景。</p>';
-  return `<div class="block sceneGroup"><h4>学习场景</h4><p>${safe(scenes||'暂未提供场景。')}</p></div>`;
+  }).join('');
+  return '<p class="mini">暂未提供可用学习场景。</p>';
  }
  function renderV2Lesson(x) {
   title.textContent=x.word; sub.textContent=`三层学习 · ${v2SystemTitle(x.systemId)}`;
