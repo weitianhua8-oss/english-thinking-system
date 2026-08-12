@@ -252,8 +252,16 @@ test('V2 graph relations use supported types, explanations, and required learnin
   assert.ok(relationKeys.includes('be:growth:ing'));
   assert.ok(relationKeys.includes('too-to:combination:to'));
   const tooToLabel = 'TOO + adj./adv. + to do → TOO...TO...';
-  assert.equal(network.nodeById(data, 'to').relations.find(relation => relation.target === 'too-to').label, tooToLabel);
-  assert.equal(network.nodeById(data, 'too-to').relations.find(relation => relation.target === 'to').label, tooToLabel);
+  const toNode = network.nodeById(data, 'to');
+  const tooToNode = network.nodeById(data, 'too-to');
+  const toTooToRelation = toNode.relations.find(relation => relation.target === 'too-to');
+  const tooToToRelation = tooToNode.relations.find(relation => relation.target === 'to');
+  assert.equal(toTooToRelation.label, tooToLabel);
+  assert.equal(tooToToRelation.label, tooToLabel);
+  [toNode.deep.logic, toTooToRelation.explanation, tooToNode.deep.logic, tooToToRelation.explanation].forEach(text => {
+    assert.match(text, /不定式标记/);
+    assert.match(text, /程度过高以致后续动作无法实现/);
+  });
   assert.equal(network.nodeById(data, 'too-to').systemId, 'state-action');
   assert.equal(network.nodeById(data, 'the').relations.some(relation => relation.target === 'if'), false);
   assert.deepEqual(network.validateGraph(data).errors, []);
