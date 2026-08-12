@@ -201,6 +201,21 @@ test('v2LessonFor returns a V2 lesson only when the word matches a V2 node', () 
   assert.equal(core.v2LessonFor(v2, 'go'), null);
 });
 
+test('V2 graph use requires a validator with no reported errors', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const invalid = structuredClone(v2);
+  invalid.nodes.find(node => node.id === 'to').deep.scenes = [];
+  assert.equal(core.isUsableV2Graph(v2, network), true);
+  assert.equal(core.isUsableV2Graph(invalid, network), false);
+});
+
+test('v2LessonFor rejects a malformed matching V2 node so V1 can render it', () => {
+  const invalid = structuredClone(require('./v2-data.js'));
+  invalid.nodes.find(node => node.id === 'to').deep.scenes = [];
+  assert.equal(core.v2LessonFor(invalid, 'to'), null);
+});
+
 test('v2 scene groups keep each title, explanation, and example together', () => {
   const v2 = require('./v2-data.js');
   v2.nodes.forEach(node => {

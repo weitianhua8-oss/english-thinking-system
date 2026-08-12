@@ -96,11 +96,24 @@ function groupCategories(vocabulary) {
 function nextLibraryFilters(filters, patch) { return {...filters,...patch}; }
 function safeRemoveProgress(removeItem) { try { removeItem(); return true; } catch(error) { return false; } }
 function lessonFor(lessons, word) { return isPlainObject(lessons?.[word]) ? lessons[word] : null; }
+function isUsableV2Graph(v2Data, graphApi) {
+ try {
+  const result=graphApi?.validateGraph?.(v2Data);
+  return isPlainObject(result)&&Array.isArray(result.errors)&&result.errors.length===0;
+ } catch(error) { return false; }
+}
+function isCompleteV2Node(node) {
+ return isPlainObject(node)
+  && ['id','word','systemId','coreMeaning','coreImage'].every(field=>typeof node[field]==='string'&&node[field].trim())
+  && isPlainObject(node.quick)&&['origin','example','memoryHook'].every(field=>typeof node.quick[field]==='string'&&node.quick[field].trim())
+  && isPlainObject(node.deep)&&['logic','structures','chineseTrap','studyTip'].every(field=>typeof node.deep[field]==='string'&&node.deep[field].trim())
+  && sceneGroupsFor(node.deep.scenes).length>0;
+}
 function v2LessonFor(v2Data, word) {
  try {
   if(!isPlainObject(v2Data)||!Array.isArray(v2Data.nodes)||typeof word!=='string') return null;
-  const node=v2Data.nodes.find(item=>isPlainObject(item)&&item.id===word&&typeof item.word==='string');
-  return node||null;
+  const node=v2Data.nodes.find(item=>isPlainObject(item)&&item.id===word);
+  return isCompleteV2Node(node) ? node : null;
  } catch(error) { return null; }
 }
 function sceneGroupsFor(scenes) {
@@ -110,11 +123,13 @@ function sceneGroupsFor(scenes) {
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
- const D=window.ENGLISH850_DATA, V2=window.ENGLISH850_V2_DATA, V2Network=window.ENGLISH850_V2_NETWORK, app=document.getElementById('app');
+ const D=window.ENGLISH850_DATA, V2Network=window.ENGLISH850_V2_NETWORK, app=document.getElementById('app');
+ let V2=window.ENGLISH850_V2_DATA, v2Notice='';
+ if(!isUsableV2Graph(V2,V2Network)) { V2=null; v2Notice='扩展课程数据暂不可用，已继续使用基础课程。'; }
  const title=document.getElementById('pageTitle'), sub=document.getElementById('pageSub');
  const STORAGE_KEY='english850_level1_progress_v1';
  let memoryProgress=emptyProgress(), storageNotice='';
@@ -124,7 +139,7 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  }
  function saveProgress(progress) { memoryProgress=progress; try { window.localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); } catch(error) { state.storageNotice='学习记录暂未保存，已保留在当前页面。'; } return memoryProgress; }
  const initialProgress=loadProgress();
- let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,storageNotice};
+ let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
  const vocabularyByWord=new Map((D.vocabulary||[]).map(item=>[item.word,item]));
  const safe=value=>html(value);
  const wordButton=(word,className='tag')=>`<button type="button" class="${className}" data-action="open-word" data-word="${safe(word)}">${safe(word)}</button>`;
