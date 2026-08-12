@@ -258,6 +258,7 @@ test('V2 graph relations use supported types, explanations, and required learnin
   const tooToToRelation = tooToNode.relations.find(relation => relation.target === 'to');
   assert.equal(toTooToRelation.label, tooToLabel);
   assert.equal(tooToToRelation.label, tooToLabel);
+  assert.equal(tooToNode.coreImage, '程度量表越过阈值，后接一个尚未能够完成的动作。');
   [toNode.deep.logic, toTooToRelation.explanation, tooToNode.deep.logic, tooToToRelation.explanation].forEach(text => {
     assert.match(text, /不定式标记/);
     assert.match(text, /程度过高以致后续动作无法实现/);
