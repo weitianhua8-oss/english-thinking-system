@@ -49,13 +49,61 @@ const VISUAL_LABELS = {
   DO: '执行', BE: '连接', I: '说话者', A: '起点', B: '终点',
 };
 
-const relationshipHints = {
-  I: '焦点落在说话者自己。',
-  get: '经过过程抵达目标。',
-  look: '目光投向目标方向。',
-  in: '物体处在边界内部。',
-  because: '从结果回溯到原因。',
-};
+// Each brief is one frozen teaching moment.  These are deliberately authored
+// from the source card/image relationships instead of deriving scenes from a
+// tagline, which is too abstract to distinguish nearby spatial words.
+const SCENE_OVERRIDES = Object.freeze({
+  I: '单一静态中心场景，匿名人物手指自己，自己处在画面焦点光环中。',
+  you: '单一静态中心场景，两位匿名人物相对站立，当前焦点向交流对象伸出一条方向箭头。',
+  he: '单一静态中心场景，前景交流者的方向箭头指向远处一位男性第三方，焦点光环圈住该人物。',
+  she: '单一静态中心场景，前景交流者的方向箭头指向远处一位女性第三方，焦点光环圈住该人物。',
+  it: '单一静态中心场景，一个共同注意的球体被柔和焦点光环包围。',
+  we: '单一静态中心场景，匿名人物与同伴处在同一个透明群体圆圈范围内。',
+  they: '单一静态中心场景，远处多位第三方处在同一个群体光环范围内，前景焦点指向该群体。',
+  this: '单一静态中心场景，人物手边一个近处物体被焦点光环圈住，方向箭头从手指落到物体。',
+  that: '单一静态中心场景，人物的方向箭头越过距离指向远处一个物体，焦点光环圈住终点。',
+  here: '单一静态中心场景，人物脚下当前位置有发光焦点圆点，位置光环落在地面。',
+  there: '单一静态中心场景，当前位置焦点圆点与远处另一位置由方向箭头连接，终点有光环。',
+  who: '单一静态中心场景，一个人物剪影的面部位置悬着问号，焦点光环等待未知人物。',
+  be: '单一静态中心场景，一个人物与一个明亮状态块由稳定连接线相连，状态成为当前焦点。',
+  have: '单一静态中心场景，一个物体安放在人物周围的半透明拥有范围内，范围边界清晰可见。',
+  do: '单一静态中心场景，人物的手沿执行路径在一张任务清单上完成一个勾选，焦点落在动作接触点。',
+  get: '单一静态中心场景，一条清晰路径从起点延伸到一个发光的单个目标终点。',
+  go: '单一静态中心场景，当前位置与另一位置同时可见，人物沿离开当前位置的方向箭头走向另一位置。',
+  come: '单一静态中心场景，远处人物沿方向箭头靠近当前焦点光环。',
+  take: '单一静态中心场景，一只手从桌面起点接触一本书，方向箭头把书带离原位置。',
+  give: '单一静态中心场景，一个礼物盒沿方向箭头从一人手中移动到另一人接收范围。',
+  put: '单一静态中心场景，手中的球沿方向箭头落入一个指定容器终点。',
+  make: '单一静态中心场景，一只手通过接触作用连接原料与一个发光结果，结果处在焦点。',
+  keep: '单一静态中心场景，一个状态球留在透明保护范围内，边界光环阻止它离开当前位置。',
+  bring: '单一静态中心场景，人物抱着一本书沿路径向当前焦点位置靠近。',
+  turn: '单一静态中心场景，一条路径在中心转弯，方向箭头从原方向连续转向新方向。',
+  see: '单一静态中心场景，一个物体沿方向箭头进入一双眼睛的视觉焦点范围。',
+  look: '单一静态中心场景，一双眼睛把注意力沿方向箭头投向一个目标焦点。',
+  watch: '单一静态中心场景，一只飞鸟处在弯曲注意路径上，眼睛的焦点光环持续跟随它。',
+  hear: '单一静态中心场景，声音波纹沿方向箭头进入一只耳朵，耳朵处在焦点。',
+  listen: '单一静态中心场景，一只耳朵主动把注意方向箭头指向远处声音波纹。',
+  feel: '单一静态中心场景，一只手接触温暖表面，接触箭头指向人物内部的感受焦点。',
+  know: '单一静态中心场景，一个稳定知识块在大脑范围内发光，并由连接线固定在焦点。',
+  think: '单一静态中心场景，两个信息点沿连接路径进入大脑，汇聚成一个想法焦点。',
+  in: '单一静态中心场景，一个物体静置在半透明边界内部，容器边界清晰包围物体。',
+  on: '单一静态中心场景，一个球与桌面表面接触，接触点处在发光焦点。',
+  at: '单一静态中心场景，一个位置点被精准焦点光环圈住，方向箭头落在该位置。',
+  to: '单一静态中心场景，一条方向箭头从起点明确指向一个目标终点。',
+  from: '单一静态中心场景，一条方向箭头从发光起点向外延伸，起点保持焦点。',
+  into: '单一静态中心场景，一个物体跨越容器边界向内，方向箭头指向半透明容器内的终点。',
+  out: '单一静态中心场景，一个物体沿箭头跨越容器边界向外，终点位于容器外。',
+  up: '单一静态中心场景，人物沿向上方向箭头从低位置到高位置，终点有焦点光环。',
+  down: '单一静态中心场景，人物沿向下方向箭头从高位置到低位置，终点有焦点光环。',
+  over: '单一静态中心场景，一条抛物线路径越过一个箱子，上方方向箭头指向终点。',
+  under: '单一静态中心场景，一只猫处在桌面表面下方的覆盖范围内，位置焦点落在猫身上。',
+  back: '单一静态中心场景，一条回旋方向箭头从终点返回原来的起点位置。',
+  and: '单一静态中心场景，两个同方向信息点由一个稳定连接件连接成并列关系。',
+  but: '单一静态中心场景，一条预期路径在中心发生方向转折，转弯后的箭头指向新终点。',
+  or: '单一静态中心场景，一条路径在起点分叉成两个方向箭头，两个终点保持可选焦点。',
+  so: '单一静态中心场景，一个原因沿因果箭头向前推出一个发光结果终点。',
+  because: '单一静态中心场景，一个原因与一个结果由因果箭头连接，箭头回指使原因成为结果的解释焦点。',
+});
 
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -112,12 +160,9 @@ function visualConcept(word, tagline) {
 
 function buildVisualBrief(lesson) {
   const word = normalizeWord(lesson.word, lesson.word);
-  if (word === 'I') return '匿名简约人物剪影居中，用手势指向自己，焦点光环落在自身。';
-  if (word === 'it') return '一个已进入共同注意力的球体被柔和焦点光环包围，表示继续指代。';
-  const hint = relationshipHints[word] || '';
+  if (SCENE_OVERRIDES[word]) return SCENE_OVERRIDES[word];
   return sanitizeVisualBrief([
     `单一静态中心场景，以简约物体、匿名人物剪影和柔和焦点光环表现${visualConcept(word, lesson.tagline)}`,
-    hint,
   ].filter(Boolean).join('。'));
 }
 
@@ -133,6 +178,7 @@ function cardFileName(lessonNo, word) {
   if (!Number.isInteger(lessonNo) || lessonNo < 1 || lessonNo > 50) {
     throw new Error('lesson number must be an integer from 1 to 50');
   }
+  if (typeof word !== 'string') throw new Error('word must be an ASCII word for the filename');
   const safeWord = word;
   if (!ASCII_WORD.test(safeWord)) throw new Error('word must be an ASCII word for the filename');
   const filename = `${String(lessonNo).padStart(2, '0')}-${safeWord.toLowerCase()}.png`;
@@ -144,9 +190,9 @@ function cardPrompt(card) {
   return [
     'vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change.',
     `Central scene instruction: ${card.visualBrief}`,
-    'Render this as one single central teaching scene with one clear focal relationship.',
+    'Render this as one single central static teaching scene.',
     `Place the English word "${card.word}" at the top and the exact Chinese tagline "${card.tagline}" at the bottom.`,
-    'Use only visible text exactly the English word and exact Chinese tagline; no English labels or any other text.',
+    'Visible wording is limited to the English word and exact Chinese tagline.',
     'Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background.',
   ].join(' ');
 }
@@ -182,6 +228,7 @@ function writeManifest() {
 if (require.main === module) writeManifest();
 
 module.exports = {
+  SCENE_OVERRIDES,
   buildManifest,
   buildVisualBrief,
   cardFileName,
