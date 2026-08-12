@@ -70,3 +70,51 @@ test('Level 1 data contains exactly ten five-word days with lesson coverage', ()
   assert.ok(data.plan.every(day => day.words.length === 5));
   assert.ok(data.plan.flatMap(day => day.words).every(word => data.lessons[word]));
 });
+
+test('filterWords combines text, category, and mastery filters', () => {
+ const words=[{word:'I',category:'人与指向'},{word:'go',category:'核心动作引擎'}];
+ const progress={words:{I:{mastery:3},go:{mastery:1}},studyDates:[]};
+ assert.deepEqual(core.filterWords(words,progress,{query:'i',category:'人与指向',mastery:'3'}),[words[0]]);
+});
+test('nextStudyDay returns the first day that has an unstarted word',()=>{
+ const plan=[{day:1,words:['I','you']},{day:2,words:['he','she']}];
+ const progress={words:{I:{mastery:1},you:{mastery:3}},studyDates:[]};
+ assert.equal(core.nextStudyDay(plan,progress),2);
+});
+
+test('viewKind routes pending navigation views to a safe placeholder', () => {
+  assert.equal(core.viewKind('review'), 'placeholder');
+  assert.equal(core.viewKind('progress'), 'placeholder');
+  assert.equal(core.viewKind('lesson'), 'lesson');
+});
+
+test('parseStoredProgress rejects corrupt or invalid learning profiles before feedback', () => {
+  const invalidProfiles = [
+    '{not-json',
+    JSON.stringify({ words: {}, studyDates: {} }),
+    JSON.stringify({ words: null, studyDates: [] }),
+  ];
+  invalidProfiles.forEach(saved => {
+    const progress = core.parseStoredProgress(saved);
+    assert.deepEqual(progress, core.emptyProgress());
+    assert.doesNotThrow(() => core.applyFeedback(progress, 'I', 'understood', new Date('2026-08-12T08:00:00Z')));
+  });
+});
+
+test('filterWords trims a query before matching words', () => {
+  const words = [{ word: 'I', category: '人与指向' }];
+  assert.deepEqual(core.filterWords(words, core.emptyProgress(), { query: ' i ', category: 'all', mastery: 'all' }), words);
+});
+
+test('libraryWords uses the shared trimmed word filters', () => {
+  const words = [
+    { word: 'I', category: '人与指向', grade: 'S', level: 'Level 1' },
+    { word: 'go', category: '核心动作引擎', grade: 'S', level: 'Level 1' },
+  ];
+  assert.deepEqual(core.libraryWords(words, core.emptyProgress(), { query: ' i ', category: 'all', grade: 'all', level: 'all' }), [words[0]]);
+});
+
+test('activeNavView marks only main navigation views as current', () => {
+  assert.equal(core.activeNavView('lesson'), null);
+  assert.equal(core.activeNavView('library'), 'library');
+});
