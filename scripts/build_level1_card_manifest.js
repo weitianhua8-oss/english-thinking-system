@@ -3,7 +3,7 @@ const path = require('node:path');
 
 const projectRoot = path.resolve(__dirname, '..');
 const cardsDirectory = path.join(projectRoot, 'website/assets/cards');
-const ASCII_WORD = /^[A-Za-z]+$/;
+const ASCII_WORD = /^[a-z0-9]+$/i;
 const SAFE_CARD_FILENAME = /^\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*\.png$/;
 const CONTROL_CHARS = /[\x00-\x1F\x7F]/g;
 const SCENE_REPLACEMENTS = [
@@ -153,17 +153,12 @@ function sanitizeVisualBrief(value) {
   return cleaned;
 }
 
-function visualConcept(word, tagline) {
-  return sanitizeVisualBrief(normalizeTagline(tagline)
-    .replace(new RegExp(`^${escapeRegExp(word)}\\s*=\\s*`, 'i'), ''));
-}
-
-function buildVisualBrief(lesson) {
+function buildVisualBrief(lesson, sceneOverrides = SCENE_OVERRIDES) {
   const word = normalizeWord(lesson.word, lesson.word);
-  if (SCENE_OVERRIDES[word]) return SCENE_OVERRIDES[word];
-  return sanitizeVisualBrief([
-    `单一静态中心场景，以简约物体、匿名人物剪影和柔和焦点光环表现${visualConcept(word, lesson.tagline)}`,
-  ].filter(Boolean).join('。'));
+  if (!Object.hasOwn(sceneOverrides, word)) {
+    throw new Error(`Missing single-scene override for word: ${word}`);
+  }
+  return sanitizeVisualBrief(sceneOverrides[word]);
 }
 
 function normalizeCardFields(card, lesson) {
@@ -197,14 +192,38 @@ function cardPrompt(card) {
   ].join(' ');
 }
 
-function buildManifest(lessons) {
+function validateSceneOverrides(lessons, sceneOverrides = SCENE_OVERRIDES) {
+  if (!Array.isArray(lessons)) throw new Error('lessons must be an array');
+  if (!sceneOverrides || typeof sceneOverrides !== 'object') throw new Error('scene overrides must be an object');
+  const lessonWords = lessons.map(lesson => lesson?.word);
+  const overrideWords = Object.keys(sceneOverrides);
+  const missing = lessonWords.filter(word => !Object.hasOwn(sceneOverrides, word));
+  const extra = overrideWords.filter(word => !lessonWords.includes(word));
+  if (missing.length || extra.length) {
+    throw new Error(`Scene override set must exactly match lesson words: missing [${missing.join(', ')}]; extra [${extra.join(', ')}]`);
+  }
+}
+
+function validateLessons(lessons) {
+  if (!Array.isArray(lessons)) throw new Error('lessons must be an array');
+  lessons.forEach(lesson => {
+    if (!lesson || typeof lesson !== 'object') throw new Error('lesson must be an object');
+    if (!Number.isInteger(lesson.lesson_no) || lesson.lesson_no < 1 || lesson.lesson_no > 50) {
+      throw new Error('lesson number must be an integer from 1 to 50');
+    }
+  });
+}
+
+function buildManifest(lessons, sceneOverrides = SCENE_OVERRIDES) {
+  validateLessons(lessons);
+  validateSceneOverrides(lessons, sceneOverrides);
   return lessons.map(lesson => {
     if (!lesson || typeof lesson !== 'object') throw new Error('lesson must be an object');
     const lessonNo = lesson.lesson_no;
     if (!Number.isInteger(lessonNo) || lessonNo < 1 || lessonNo > 50) {
       throw new Error('lesson number must be an integer from 1 to 50');
     }
-    const visualBrief = buildVisualBrief(lesson);
+    const visualBrief = buildVisualBrief(lesson, sceneOverrides);
     const card = normalizeCardFields({ word: lesson.word, tagline: lesson.tagline, visualBrief }, lesson);
     const filename = cardFileName(lessonNo, card.word);
     return {
@@ -236,4 +255,6 @@ module.exports = {
   normalizeTagline,
   normalizeWord,
   sanitizeVisualBrief,
+  validateLessons,
+  validateSceneOverrides,
 };

@@ -5,7 +5,11 @@ function calendarDate(date) {
  }
  return date instanceof Date ? new Date(date.getTime()) : new Date(date);
 }
-function cardFileName(lessonNo, word) { return `${String(lessonNo).padStart(2,'0')}-${String(word).toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`; }
+function cardFileName(lessonNo, word) {
+ if(!Number.isInteger(lessonNo)||lessonNo<1||lessonNo>50) throw new Error('lesson number must be an integer from 1 to 50');
+ if(typeof word!=='string'||!/^[a-z0-9]+$/i.test(word)) throw new Error('word must be a nonempty ASCII [a-z0-9] token');
+ return `${String(lessonNo).padStart(2,'0')}-${word.toLowerCase()}.png`;
+}
 function localDate(date) {
  const value=calendarDate(date);
  return `${value.getFullYear()}-${String(value.getMonth()+1).padStart(2,'0')}-${String(value.getDate()).padStart(2,'0')}`;

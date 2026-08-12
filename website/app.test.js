@@ -11,9 +11,12 @@ test('manifest covers fifty unique cards', () => {
 });
 test('cardFileName is stable',()=>{ assert.equal(core.cardFileName(1,'I'),'01-i.png'); assert.equal(core.cardFileName(50,'because'),'50-because.png'); });
 
-test('cardFileName rejects every non-primitive string word', () => {
- [new String('I'), { toString: () => 'I' }, null, undefined, 1].forEach(word => {
-   assert.throws(() => cardManifestGenerator.cardFileName(1, word), /word.*ASCII/i);
+test('app cardFileName matches generator validation rules', () => {
+ [new String('I'), { toString: () => 'I' }, null, undefined, 1, '', 'two words', 'go!'].forEach(word => {
+   assert.throws(() => core.cardFileName(1, word), /word.*[a-z0-9]/i);
+ });
+ ['1', 0, 1.5, 51, null].forEach(lessonNo => {
+   assert.throws(() => core.cardFileName(lessonNo, 'I'), /lesson.*integer.*1.*50/i);
  });
 });
 
@@ -86,14 +89,6 @@ test('card generator validates fields and cleans visual source material', () => 
  assert.throws(() => cardManifestGenerator.normalizeCardFields({
    word: 'I', tagline: '诺诺\u0000说话者。', visualBrief: '人物视角。',
  }, { word: 'I' }), /tagline/i);
- const visualBrief = cardManifestGenerator.buildVisualBrief({
-   word: 'demo', tagline: 'demo = 将球放入盒内。',
-   card: '诺诺的双场景卡：容器关系。',
-   image: '固定人物角色把球放进透明盒，LABEL。',
- });
- assert.match(visualBrief, /单一静态中心场景/);
- assert.match(visualBrief, /将球放入盒内/);
- assert.doesNotMatch(visualBrief, /[\x00-\x1F\x7F]|诺诺|固定人物角色|双场景|[A-Za-z]/);
  const translatedVisualBrief = cardManifestGenerator.buildVisualBrief({
    word: 'look', tagline: 'look = 主动把目光投向目标方向。',
    card: 'EYES → AT → TARGET', image: 'EYES → TARGET',
@@ -101,6 +96,24 @@ test('card generator validates fields and cleans visual source material', () => 
  assert.match(translatedVisualBrief, /眼睛|注意力/);
  assert.match(translatedVisualBrief, /目标/);
  assert.match(cardManifestGenerator.sanitizeVisualBrief('诺诺 LABEL 双场景'), /匿名人物|单一画面/);
+});
+
+test('buildVisualBrief rejects words without a single-scene override', () => {
+ assert.throws(() => cardManifestGenerator.buildVisualBrief({
+   word: 'else', tagline: 'else = 其他情况。',
+ }), /Missing single-scene override for word: else/);
+});
+
+test('buildManifest validates override coverage before mapping cards', () => {
+ const lesson = { lesson_no: 1, word: 'I', tagline: 'I = 说话的人。' };
+ assert.throws(() => cardManifestGenerator.buildManifest([
+   lesson,
+   { lesson_no: 2, word: 'else', tagline: 'else = 其他情况。' },
+ ], { I: cardManifestGenerator.SCENE_OVERRIDES.I }), /missing.*else/i);
+ assert.throws(() => cardManifestGenerator.buildManifest([lesson], {
+   I: cardManifestGenerator.SCENE_OVERRIDES.I,
+   else: '单一静态中心场景。',
+ }), /extra.*else/i);
 });
 
 test('manifest card filenames remain safe generated PNG paths', () => {
