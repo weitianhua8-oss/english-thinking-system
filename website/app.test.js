@@ -210,6 +210,14 @@ test('V2 graph use requires a validator with no reported errors', () => {
   assert.equal(core.isUsableV2Graph(invalid, network), false);
 });
 
+test('network readiness requires usable V2 data and a valid graph API', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  assert.equal(core.isNetworkReady(v2, network), true);
+  assert.equal(core.isNetworkReady(null, network), false);
+  assert.equal(core.isNetworkReady(v2, {}), false);
+});
+
 test('v2LessonFor rejects a malformed matching V2 node so V1 can render it', () => {
   const invalid = structuredClone(require('./v2-data.js'));
   invalid.nodes.find(node => node.id === 'to').deep.scenes = [];

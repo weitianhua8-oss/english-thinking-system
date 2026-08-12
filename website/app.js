@@ -102,6 +102,9 @@ function isUsableV2Graph(v2Data, graphApi) {
   return isPlainObject(result)&&Array.isArray(result.errors)&&result.errors.length===0;
  } catch(error) { return false; }
 }
+function isNetworkReady(v2Data, graphApi) {
+ return Boolean(v2Data)&&isPlainObject(graphApi)&&typeof graphApi.validateGraph==='function';
+}
 function isCompleteV2Node(node) {
  return isPlainObject(node)
   && ['id','word','systemId','coreMeaning','coreImage'].every(field=>typeof node[field]==='string'&&node[field].trim())
@@ -123,7 +126,7 @@ function sceneGroupsFor(scenes) {
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -221,8 +224,8 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  }
  function renderNetwork() {
   title.textContent='知识网络'; sub.textContent='从系统关系查看词义连接。';
-  const ready=V2Network&&typeof V2Network==='object';
-  app.innerHTML=`<div class="emptyState"><div><b>知识网络正在准备中</b><p class="mini">${ready?'网络数据已加载，可从三层课程进入。':'网络数据暂不可用，请继续使用知识树查看课程。'}</p></div></div>`;
+  const ready=isNetworkReady(V2,V2Network);
+  app.innerHTML=`<div class="emptyState"><div><b>知识网络正在准备中</b><p class="mini">${ready?'知识网络数据已准备好，可从三层课程进入。':'知识网络暂不可用，请继续使用知识树查看课程。'}</p></div></div>`;
  }
  function renderProgress() {
   const today=localDate(new Date()), counts=masteryCounts(state.progress), due=dueWords(state.progress,today).length, days=streak(state.progress.studyDates,today);
