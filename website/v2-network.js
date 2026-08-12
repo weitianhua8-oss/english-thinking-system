@@ -1,95 +1,149 @@
-const REQUIRED_NODE_FIELDS = ['id', 'word', 'systemId', 'coreMeaning', 'coreImage', 'quick', 'deep', 'relations'];
-const REQUIRED_QUICK_FIELDS = ['origin', 'example', 'memoryHook'];
-const REQUIRED_DEEP_FIELDS = ['logic', 'scenes', 'structures', 'chineseTrap', 'studyTip'];
-const RELATION_TYPES = new Set(['system', 'growth', 'combination', 'contrast']);
+(() => {
+  const RELATION_TYPES = new Set(['system', 'growth', 'combination', 'contrast']);
+  const QUICK_FIELDS = ['origin', 'example', 'memoryHook'];
+  const DEEP_FIELDS = ['logic', 'scenes', 'structures', 'chineseTrap', 'studyTip'];
 
-function hasContent(value) {
-  return typeof value === 'string' ? value.trim().length > 0 : Array.isArray(value) ? value.length > 0 : Boolean(value);
-}
+  function isPlainObject(value) {
+    return value !== null && typeof value === 'object' && Object.prototype.toString.call(value) === '[object Object]';
+  }
 
-function nodeById(data, id) {
-  return (data && Array.isArray(data.nodes) ? data.nodes : []).find(node => node && node.id === id) || null;
-}
+  function isNonEmptyString(value) {
+    return typeof value === 'string' && value.trim().length > 0;
+  }
 
-function nodesForSystem(data, systemId) {
-  return (data && Array.isArray(data.nodes) ? data.nodes : []).filter(node => node && node.systemId === systemId);
-}
+  function display(value) {
+    try { return String(value); } catch { return '<unprintable>'; }
+  }
 
-function explorableRelations(data, node) {
-  const source = typeof node === 'string' ? nodeById(data, node) : node;
-  if (!source || !Array.isArray(source.relations)) return [];
-  const systems = data && Array.isArray(data.systems) ? data.systems : [];
-  return source.relations.map(relation => ({
-    ...relation,
-    targetNode: nodeById(data, relation.target),
-    targetSystem: systems.find(system => system && system.id === relation.target) || null,
-  }));
-}
+  function cloneNode(node) {
+    if (!isPlainObject(node)) return null;
+    return {
+      ...node,
+      quick: isPlainObject(node.quick) ? { ...node.quick } : node.quick,
+      deep: isPlainObject(node.deep) ? { ...node.deep } : node.deep,
+      relations: Array.isArray(node.relations) ? node.relations.map(relation => isPlainObject(relation) ? { ...relation } : relation) : node.relations,
+    };
+  }
 
-function pushExplorePath(path, id) {
-  return [...(Array.isArray(path) ? path : []), id];
-}
+  function nodeById(data, id) {
+    if (!isPlainObject(data) || !Array.isArray(data.nodes) || !isNonEmptyString(id)) return null;
+    const node = data.nodes.find(item => isPlainObject(item) && item.id === id);
+    return cloneNode(node);
+  }
 
-function popExplorePath(path) {
-  return Array.isArray(path) ? path.slice(0, -1) : [];
-}
+  function nodesForSystem(data, systemId) {
+    if (!isPlainObject(data) || !Array.isArray(data.nodes) || !isNonEmptyString(systemId)) return [];
+    return data.nodes.filter(node => isPlainObject(node) && node.systemId === systemId).map(cloneNode);
+  }
 
-function validateGraph(data) {
-  const errors = [];
-  const nodes = data && Array.isArray(data.nodes) ? data.nodes : null;
-  const systems = data && Array.isArray(data.systems) ? data.systems : null;
-  if (!nodes) errors.push('nodes must be an array');
-  if (!systems) errors.push('systems must be an array');
-  if (!nodes || !systems) return { errors };
+  function isCompleteRelation(relation) {
+    return isPlainObject(relation)
+      && RELATION_TYPES.has(relation.type)
+      && isNonEmptyString(relation.target)
+      && isNonEmptyString(relation.label)
+      && isNonEmptyString(relation.explanation);
+  }
 
-  const systemIds = new Set();
-  systems.forEach((system, index) => {
-    if (!system || !hasContent(system.id)) {
-      errors.push(`system[${index}] is missing id`);
-      return;
-    }
-    if (systemIds.has(system.id)) errors.push(`duplicate system id: ${system.id}`);
-    systemIds.add(system.id);
-  });
+  function explorableRelations(data, node) {
+    const source = typeof node === 'string' ? nodeById(data, node) : cloneNode(node);
+    if (!source || !Array.isArray(source.relations) || !isPlainObject(data)) return [];
+    const systemIds = new Set(Array.isArray(data.systems) ? data.systems.filter(isPlainObject).map(system => system.id) : []);
+    return source.relations.reduce((result, relation) => {
+      if (!isCompleteRelation(relation)) return result;
+      const targetNode = relation.type === 'system' ? null : nodeById(data, relation.target);
+      const targetSystem = relation.type === 'system' && systemIds.has(relation.target)
+        ? { ...data.systems.find(system => isPlainObject(system) && system.id === relation.target) }
+        : null;
+      if (!targetNode && !targetSystem) return result;
+      result.push({ ...relation, targetNode, targetSystem });
+      return result;
+    }, []);
+  }
 
-  const nodeIds = new Set();
-  nodes.forEach((node, index) => {
-    if (!node || typeof node !== 'object') {
-      errors.push(`node[${index}] must be an object`);
-      return;
-    }
-    REQUIRED_NODE_FIELDS.forEach(field => {
-      if (!hasContent(node[field])) errors.push(`node[${index}] is missing ${field}`);
-    });
-    if (hasContent(node.id)) {
-      if (nodeIds.has(node.id)) errors.push(`duplicate node id: ${node.id}`);
-      nodeIds.add(node.id);
-    }
-    if (hasContent(node.systemId) && !systemIds.has(node.systemId)) errors.push(`node ${node.id || index} has unknown system: ${node.systemId}`);
-    REQUIRED_QUICK_FIELDS.forEach(field => {
-      if (!node.quick || !hasContent(node.quick[field])) errors.push(`node ${node.id || index} is missing quick.${field}`);
-    });
-    REQUIRED_DEEP_FIELDS.forEach(field => {
-      if (!node.deep || !hasContent(node.deep[field])) errors.push(`node ${node.id || index} is missing deep.${field}`);
-    });
-  });
+  function pushExplorePath(path, id) {
+    return Array.isArray(path) && isNonEmptyString(id) ? [...path, id] : [];
+  }
 
-  const relationTargets = new Set([...nodeIds, ...systemIds]);
-  nodes.forEach((node, index) => {
-    if (!node || !Array.isArray(node.relations)) return;
-    node.relations.forEach((relation, relationIndex) => {
-      const label = `node ${node.id || index} relation[${relationIndex}]`;
-      if (!relation || typeof relation !== 'object') {
-        errors.push(`${label} must be an object`);
+  function popExplorePath(path) {
+    return Array.isArray(path) ? path.slice(0, -1) : [];
+  }
+
+  function validateGraph(data) {
+    const errors = [];
+    if (!isPlainObject(data)) return { errors: ['data must be a plain object'] };
+    if (!Array.isArray(data.systems)) errors.push('systems must be an array');
+    if (!Array.isArray(data.nodes)) errors.push('nodes must be an array');
+    if (!Array.isArray(data.systems) || !Array.isArray(data.nodes)) return { errors };
+
+    const systemIds = new Set();
+    data.systems.forEach((system, index) => {
+      const label = `system[${index}]`;
+      if (!isPlainObject(system)) {
+        errors.push(`${label} must be a plain object`);
         return;
       }
-      if (!RELATION_TYPES.has(relation.type)) errors.push(`${label} has invalid type: ${relation.type}`);
-      if (!hasContent(relation.target) || !relationTargets.has(relation.target)) errors.push(`${label} has unknown target: ${relation.target}`);
-      if (!hasContent(relation.explanation)) errors.push(`${label} is missing explanation`);
+      ['id', 'title'].forEach(field => {
+        if (!isNonEmptyString(system[field])) errors.push(`${label} is missing valid ${field}`);
+      });
+      if (isNonEmptyString(system.id)) {
+        if (systemIds.has(system.id)) errors.push(`duplicate system id: ${system.id}`);
+        systemIds.add(system.id);
+      }
     });
-  });
 
-  return { errors };
-}
+    const nodeIds = new Set();
+    data.nodes.forEach((node, index) => {
+      const label = `node[${index}]`;
+      if (!isPlainObject(node)) {
+        errors.push(`${label} must be a plain object`);
+        return;
+      }
+      ['id', 'word', 'systemId', 'coreMeaning', 'coreImage'].forEach(field => {
+        if (!isNonEmptyString(node[field])) errors.push(`${label} is missing valid ${field}`);
+      });
+      if (isNonEmptyString(node.id)) {
+        if (nodeIds.has(node.id)) errors.push(`duplicate node id: ${node.id}`);
+        nodeIds.add(node.id);
+      }
+      if (isNonEmptyString(node.systemId) && !systemIds.has(node.systemId)) errors.push(`${label} has unknown system: ${node.systemId}`);
+      [['quick', QUICK_FIELDS], ['deep', DEEP_FIELDS]].forEach(([group, fields]) => {
+        if (!isPlainObject(node[group])) {
+          errors.push(`${label} ${group} must be a plain object`);
+          return;
+        }
+        fields.forEach(field => {
+          const value = node[group][field];
+          if (!(isNonEmptyString(value) || (Array.isArray(value) && value.length > 0))) errors.push(`${label} is missing valid ${group}.${field}`);
+        });
+      });
+      if (!Array.isArray(node.relations)) errors.push(`${label} relations must be an array`);
+    });
 
-module.exports = { validateGraph, nodeById, nodesForSystem, explorableRelations, pushExplorePath, popExplorePath };
+    data.nodes.forEach((node, nodeIndex) => {
+      if (!isPlainObject(node) || !Array.isArray(node.relations)) return;
+      node.relations.forEach((relation, relationIndex) => {
+        const label = `node[${nodeIndex}] relation[${relationIndex}]`;
+        if (!isPlainObject(relation)) {
+          errors.push(`${label} must be a plain object`);
+          return;
+        }
+        if (!RELATION_TYPES.has(relation.type)) errors.push(`${label} has invalid type: ${display(relation.type)}`);
+        ['target', 'label', 'explanation'].forEach(field => {
+          if (!isNonEmptyString(relation[field])) errors.push(`${label} is missing valid ${field}`);
+        });
+        if (!isNonEmptyString(relation.target)) return;
+        if (relation.type === 'system') {
+          if (!systemIds.has(relation.target)) errors.push(`${label} has unknown system target: ${relation.target}`);
+        } else if (RELATION_TYPES.has(relation.type) && !nodeIds.has(relation.target)) {
+          errors.push(`${label} has unknown node target: ${relation.target}`);
+        }
+      });
+    });
+
+    return { errors };
+  }
+
+  const api = { validateGraph, nodeById, nodesForSystem, explorableRelations, pushExplorePath, popExplorePath };
+  globalThis.ENGLISH850_V2_NETWORK = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})();
