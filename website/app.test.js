@@ -61,3 +61,12 @@ test('unknown feedback throws without changing progress', () => {
   assert.throws(() => core.applyFeedback(progress, 'I', 'maybe', new Date('2026-08-12T08:00:00Z')), /Unknown feedback: maybe/);
   assert.deepEqual(progress, core.emptyProgress());
 });
+
+test('Level 1 data contains exactly ten five-word days with lesson coverage', () => {
+  const data = require('./data.js');
+  assert.equal(data.vocabulary.length, 50);
+  assert.equal(Object.keys(data.lessons).length, 50);
+  assert.equal(data.plan.length, 10);
+  assert.ok(data.plan.every(day => day.words.length === 5));
+  assert.ok(data.plan.flatMap(day => day.words).every(word => data.lessons[word]));
+});
