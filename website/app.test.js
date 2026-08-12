@@ -193,6 +193,12 @@ test('lessonFor returns null for an unknown lesson', () => {
   assert.equal(core.lessonFor({ I: { word: 'I' } }, 'missing'), null);
 });
 
+test('v2LessonFor returns a V2 lesson only when the word matches a V2 node', () => {
+  const v2 = require('./v2-data.js');
+  assert.equal(core.v2LessonFor(v2, 'to').word, 'TO');
+  assert.equal(core.v2LessonFor(v2, 'go'), null);
+});
+
 test('safePlanDay returns null when the plan has no selectable day', () => {
   assert.equal(core.safePlanDay([], 1), null);
 });
