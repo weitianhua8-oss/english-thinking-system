@@ -9,16 +9,31 @@ function cardFileName(lessonNo, word) {
   return `${String(lessonNo).padStart(2, '0')}-${String(word).toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`;
 }
 
-function sceneText(value) {
-  return String(value || '').replace(/诺诺|固定人物角色/g, 'anonymous learner');
+function sanitizeText(value) {
+  return String(value || '').replace(/诺诺|固定人物角色/g, '');
+}
+
+function visualBrief(lesson) {
+  if (lesson.word === 'I') {
+    return '人物视角卡：匿名简约人物剪影居中，焦点标记。';
+  }
+
+  const concept = sanitizeText(lesson.tagline)
+    .replace(new RegExp(`^${lesson.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*=\\s*`, 'i'), '')
+    .replace(/[A-Za-z][A-Za-z0-9_/-]*/g, '')
+    .replace(/[。！？]$/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return `单一教学主画面：用简约 3D 物体、方向线和焦点标记，表现${concept || '当前词的核心含义'}。`;
 }
 
 function cardPrompt(lesson) {
   return [
     'vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change.',
-    `English word "${lesson.word}" at top; exact Chinese tagline "${lesson.tagline}" at bottom.`,
-    `One clear scene based on this card direction: ${sceneText(lesson.card)} Scene detail: ${sceneText(lesson.image)}.`,
-    'Use an anonymous simplified silhouette only if a person is necessary; never use named or recurring character, face, watermark, logo, extra words, or busy background.',
+    'Render a single central teaching scene that illustrates the core concept with one clear focal relationship.',
+    `Place the English word "${lesson.word}" at the top and the exact Chinese tagline "${lesson.tagline}" at the bottom.`,
+    'Use only visible text exactly the English word and exact Chinese tagline; no English labels or any other text.',
+    'Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background.',
   ].join(' ');
 }
 
@@ -30,7 +45,7 @@ const manifest = lessons.map(lesson => {
     filename,
     tagline: lesson.tagline,
     imagePath: `assets/cards/${filename}`,
-    visualBrief: lesson.card,
+    visualBrief: visualBrief(lesson),
     prompt: cardPrompt(lesson),
   };
 });

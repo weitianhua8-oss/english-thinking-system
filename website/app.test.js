@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { execFileSync } = require('node:child_process');
+const path = require('node:path');
 const core = require('./app.js');
 const manifest = require('./assets/cards/manifest.json');
 
@@ -8,6 +9,21 @@ test('manifest covers fifty unique cards', () => {
  assert.equal(manifest.length,50); assert.equal(new Set(manifest.map(c=>c.filename)).size,50); assert.equal(manifest[0].filename,'01-i.png'); assert.equal(manifest.at(-1).filename,'50-because.png'); assert.ok(manifest.every(c=>!(/诺诺|固定人物角色/.test(c.prompt))));
 });
 test('cardFileName is stable',()=>{ assert.equal(core.cardFileName(1,'I'),'01-i.png'); assert.equal(core.cardFileName(50,'because'),'50-because.png'); });
+
+test('manifest sanitizes identities and multi-scene instructions', () => {
+ const forbiddenMultiScene = ['vs', '对比卡', '双场景', '多目标', '配套', '五目标', '三帧'];
+ assert.ok(manifest.every(card => !(/诺诺|固定人物角色/.test(`${card.visualBrief}\n${card.prompt}`))));
+ assert.ok(manifest.every(card => forbiddenMultiScene.every(token => !card.prompt.toLowerCase().includes(token.toLowerCase()))));
+ assert.ok(manifest.every(card => card.prompt.includes('single central teaching scene')));
+ assert.ok(manifest.every(card => card.prompt.includes('only visible text exactly the English word and exact Chinese tagline; no English labels or any other text')));
+});
+
+test('card manifest generator preserves fifty records', () => {
+ execFileSync(process.execPath, ['scripts/build_level1_card_manifest.js'], { cwd: path.resolve(__dirname, '..') });
+ const manifestPath = require.resolve('./assets/cards/manifest.json');
+ delete require.cache[manifestPath];
+ assert.equal(require(manifestPath).length, 50);
+});
 
 test('marking a new word understood sets mastery 3 and schedules seven days later', () => {
   const progress = core.emptyProgress();
