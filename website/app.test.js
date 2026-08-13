@@ -73,6 +73,31 @@ test('Level 1 data contains exactly ten five-word days with lesson coverage', ()
   assert.ok(data.plan.flatMap(day => day.words).every(word => data.lessons[word]));
 });
 
+test('complete vocabulary and learning plan keep their required coverage, including case-sensitive knowledge points', () => {
+  const vocabulary = JSON.parse(fs.readFileSync(require.resolve('../data/vocabulary_850.json'), 'utf8'));
+  const planRows = fs.readFileSync(require.resolve('../data/learning_plan_170days.csv'), 'utf8').trim().split(/\r?\n/).slice(1);
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+
+  assert.equal(vocabulary.length, 850);
+  assert.equal(new Set(vocabulary.map(entry => entry.word)).size, 850);
+  // "may" and "May" deliberately use case to distinguish a modal verb from a month name.
+  const mayVariants = vocabulary.filter(entry => entry.word.toLowerCase() === 'may');
+  assert.equal(mayVariants.length, 2);
+  assert.deepEqual(mayVariants.map(({ word, level, grade }) => ({ word, level, grade })), [
+    { word: 'may', level: 'Level 2｜150生存词', grade: 'A' },
+    { word: 'May', level: 'Level 4｜500基础表达词', grade: 'B' },
+  ]);
+  assert.deepEqual([...new Set(vocabulary.map(entry => entry.grade))].sort(), ['A', 'B', 'S']);
+  const levels = new Set(vocabulary.map(entry => entry.level));
+  assert.equal(levels.size, 5);
+  [1, 2, 3, 4, 5].forEach(number => assert.ok([...levels].some(level => level.startsWith(`Level ${number}`))));
+  assert.equal(planRows.length, 170);
+  assert.equal(v2.nodes.length, 13);
+  assert.deepEqual(network.validateGraph(v2).errors, []);
+  v2.nodes.flatMap(node => node.relations).forEach(relation => assert.ok(relation.explanation.trim()));
+});
+
 test('filterWords combines text, category, and mastery filters', () => {
  const words=[{word:'I',category:'人与指向'},{word:'go',category:'核心动作引擎'}];
  const progress={words:{I:{mastery:3},go:{mastery:1}},studyDates:[]};
