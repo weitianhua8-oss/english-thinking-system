@@ -181,11 +181,7 @@ function renderLessonMiniNetwork(v2Data, graphApi, node) {
  const current=networkNodeFor(v2Data,node.id);
  if(!current) return empty;
  const relationTypes={system:'所属系统',growth:'延展关系',combination:'组合关系',contrast:'对比关系'};
- const currentRelations=graphApi.explorableRelations(v2Data,current);
- const systemRelations=Array.isArray(v2Data.nodes)
-  ? v2Data.nodes.filter(item=>item?.systemId===current.systemId&&item?.id!==current.id).flatMap(item=>graphApi.explorableRelations(v2Data,item)).filter(relation=>relation?.target===current.id||(typeof relation?.label==='string'&&relation.label.toUpperCase().includes(current.word.toUpperCase())))
-  : [];
- const relations=[...currentRelations,...systemRelations].filter(relation=>relationTypes[relation?.type]);
+ const relations=graphApi.explorableRelations(v2Data,current).filter(relation=>relationTypes[relation?.type]);
  const relationMarkup=Object.entries(relationTypes).map(([type,title])=>{
   const group=relations.filter(relation=>relation.type===type);
   if(!group.length) return '';

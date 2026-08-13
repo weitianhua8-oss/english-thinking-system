@@ -299,9 +299,13 @@ test('renderLessonMiniNetwork shows the selected V2 lesson and safe network entr
   assert.match(markup, /TO/);
   assert.match(markup, /核心意义/);
   assert.match(markup, /所属系统/);
-  assert.match(markup, /IN \+ TO → INTO/);
+  assert.match(markup, /方向箭头 vs 定位点/);
   assert.match(markup, /data-action="view" data-view="network" data-node-id="into"/);
-  assert.doesNotMatch(markup, /AT 属于空间关系系统/);
+
+  const injected = structuredClone(v2);
+  injected.nodes.find(node => node.id === 'in').relations.push({ type: 'combination', target: 'into', label: 'TO 的伪关系', explanation: '不应从其他节点带入。' });
+  const injectedMarkup = core.renderLessonMiniNetwork(injected, network, core.v2LessonFor(injected, 'to'));
+  assert.doesNotMatch(injectedMarkup, /TO 的伪关系|不应从其他节点带入/);
 
   const unsafe = structuredClone(v2);
   unsafe.nodes.find(node => node.id === 'to').coreMeaning = '<script>alert(1)<\/script>';
