@@ -295,6 +295,17 @@ test('network growth relation badge uses a teal visual language', () => {
   assert.match(styles, /\.networkMapWorkspace \.relation-growth\{border-color:#99f6e4;background:#f0fdfa;color:#0f766e\}/);
 });
 
+test('mind map styles present direct relation branches without mobile overflow', () => {
+  const styles = fs.readFileSync(require.resolve('./styles.css'), 'utf8');
+  assert.match(styles, /\.mindMapCanvas\{[^}]*min-width:0/);
+  assert.match(styles, /\.mindBranch-system\{[^}]*color:#526174/);
+  assert.match(styles, /\.mindBranch-growth\{[^}]*color:#0f766e/);
+  assert.match(styles, /\.mindBranch-combination\{[^}]*color:#6d28d9/);
+  assert.match(styles, /\.mindBranch-contrast\{[^}]*color:#a15c00/);
+  assert.match(styles, /@media\(max-width:900px\)\{[^]*?\.mindMapCanvas\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.match(styles, /@media\(max-width:900px\)\{[^]*?\.mindBranch::before\{display:none/);
+});
+
 test('networkStepForAction keeps the mobile network in one panel at a time', () => {
   assert.equal(typeof core.networkStepForAction, 'function');
   assert.equal(core.networkStepForAction('systems', 'select-network-system'), 'nodes');
