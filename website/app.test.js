@@ -98,6 +98,38 @@ test('complete vocabulary and learning plan keep their required coverage, includ
   v2.nodes.flatMap(node => node.relations).forEach(relation => assert.ok(relation.explanation.trim()));
 });
 
+test('V2 learning plan gives every vocabulary knowledge point one case-sensitive slot', () => {
+  const csvLines = fs.readFileSync(require.resolve('../data/learning_plan_170days.csv'), 'utf8').trim().split(/\r?\n/);
+  const header = csvLines[0].replace(/^\uFEFF/, '').split(',');
+  const planRows = csvLines.slice(1);
+  const vocabulary = JSON.parse(fs.readFileSync(require.resolve('../data/vocabulary_850.json'), 'utf8'));
+  const vocabularyWords = vocabulary.map(entry => entry.word);
+  const vocabularyWordSet = new Set(vocabularyWords);
+  const wordColumns = ['word1', 'word2', 'word3', 'word4', 'word5'].map(column => {
+    const index = header.indexOf(column);
+    assert.notEqual(index, -1, `missing ${column} column`);
+    return index;
+  });
+  const planWords = planRows.flatMap((row, dayIndex) => {
+    const cells = row.split(',');
+    return wordColumns.map((columnIndex, wordIndex) => {
+      const word = cells[columnIndex];
+      assert.ok(typeof word === 'string' && word.trim(), `Day ${dayIndex + 1} word${wordIndex + 1} must not be empty`);
+      return word;
+    });
+  });
+  const planCounts = new Map();
+  planWords.forEach(word => planCounts.set(word, (planCounts.get(word) || 0) + 1));
+
+  assert.equal(planRows.length, 170);
+  assert.equal(wordColumns.length, 5);
+  assert.equal(planWords.length, 850);
+  planWords.forEach(word => assert.ok(vocabularyWordSet.has(word), `plan word must exactly match vocabulary word: ${word}`));
+  vocabularyWords.forEach(word => assert.equal(planCounts.get(word), 1, `vocabulary word must appear exactly once in the plan: ${word}`));
+  assert.equal(planCounts.size, vocabularyWordSet.size);
+  assert.deepEqual([...planCounts.keys()].sort(), [...vocabularyWordSet].sort());
+});
+
 test('filterWords combines text, category, and mastery filters', () => {
  const words=[{word:'I',category:'人与指向'},{word:'go',category:'核心动作引擎'}];
  const progress={words:{I:{mastery:3},go:{mastery:1}},studyDates:[]};
