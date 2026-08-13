@@ -249,6 +249,13 @@ test('selectNetworkSystem preserves the current node in the path for a system re
   assert.deepEqual(core.selectNetworkBack(selected, v2, network), start);
 });
 
+test('selectNetworkDirect opens a course node without inheriting a prior explore path', () => {
+  const v2 = require('./v2-data.js');
+  assert.deepEqual(core.selectNetworkDirect({ networkSystem: 'space-relations', networkNode: 'to', explorePath: ['at'] }, v2, 'at'), {
+    networkSystem: 'space-relations', networkNode: 'at', explorePath: [],
+  });
+});
+
 test('renderNetworkContent shows only relations verified as explorable', () => {
   const v2 = structuredClone(require('./v2-data.js'));
   const network = require('./v2-network.js');
@@ -258,6 +265,25 @@ test('renderNetworkContent shows only relations verified as explorable', () => {
   const markup = core.renderNetworkContent(v2, { ...network, validateGraph: () => ({ errors: [] }) }, { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] });
   assert.match(markup, /方向箭头 vs 定位点/);
   assert.doesNotMatch(markup, /不应出现的关系|目标不存在/);
+});
+
+test('renderNetworkContent includes the current node core origin with safe HTML', () => {
+  const v2 = structuredClone(require('./v2-data.js'));
+  const network = require('./v2-network.js');
+  v2.nodes.find(node => node.id === 'to').quick.origin = '<img src=x onerror=alert(1)>';
+  const markup = core.renderNetworkContent(v2, { ...network, validateGraph: () => ({ errors: [] }) }, { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] });
+  assert.match(markup, /核心本源/);
+  assert.match(markup, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.doesNotMatch(markup, /<img src=x/);
+});
+
+test('renderNetworkContent hides fully invalid relations behind a neutral message', () => {
+  const v2 = structuredClone(require('./v2-data.js'));
+  const network = require('./v2-network.js');
+  v2.nodes.find(node => node.id === 'the').relations = [{ type: 'contrast', target: 'missing', label: '不应显示', explanation: '不应显示。' }];
+  const markup = core.renderNetworkContent(v2, { ...network, validateGraph: () => ({ errors: [] }) }, { networkSystem: 'information-structure', networkNode: 'the', explorePath: [] });
+  assert.match(markup, /该关联内容暂未开放/);
+  assert.doesNotMatch(markup, /不应显示/);
 });
 
 test('renderNetworkContent safely falls back when V2 data is invalid', () => {

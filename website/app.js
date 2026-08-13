@@ -122,6 +122,12 @@ function selectNetworkNode(state, v2Data, targetId) {
   : unchanged.explorePath;
  return {networkSystem:target.systemId,networkNode:target.id,explorePath:path};
 }
+function selectNetworkDirect(state, v2Data, targetId) {
+ const current=isPlainObject(state)?state:{};
+ const target=networkNodeFor(v2Data,targetId);
+ if(!target) return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[]};
+ return {networkSystem:target.systemId,networkNode:target.id,explorePath:[]};
+}
 function selectNetworkBack(state, v2Data, graphApi) {
  const current=isPlainObject(state)?state:{};
  const path=Array.isArray(current.explorePath)?current.explorePath:[];
@@ -173,7 +179,8 @@ function renderNetworkContent(v2Data, graphApi, state) {
   }).join('')}</section>`;
  }).join('');
  const back=current.path.length?'<p><button type="button" class="backBtn" data-action="network-back">← 返回上一步</button></p>':'';
- return `<div class="networkLayout"><section class="panel networkSystems"><h3>知识系统</h3><div class="tags">${systems}</div></section><section class="panel networkNodes"><h3>系统词条</h3><div class="grid contentGrid">${nodes||'<p class="mini">该系统暂未提供词条。</p>'}</div></section><section class="panel networkExplain">${back}<h2>${html(current.node.word)}</h2><p><b>${html(current.node.coreMeaning)}</b></p>${relationMarkup||'<p class="mini">暂未提供可探索关系。</p>'}</section></div>`;
+ const origin=typeof current.node.quick?.origin==='string'?current.node.quick.origin:'暂未提供核心本源。';
+ return `<div class="networkLayout"><section class="panel networkSystems"><h3>知识系统</h3><div class="tags">${systems}</div></section><section class="panel networkNodes"><h3>系统词条</h3><div class="grid contentGrid">${nodes||'<p class="mini">该系统暂未提供词条。</p>'}</div></section><section class="panel networkExplain">${back}<h2>${html(current.node.word)}</h2><p><b>${html(current.node.coreMeaning)}</b></p><section class="block"><h4>核心本源</h4><p>${html(origin)}</p></section>${relationMarkup||'<p class="mini">该关联内容暂未开放。</p>'}</section></div>`;
 }
 function isCompleteV2Node(node) {
  return isPlainObject(node)
@@ -196,7 +203,7 @@ function sceneGroupsFor(scenes) {
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectNetworkNode,selectNetworkBack,networkStateFor,selectNetworkSystem,renderNetworkContent,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,renderNetworkContent,v2LessonFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -312,7 +319,7 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;
   const {action,word,view,day,feedback,nodeId,systemId,preservePath}=target.dataset;
   if(action==='open-word') openWord(word);
-  else if(action==='view') { if(view==='network'&&nodeId) Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.view=view; render(); }
+  else if(action==='view') { if(view==='network'&&nodeId) Object.assign(state,selectNetworkDirect(state,V2,nodeId)); state.view=view; render(); }
   else if(action==='select-network-node') { Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.view='network'; render(); }
   else if(action==='select-network-system') { Object.assign(state,selectNetworkSystem(state,V2,systemId,preservePath==='true')); state.view='network'; render(); }
   else if(action==='network-back') { Object.assign(state,selectNetworkBack(state,V2,V2Network)); state.view='network'; render(); }
