@@ -369,6 +369,22 @@ test('renderV2LessonWorkspace keeps semantic content in one selected layer', () 
   assert.match(markup, /核心画面/);
 });
 
+test('V2 workspace tabs stay three equal touch targets on narrow screens', () => {
+  const styles = fs.readFileSync(require.resolve('./styles.css'), 'utf8');
+  assert.match(styles, /@media\(max-width:900px\)[\s\S]*?\.workspaceTabs\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\);gap:8px;padding:12px 24px;overflow:visible\}/);
+  assert.match(styles, /\.workspaceTab\{width:100%;min-width:0;min-height:44px;/);
+});
+
+test('V2 keeps one active learning layer and does not enroll V1 GO', () => {
+  const data = require('./v2-data.js');
+  const graph = require('./v2-network.js');
+  const markup = core.renderV2LessonWorkspace(data, graph, core.v2LessonFor(data, 'to'), 'deep');
+  assert.equal(core.v2LessonFor(data, 'go'), null);
+  assert.match(markup, /workspaceLayer deepLayer active/);
+  assert.equal((markup.match(/workspaceLayer[^\"]* active/g) || []).length, 1);
+  assert.doesNotMatch(markup, /workspaceLayer quickLayer active|workspaceLayer networkLayer active/);
+});
+
 test('reviewContentFor preserves V1 cards and renders revealed V2 review details safely', () => {
   const v2 = structuredClone(require('./v2-data.js'));
   const v2Word = 'too-to';
