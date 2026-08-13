@@ -274,6 +274,22 @@ test('network content opens the selected V2 sample course and exposes its mobile
   assert.match(markup, /data-action="network-mobile-nodes"/);
 });
 
+test('renderNetworkContent exposes only the relation type badges present on each node', () => {
+  const data = require('./v2-data.js');
+  const graph = require('./v2-network.js');
+  const toMarkup = core.renderNetworkContent(data, graph, {
+    networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkStep: 'detail',
+  });
+  const beMarkup = core.renderNetworkContent(data, graph, {
+    networkSystem: 'state-action', networkNode: 'be', explorePath: [], networkStep: 'detail',
+  });
+  assert.match(toMarkup, /networkMapWorkspace/);
+  assert.match(toMarkup, /relationBadge relation-combination/);
+  assert.match(toMarkup, /relationBadge relation-contrast/);
+  assert.doesNotMatch(toMarkup, /relationBadge relation-growth/);
+  assert.match(beMarkup, /relationBadge relation-growth/);
+});
+
 test('networkStepForAction keeps the mobile network in one panel at a time', () => {
   assert.equal(typeof core.networkStepForAction, 'function');
   assert.equal(core.networkStepForAction('systems', 'select-network-system'), 'nodes');
