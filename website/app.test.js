@@ -430,6 +430,47 @@ test('selectedNetworkRelation returns only the current node’s real explorable 
   assert.equal(core.selectedNetworkRelation(v2, graph, node, null), null);
 });
 
+test('selectedNetworkRelation rejects invalid graph inputs without throwing', () => {
+  const v2 = require('./v2-data.js');
+  const graph = require('./v2-network.js');
+  const node = graph.nodeById(v2, 'to');
+  const relation = node.relations.find(item => item.target === 'into');
+  const targetNode = graph.nodeById(v2, 'into');
+  const invalidGraphs = [
+    null,
+    {},
+    { validateGraph: () => ({ errors: ['invalid'] }), explorableRelations: () => [{ ...relation, targetNode, targetSystem: null }] },
+    { validateGraph: () => ({ errors: [] }), explorableRelations: () => { throw new Error('broken relation API'); } },
+    { validateGraph: () => ({ errors: [] }), explorableRelations: () => null },
+  ];
+  const invalidCalls = [
+    () => core.selectedNetworkRelation(null, graph, node, 'into'),
+    ...invalidGraphs.map(api => () => core.selectedNetworkRelation(v2, api, node, 'into')),
+    () => core.selectedNetworkRelation(v2, graph, null, 'into'),
+    () => core.selectedNetworkRelation(v2, graph, { id: 'missing' }, 'into'),
+    () => core.selectedNetworkRelation(v2, graph, node, ' '),
+  ];
+  invalidCalls.forEach(call => {
+    assert.doesNotThrow(call);
+    assert.equal(call(), null);
+  });
+});
+
+test('selectedNetworkRelation rejects fabricated and incomplete graph relations', () => {
+  const v2 = require('./v2-data.js');
+  const node = v2.nodes.find(item => item.id === 'to');
+  const canonical = node.relations.find(relation => relation.target === 'into');
+  const graph = {
+    validateGraph: () => ({ errors: [] }),
+    explorableRelations: () => [
+      { ...canonical, target: 'be', targetNode: { id: 'be' } },
+      { ...canonical, targetNode: null },
+    ],
+  };
+  assert.equal(core.selectedNetworkRelation(v2, graph, node, 'be'), null);
+  assert.equal(core.selectedNetworkRelation(v2, graph, node, 'into'), null);
+});
+
 test('selectNetworkNode follows an explorable V2 node and clears selected relation', () => {
   const v2 = require('./v2-data.js');
   const start = { networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: 'into' };

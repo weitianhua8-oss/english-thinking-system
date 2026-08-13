@@ -112,12 +112,25 @@ function networkNodeFor(v2Data, nodeId) {
  return node||null;
 }
 function selectedNetworkRelation(v2Data, graphApi, node, targetId) {
- if(!isPlainObject(graphApi)||typeof graphApi.explorableRelations!=='function'||typeof targetId!=='string'||!targetId.trim()||!isPlainObject(node)) return null;
+ if(!isUsableV2Graph(v2Data,graphApi)||typeof graphApi.explorableRelations!=='function'||typeof targetId!=='string'||!targetId.trim()||!isPlainObject(node)) return null;
  const current=networkNodeFor(v2Data,node.id);
  if(!current) return null;
  try {
   const relations=graphApi.explorableRelations(v2Data,current);
-  return Array.isArray(relations) ? relations.find(relation=>isPlainObject(relation)&&relation.target===targetId)||null : null;
+  if(!Array.isArray(relations)) return null;
+  const types=['system','growth','combination','contrast'];
+  const canonical=current.relations.find(relation=>isPlainObject(relation)&&types.includes(relation.type)&&relation.target===targetId&&typeof relation.label==='string'&&relation.label.trim()&&typeof relation.explanation==='string'&&relation.explanation.trim());
+  if(!canonical) return null;
+  const targetNode=canonical.type==='system'?null:networkNodeFor(v2Data,canonical.target);
+  const targetSystem=canonical.type==='system'&&Array.isArray(v2Data.systems)
+   ? v2Data.systems.find(system=>isPlainObject(system)&&system.id===canonical.target&&typeof system.title==='string'&&system.title.trim())||null
+   : null;
+  const relation=relations.find(candidate=>isPlainObject(candidate)&&candidate.type===canonical.type&&candidate.target===canonical.target&&candidate.label===canonical.label&&candidate.explanation===canonical.explanation&&(
+   targetNode ? isPlainObject(candidate.targetNode)&&candidate.targetNode.id===targetNode.id&&candidate.targetNode.systemId===targetNode.systemId&&candidate.targetNode.word===targetNode.word
+    : targetSystem ? isPlainObject(candidate.targetSystem)&&candidate.targetSystem.id===targetSystem.id&&candidate.targetSystem.title===targetSystem.title
+    : false
+  ));
+  return relation ? {...canonical,targetNode,targetSystem} : null;
  } catch(error) { return null; }
 }
 function selectNetworkNode(state, v2Data, targetId) {
