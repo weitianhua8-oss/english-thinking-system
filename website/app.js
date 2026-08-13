@@ -111,21 +111,27 @@ function networkNodeFor(v2Data, nodeId) {
  const node=v2Data.nodes.find(item=>isCompleteV2Node(item)&&item.id===nodeId&&typeof item.systemId==='string'&&systemIds.has(item.systemId));
  return node||null;
 }
-function selectedNetworkRelation(v2Data, graphApi, node, targetId) {
- if(!isUsableV2Graph(v2Data,graphApi)||typeof graphApi.explorableRelations!=='function'||typeof targetId!=='string'||!targetId.trim()||!isPlainObject(node)) return null;
+function relationSelectionKey(relation) {
+ if(!isPlainObject(relation)) return null;
+ const fields=['type','target','label','explanation'];
+ if(!fields.every(field=>typeof relation[field]==='string'&&relation[field].trim())) return null;
+ return JSON.stringify(fields.map(field=>relation[field]));
+}
+function selectedNetworkRelation(v2Data, graphApi, node, selectionKey) {
+ if(!isUsableV2Graph(v2Data,graphApi)||typeof graphApi.explorableRelations!=='function'||typeof selectionKey!=='string'||!selectionKey.trim()||!isPlainObject(node)) return null;
  const current=networkNodeFor(v2Data,node.id);
  if(!current) return null;
  try {
   const relations=graphApi.explorableRelations(v2Data,current);
   if(!Array.isArray(relations)) return null;
   const types=['system','growth','combination','contrast'];
-  const canonical=current.relations.find(relation=>isPlainObject(relation)&&types.includes(relation.type)&&relation.target===targetId&&typeof relation.label==='string'&&relation.label.trim()&&typeof relation.explanation==='string'&&relation.explanation.trim());
+  const canonical=current.relations.find(relation=>isPlainObject(relation)&&types.includes(relation.type)&&relationSelectionKey(relation)===selectionKey);
   if(!canonical) return null;
   const targetNode=canonical.type==='system'?null:networkNodeFor(v2Data,canonical.target);
   const targetSystem=canonical.type==='system'&&Array.isArray(v2Data.systems)
    ? v2Data.systems.find(system=>isPlainObject(system)&&system.id===canonical.target&&typeof system.title==='string'&&system.title.trim())||null
    : null;
-  const relation=relations.find(candidate=>isPlainObject(candidate)&&candidate.type===canonical.type&&candidate.target===canonical.target&&candidate.label===canonical.label&&candidate.explanation===canonical.explanation&&(
+  const relation=relations.find(candidate=>isPlainObject(candidate)&&relationSelectionKey(candidate)===selectionKey&&(
    targetNode ? isPlainObject(candidate.targetNode)&&candidate.targetNode.id===targetNode.id&&candidate.targetNode.systemId===targetNode.systemId&&candidate.targetNode.word===targetNode.word
     : targetSystem ? isPlainObject(candidate.targetSystem)&&candidate.targetSystem.id===targetSystem.id&&candidate.targetSystem.title===targetSystem.title
     : false
@@ -234,15 +240,25 @@ function renderNetworkContent(v2Data, graphApi, state) {
  if(!current.node||!current.systemId) return '<div class="emptyState"><div><b>知识网络暂不可用</b><p class="mini">暂时无法读取可探索的词条。</p></div></div>';
  const relationTypes={system:'所属系统',growth:'直接生长',combination:'组合关系',contrast:'易混对比'};
  const systems=current.systems.map(system=>`<button type="button" class="tag networkSystem" data-action="select-network-system" data-system-id="${html(system.id)}"${system.id===current.systemId?' aria-pressed="true"':''}>${html(system.title)}</button>`).join('');
- const nodes=graphApi.nodesForSystem(v2Data,current.systemId).filter(node=>networkNodeFor(v2Data,node?.id)).map(node=>`<button type="button" class="wordCard networkNode" data-action="select-network-node" data-node-id="${html(node.id)}"${node.id===current.node.id?' aria-pressed="true"':''}><div class="word">${html(node.word)}</div><div class="mini">${html(node.coreMeaning)}</div></button>`).join('');
+ let systemNodes=[];
+ try {
+  const sourceNodes=graphApi.nodesForSystem(v2Data,current.systemId);
+  if(Array.isArray(sourceNodes)) systemNodes=sourceNodes.reduce((result,node)=>{
+   const canonical=networkNodeFor(v2Data,node?.id);
+   if(canonical&&canonical.systemId===current.systemId&&!result.some(item=>item.id===canonical.id)) result.push(canonical);
+   return result;
+  },[]);
+ } catch(error) { systemNodes=[]; }
+ const nodes=systemNodes.map(node=>`<button type="button" class="wordCard networkNode" data-action="select-network-node" data-node-id="${html(node.id)}"${node.id===current.node.id?' aria-pressed="true"':''}><div class="word">${html(node.word)}</div><div class="mini">${html(node.coreMeaning)}</div></button>`).join('');
  let explorable=[];
  try {
   const sourceRelations=graphApi.explorableRelations(v2Data,current.node);
   if(Array.isArray(sourceRelations)) {
    explorable=sourceRelations.reduce((result,relation)=>{
     if(!relationTypes[relation?.type]||typeof relation.target!=='string') return result;
-    const verified=selectedNetworkRelation(v2Data,graphApi,current.node,relation.target);
-    if(!verified||result.some(item=>item.type===verified.type&&item.target===verified.target&&item.label===verified.label)) return result;
+    const selectionKey=relationSelectionKey(relation);
+    const verified=selectedNetworkRelation(v2Data,graphApi,current.node,selectionKey);
+    if(!verified||result.some(item=>relationSelectionKey(item)===selectionKey)) return result;
     result.push(verified); return result;
    },[]);
   }
@@ -253,7 +269,8 @@ function renderNetworkContent(v2Data, graphApi, state) {
   const target=relation.targetNode||relation.targetSystem;
   const targetWord=relation.targetNode?.word||relation.targetSystem?.title||relation.target;
   const targetMeaning=relation.targetNode?.coreMeaning||relation.targetSystem?.description||'';
-  return `<button type="button" class="mindBranch mindBranch-${html(relation.type)}" data-action="select-network-relation" data-relation-target="${html(relation.target)}"${relation.target===selected?.target?' aria-pressed="true"':''}><span class="relationBadge relation-${html(relation.type)}">${html(relationTypes[relation.type])}</span><strong>${html(relation.label)}</strong><span>${html(targetWord)}</span>${targetMeaning?`<small>${html(targetMeaning)}</small>`:''}</button>`;
+  const selectionKey=relationSelectionKey(relation);
+  return `<button type="button" class="mindBranch mindBranch-${html(relation.type)}" data-action="select-network-relation" data-relation-key="${html(selectionKey)}"${selectionKey===state?.networkRelation?' aria-pressed="true"':''}><span class="relationBadge relation-${html(relation.type)}">${html(relationTypes[relation.type])}</span><strong>${html(relation.label)}</strong><span>${html(targetWord)}</span>${targetMeaning?`<small>${html(targetMeaning)}</small>`:''}</button>`;
  }).join('');
  const mindMap=`<div class="mindMapCanvas">${root}<div class="mindBranches">${branches||'<p class="mini">该关联内容暂未开放。</p>'}</div></div>`;
  const relationPanel=selected?(()=>{
@@ -305,7 +322,7 @@ function sceneGroupsFor(scenes) {
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -409,12 +426,12 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{state.view=button.dataset.view; if(state.view==='network') state.networkStep=networkStepForAction(state.networkStep,'nav-network'); render();}));
  app.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;
-  const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation,relationTarget}=target.dataset;
+  const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation,relationKey}=target.dataset;
   if(action==='return-top') { if(typeof window.scrollTo==='function') window.scrollTo({top:0,behavior:'smooth'}); return; }
   if(action==='open-word') openWord(word);
   else if(['lesson-layer-quick','lesson-layer-deep','lesson-layer-network'].includes(action)) { state.lessonLayer=lessonLayerForAction(state.lessonLayer,action); state.view='lesson'; render(); }
   else if(action==='view') { if(view==='network') { if(nodeId) Object.assign(state,selectNetworkDirect(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,nodeId?'lesson-network':'nav-network'); } state.view=view; render(); }
-  else if(action==='select-network-relation') { state.networkRelation=selectedNetworkRelation(V2,V2Network,networkNodeFor(V2,state.networkNode),relationTarget)?.target||null; state.networkStep=networkStepForAction(state.networkStep,'select-network-relation'); state.view='network'; render(); }
+  else if(action==='select-network-relation') { const relation=selectedNetworkRelation(V2,V2Network,networkNodeFor(V2,state.networkNode),relationKey); state.networkRelation=relationSelectionKey(relation); state.networkStep=networkStepForAction(state.networkStep,'select-network-relation'); state.view='network'; render(); }
   else if(action==='select-network-node') { Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,networkRelation==='true'?'select-network-relation':'select-network-node'); state.view='network'; render(); }
   else if(action==='select-network-system') { Object.assign(state,selectNetworkSystem(state,V2,systemId,preservePath==='true')); state.networkStep=networkStepForAction(state.networkStep,networkRelation==='true'?'select-network-relation':'select-network-system'); state.view='network'; render(); }
   else if(action==='network-back') { Object.assign(state,selectNetworkBack(state,V2,V2Network)); state.networkStep=networkStepForAction(state.networkStep,'network-back'); state.view='network'; render(); }

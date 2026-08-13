@@ -421,11 +421,19 @@ test('network readiness requires usable V2 data and a valid graph API', () => {
   assert.equal(core.isNetworkReady(v2, {}), false);
 });
 
+test('relationSelectionKey identifies one complete relation by all learner-visible fields', () => {
+  const relation = { type: 'combination', target: 'into', label: 'TO + IN → INTO', explanation: '方向进入边界内部。' };
+  assert.equal(core.relationSelectionKey(relation), JSON.stringify(['combination', 'into', 'TO + IN → INTO', '方向进入边界内部。']));
+  assert.equal(core.relationSelectionKey({ ...relation, explanation: '另一条解释。' }), JSON.stringify(['combination', 'into', 'TO + IN → INTO', '另一条解释。']));
+  assert.equal(core.relationSelectionKey({ type: 'combination', target: 'into', label: '', explanation: '缺少标签。' }), null);
+});
+
 test('selectedNetworkRelation returns only the current node’s real explorable relation', () => {
   const v2 = require('./v2-data.js');
   const graph = require('./v2-network.js');
   const node = graph.nodeById(v2, 'to');
-  assert.equal(core.selectedNetworkRelation(v2, graph, node, 'into')?.target, 'into');
+  const relation = node.relations.find(item => item.target === 'into');
+  assert.equal(core.selectedNetworkRelation(v2, graph, node, core.relationSelectionKey(relation))?.target, 'into');
   assert.equal(core.selectedNetworkRelation(v2, graph, node, 'be'), null);
   assert.equal(core.selectedNetworkRelation(v2, graph, node, null), null);
 });
@@ -436,6 +444,7 @@ test('selectedNetworkRelation rejects invalid graph inputs without throwing', ()
   const node = graph.nodeById(v2, 'to');
   const relation = node.relations.find(item => item.target === 'into');
   const targetNode = graph.nodeById(v2, 'into');
+  const selectionKey = JSON.stringify([relation.type, relation.target, relation.label, relation.explanation]);
   const invalidGraphs = [
     null,
     {},
@@ -444,10 +453,10 @@ test('selectedNetworkRelation rejects invalid graph inputs without throwing', ()
     { validateGraph: () => ({ errors: [] }), explorableRelations: () => null },
   ];
   const invalidCalls = [
-    () => core.selectedNetworkRelation(null, graph, node, 'into'),
-    ...invalidGraphs.map(api => () => core.selectedNetworkRelation(v2, api, node, 'into')),
-    () => core.selectedNetworkRelation(v2, graph, null, 'into'),
-    () => core.selectedNetworkRelation(v2, graph, { id: 'missing' }, 'into'),
+    () => core.selectedNetworkRelation(null, graph, node, selectionKey),
+    ...invalidGraphs.map(api => () => core.selectedNetworkRelation(v2, api, node, selectionKey)),
+    () => core.selectedNetworkRelation(v2, graph, null, selectionKey),
+    () => core.selectedNetworkRelation(v2, graph, { id: 'missing' }, selectionKey),
     () => core.selectedNetworkRelation(v2, graph, node, ' '),
   ];
   invalidCalls.forEach(call => {
@@ -460,6 +469,7 @@ test('selectedNetworkRelation rejects fabricated and incomplete graph relations'
   const v2 = require('./v2-data.js');
   const node = v2.nodes.find(item => item.id === 'to');
   const canonical = node.relations.find(relation => relation.target === 'into');
+  const selectionKey = JSON.stringify([canonical.type, canonical.target, canonical.label, canonical.explanation]);
   const graph = {
     validateGraph: () => ({ errors: [] }),
     explorableRelations: () => [
@@ -468,7 +478,7 @@ test('selectedNetworkRelation rejects fabricated and incomplete graph relations'
     ],
   };
   assert.equal(core.selectedNetworkRelation(v2, graph, node, 'be'), null);
-  assert.equal(core.selectedNetworkRelation(v2, graph, node, 'into'), null);
+  assert.equal(core.selectedNetworkRelation(v2, graph, node, selectionKey), null);
 });
 
 test('selectNetworkNode follows an explorable V2 node and clears selected relation', () => {
@@ -523,12 +533,13 @@ test('renderNetworkContent shows only relations verified as explorable', () => {
 test('renderNetworkContent renders the selected real relation as a mind-map branch', () => {
   const v2 = require('./v2-data.js');
   const network = require('./v2-network.js');
+  const relation = network.nodeById(v2, 'to').relations.find(item => item.target === 'into');
   const markup = core.renderNetworkContent(v2, network, {
-    networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: 'into', networkStep: 'detail',
+    networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: core.relationSelectionKey(relation), networkStep: 'detail',
   });
   assert.match(markup, /class="mindMapRoot"/);
   assert.match(markup, /class="mindBranch mindBranch-combination"/);
-  assert.match(markup, /data-action="select-network-relation" data-relation-target="into"/);
+  assert.match(markup, /data-action="select-network-relation" data-relation-key=/);
   assert.match(markup, /class="networkRelationPanel"/);
   assert.match(markup, /TO \+ IN/);
   assert.doesNotMatch(markup, /mindBranch mindBranch-growth/);
@@ -542,6 +553,44 @@ test('renderNetworkContent falls back to core origin for an invalid selected rel
   });
   assert.match(markup, /核心本源/);
   assert.doesNotMatch(markup, /not-a-relation/);
+});
+
+test('renderNetworkContent keeps distinct same-target relations selectable by key', () => {
+  const v2 = structuredClone(require('./v2-data.js'));
+  const network = require('./v2-network.js');
+  const inNode = v2.nodes.find(node => node.id === 'in');
+  inNode.relations.push({
+    type: 'contrast', target: 'into', label: '静态内部 vs 动态进入', explanation: 'IN 是已经在里面；INTO 是穿过边界进入里面。',
+  });
+  const combination = inNode.relations.find(relation => relation.type === 'combination' && relation.target === 'into');
+  const contrast = inNode.relations.find(relation => relation.type === 'contrast' && relation.target === 'into');
+  const combinationKey = core.relationSelectionKey(combination);
+  const contrastKey = core.relationSelectionKey(contrast);
+  const combinationMarkup = core.renderNetworkContent(v2, network, {
+    networkSystem: 'space-relations', networkNode: 'in', explorePath: [], networkRelation: combinationKey, networkStep: 'detail',
+  });
+  const contrastMarkup = core.renderNetworkContent(v2, network, {
+    networkSystem: 'space-relations', networkNode: 'in', explorePath: [], networkRelation: contrastKey, networkStep: 'detail',
+  });
+  assert.match(combinationMarkup, /mindBranch mindBranch-combination/);
+  assert.match(combinationMarkup, /mindBranch mindBranch-contrast/);
+  assert.equal(core.selectedNetworkRelation(v2, network, inNode, combinationKey)?.label, combination.label);
+  assert.equal(core.selectedNetworkRelation(v2, network, inNode, contrastKey)?.explanation, contrast.explanation);
+  assert.match(combinationMarkup, new RegExp(combination.explanation));
+  assert.match(contrastMarkup, new RegExp(contrast.explanation));
+});
+
+test('renderNetworkContent safely handles null and throwing system node APIs', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  [
+    { ...network, nodesForSystem: () => null },
+    { ...network, nodesForSystem: () => { throw new Error('system nodes failed'); } },
+  ].forEach(graphApi => {
+    let markup;
+    assert.doesNotThrow(() => { markup = core.renderNetworkContent(v2, graphApi, { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] }); });
+    assert.match(markup, /该系统暂未提供词条。/);
+  });
 });
 
 test('renderNetworkContent includes the current node core origin with safe HTML', () => {

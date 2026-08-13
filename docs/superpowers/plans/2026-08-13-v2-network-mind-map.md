@@ -38,7 +38,8 @@ test('selectedNetworkRelation keeps only an explorable current-node relation', (
   const v2 = require('./v2-data.js');
   const graph = require('./v2-network.js');
   const node = core.networkNodeFor(v2, 'to');
-  const selected = core.selectedNetworkRelation(v2, graph, node, 'into');
+  const relation = node.relations.find(item => item.target === 'into');
+  const selected = core.selectedNetworkRelation(v2, graph, node, core.relationSelectionKey(relation));
   assert.equal(selected.target, 'into');
   assert.equal(core.selectedNetworkRelation(v2, graph, node, 'be'), null);
   assert.equal(core.selectedNetworkRelation(v2, graph, node, null), null);
@@ -46,7 +47,8 @@ test('selectedNetworkRelation keeps only an explorable current-node relation', (
 
 test('network relation selection resets while changing the exploration target', () => {
   const v2 = require('./v2-data.js');
-  const next = core.selectNetworkNode({ networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: 'into' }, v2, 'into');
+  const relation = v2.nodes.find(node => node.id === 'to').relations.find(item => item.target === 'into');
+  const next = core.selectNetworkNode({ networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: core.relationSelectionKey(relation) }, v2, 'into');
   assert.deepEqual(next, { networkSystem: 'space-relations', networkNode: 'into', explorePath: ['to'], networkRelation: null });
 });
 ```
@@ -62,12 +64,17 @@ Expected: FAIL，提示 `selectedNetworkRelation is not a function`，且 `selec
 在 `networkNodeFor` 后加入：
 
 ```js
-function selectedNetworkRelation(v2Data, graphApi, node, targetId) {
-  if (!isUsableV2Graph(v2Data, graphApi) || typeof graphApi?.explorableRelations !== 'function' || typeof targetId !== 'string') return null;
+function relationSelectionKey(relation) {
+  if (!isPlainObject(relation) || !['type', 'target', 'label', 'explanation'].every(field => typeof relation[field] === 'string' && relation[field].trim())) return null;
+  return JSON.stringify([relation.type, relation.target, relation.label, relation.explanation]);
+}
+
+function selectedNetworkRelation(v2Data, graphApi, node, selectionKey) {
+  if (!isUsableV2Graph(v2Data, graphApi) || typeof graphApi?.explorableRelations !== 'function' || typeof selectionKey !== 'string') return null;
   const current = networkNodeFor(v2Data, node?.id);
   if (!current) return null;
   try {
-    return graphApi.explorableRelations(v2Data, current).find(relation => relation?.target === targetId) || null;
+    return graphApi.explorableRelations(v2Data, current).find(relation => relationSelectionKey(relation) === selectionKey) || null;
   } catch (error) { return null; }
 }
 ```
@@ -101,11 +108,11 @@ test('network mind map renders one root and only current-node explorable branche
   const v2 = require('./v2-data.js');
   const graph = require('./v2-network.js');
   const markup = core.renderNetworkContent(v2, graph, {
-    networkSystem: 'space-relations', networkNode: 'to', networkRelation: 'into', explorePath: [], networkStep: 'detail',
+    networkSystem: 'space-relations', networkNode: 'to', networkRelation: core.relationSelectionKey(relation), explorePath: [], networkStep: 'detail',
   });
   assert.match(markup, /class="mindMapRoot"/);
   assert.match(markup, /class="mindBranch mindBranch-combination/);
-  assert.match(markup, /data-action="select-network-relation" data-relation-target="into"/);
+  assert.match(markup, /data-action="select-network-relation" data-relation-key=/);
   assert.match(markup, /class="networkRelationPanel"/);
   assert.match(markup, /IN \+ TO/);
   assert.doesNotMatch(markup, /class="mindBranch mindBranch-growth/);
@@ -138,13 +145,16 @@ Expected: FAIL，旧网络渲染没有 `mindMapRoot` 或关系选择动作。
 
 ```js
 const root = `<button type="button" class="mindMapRoot" data-action="open-word" data-word="${html(current.node.id)}"><strong>${html(current.node.word)}</strong><span>${html(current.node.coreMeaning)}</span></button>`;
-const branches = relations.map(relation => `<button type="button" class="mindBranch mindBranch-${html(relation.type)}" data-action="select-network-relation" data-relation-target="${html(relation.target)}"${relation.target === selected?.target ? ' aria-pressed="true"' : ''}><span class="relationBadge relation-${html(relation.type)}">${html(relationTypes[relation.type])}</span><strong>${html(relation.label)}</strong><span>${html(relation.targetNode?.word || relation.targetSystem?.title)}</span></button>`).join('');
+const branches = relations.map(relation => {
+  const key = relationSelectionKey(relation);
+  return `<button type="button" class="mindBranch mindBranch-${html(relation.type)}" data-action="select-network-relation" data-relation-key="${html(key)}"${key === state?.networkRelation ? ' aria-pressed="true"' : ''}><span class="relationBadge relation-${html(relation.type)}">${html(relationTypes[relation.type])}</span><strong>${html(relation.label)}</strong><span>${html(relation.targetNode?.word || relation.targetSystem?.title)}</span></button>`;
+}).join('');
 ```
 
 4. 中栏保留系统内其他节点的紧凑入口，放在导图下方，不能与根节点关系混淆。
 5. 右栏用 `networkRelationPanel` 渲染所选关系 label、explanation、目标词核心含义，以及 `select-network-node` 或 `select-network-system` 的“继续探索”按钮。
 6. 保留 `data-network-step` 和既有 `networkMobileNav`；在移动 `detail` 面板中也输出上述导图与解释，桌面样式才变为三栏。
-7. 初始化 `state.networkRelation = null`。处理 `select-network-relation`：写入 `state.networkRelation = target.dataset.relationTarget`，用 `networkStepForAction` 后 render；所有进入/返回节点的动作在其 `Object.assign` 后保持函数返回的 `null`。
+7. 初始化 `state.networkRelation = null`。处理 `select-network-relation`：从 `target.dataset.relationKey` 解析当前节点的真实关系，并写入完整关系键；键固定由 `type`、`target`、`label`、`explanation` 生成，不能只保存目标 id，否则同一目标的不同关系会互相覆盖。用 `networkStepForAction` 后 render；所有进入/返回节点的动作在其 `Object.assign` 后保持函数返回的 `null`。
 
 - [ ] **Step 4: 运行全套测试确认绿灯**
 
