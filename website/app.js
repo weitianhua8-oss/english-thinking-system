@@ -235,24 +235,39 @@ function renderNetworkContent(v2Data, graphApi, state) {
  const relationTypes={system:'所属系统',growth:'直接生长',combination:'组合关系',contrast:'易混对比'};
  const systems=current.systems.map(system=>`<button type="button" class="tag networkSystem" data-action="select-network-system" data-system-id="${html(system.id)}"${system.id===current.systemId?' aria-pressed="true"':''}>${html(system.title)}</button>`).join('');
  const nodes=graphApi.nodesForSystem(v2Data,current.systemId).filter(node=>networkNodeFor(v2Data,node?.id)).map(node=>`<button type="button" class="wordCard networkNode" data-action="select-network-node" data-node-id="${html(node.id)}"${node.id===current.node.id?' aria-pressed="true"':''}><div class="word">${html(node.word)}</div><div class="mini">${html(node.coreMeaning)}</div></button>`).join('');
- const relations=graphApi.explorableRelations(v2Data,current.node).reduce((groups,relation)=>{
-  if(!relationTypes[relation.type]) return groups;
-  (groups[relation.type]||=[]).push(relation); return groups;
- },{});
- const relationMarkup=Object.entries(relationTypes).map(([type,title])=>{
-  const group=relations[type]||[]; if(!group.length) return '';
-  return `<section class="block networkRelation networkRelation-${html(type)}${type==='contrast'?' contrastBlock':''}"><div class="networkRelationHeading"><span class="relationBadge relation-${html(type)}">${html(title)}</span><h4>${html(title)}</h4></div>${group.map(relation=>{
-   const target=relation.targetNode||relation.targetSystem;
-   const action=relation.targetNode?'select-network-node':'select-network-system';
-   const attribute=relation.targetNode?'data-node-id':'data-system-id';
-   const targetLabel=relation.targetNode?.word||relation.targetSystem?.title||relation.target;
-   return `<div class="mini networkRelationItem"><b>${html(relation.label)}</b><p>${html(relation.explanation)}</p><button type="button" class="tag" data-action="${action}" ${attribute}="${html(relation.target)}" data-network-relation="true"${relation.targetNode?'':' data-preserve-path="true"'}>查看 ${html(targetLabel)}</button></div>`;
-  }).join('')}</section>`;
+ let explorable=[];
+ try {
+  const sourceRelations=graphApi.explorableRelations(v2Data,current.node);
+  if(Array.isArray(sourceRelations)) {
+   explorable=sourceRelations.reduce((result,relation)=>{
+    if(!relationTypes[relation?.type]||typeof relation.target!=='string') return result;
+    const verified=selectedNetworkRelation(v2Data,graphApi,current.node,relation.target);
+    if(!verified||result.some(item=>item.type===verified.type&&item.target===verified.target&&item.label===verified.label)) return result;
+    result.push(verified); return result;
+   },[]);
+  }
+ } catch(error) { explorable=[]; }
+ const selected=selectedNetworkRelation(v2Data,graphApi,current.node,state?.networkRelation);
+ const root=`<div class="mindMapRootGroup"><button type="button" class="mindMapRoot" data-action="open-word" data-word="${html(current.node.id)}"><strong>${html(current.node.word)}</strong><span>${html(current.node.coreMeaning)}</span></button><p class="mindMapOrigin">${html(current.node.quick.origin)}</p></div>`;
+ const branches=explorable.map(relation=>{
+  const target=relation.targetNode||relation.targetSystem;
+  const targetWord=relation.targetNode?.word||relation.targetSystem?.title||relation.target;
+  const targetMeaning=relation.targetNode?.coreMeaning||relation.targetSystem?.description||'';
+  return `<button type="button" class="mindBranch mindBranch-${html(relation.type)}" data-action="select-network-relation" data-relation-target="${html(relation.target)}"${relation.target===selected?.target?' aria-pressed="true"':''}><span class="relationBadge relation-${html(relation.type)}">${html(relationTypes[relation.type])}</span><strong>${html(relation.label)}</strong><span>${html(targetWord)}</span>${targetMeaning?`<small>${html(targetMeaning)}</small>`:''}</button>`;
  }).join('');
+ const mindMap=`<div class="mindMapCanvas">${root}<div class="mindBranches">${branches||'<p class="mini">该关联内容暂未开放。</p>'}</div></div>`;
+ const relationPanel=selected?(()=>{
+  const target=selected.targetNode||selected.targetSystem;
+  const targetWord=selected.targetNode?.word||selected.targetSystem?.title||selected.target;
+  const targetMeaning=selected.targetNode?.coreMeaning||selected.targetSystem?.description||'';
+  const exploreButton=selected.targetNode
+   ? `<button type="button" class="primaryAction" data-action="select-network-node" data-node-id="${html(selected.target)}">继续探索 ${html(targetWord)}</button>`
+   : `<button type="button" class="primaryAction" data-action="select-network-system" data-system-id="${html(selected.target)}" data-preserve-path="true">继续探索 ${html(targetWord)}</button>`;
+  return `<section class="networkRelationPanel"><div class="networkPanelTitle"><span>03</span><div><p>关系解释</p><h3>${html(selected.label)}</h3></div></div><div class="relationExplanation"><span class="relationBadge relation-${html(selected.type)}">${html(relationTypes[selected.type])}</span><p>${html(selected.explanation)}</p><h4>${html(targetWord)}</h4>${targetMeaning?`<p class="coreMeaning">${html(targetMeaning)}</p>`:''}<p>${exploreButton}</p></div></section>`;
+ })():`<section class="networkRelationPanel"><div class="networkPanelTitle"><span>03</span><div><p>当前词理解</p><h3>${html(current.node.word)} <em>→ ${html(current.node.coreMeaning)}</em></h3></div></div><div class="relationExplanation"><h4>核心本源</h4><p>${html(current.node.quick.origin)}</p><p><button type="button" class="primaryAction" data-action="open-word" data-word="${html(current.node.id)}">打开三层课程</button></p></div></section>`;
  const step=['systems','nodes','detail'].includes(state?.networkStep)?state.networkStep:'systems';
  const back=current.path.length?'<p><button type="button" class="backBtn" data-action="network-back">← 返回上一步</button></p>':'';
- const origin=typeof current.node.quick?.origin==='string'?current.node.quick.origin:'暂未提供核心本源。';
- return `<section class="learningWorkspace networkMapWorkspace"><header class="networkMapHero"><p class="workspaceEyebrow">英语思维 · 知识网络</p><h2>从系统出发，沿关系继续探索</h2><p>当前坐标：${html(v2SystemTitleFor(v2Data,current.systemId))} · ${html(current.node.word)} → ${html(current.node.coreMeaning)}</p></header><div class="networkLayout" data-network-step="${html(step)}"><section class="panel networkMapPanel networkSystems"><div class="networkPanelTitle"><span>01</span><div><p>认知系统</p><h3>选择你要理解的系统</h3></div></div><div class="tags">${systems}</div></section><section class="panel networkMapPanel networkNodes"><p class="networkMobileNav"><button type="button" class="backBtn" data-action="network-mobile-systems">← 选择系统</button></p><div class="networkPanelTitle"><span>02</span><div><p>${html(v2SystemTitleFor(v2Data,current.systemId))}</p><h3>发现系统里的知识节点</h3></div></div><div class="grid contentGrid">${nodes||'<p class="mini">该系统暂未提供词条。</p>'}</div></section><section class="panel networkMapPanel networkExplain"><p class="networkMobileNav"><button type="button" class="backBtn" data-action="network-mobile-nodes">← 选择词条</button></p>${back}<div class="networkPanelTitle"><span>03</span><div><p>当前关系说明</p><h3>${html(current.node.word)} <em>→ ${html(current.node.coreMeaning)}</em></h3></div></div><section class="block knowledgeConnection"><h4>核心本源</h4><p>${html(origin)}</p><p><button type="button" class="primaryAction" data-action="open-word" data-word="${html(current.node.id)}">打开三层课程</button></p></section>${relationMarkup||'<p class="mini">该关联内容暂未开放。</p>'}</section></div>${returnTopButton()}</section>`;
+ return `<section class="learningWorkspace networkMapWorkspace"><header class="networkMapHero"><p class="workspaceEyebrow">英语思维 · 知识网络</p><h2>从系统出发，沿关系继续探索</h2><p>当前坐标：${html(v2SystemTitleFor(v2Data,current.systemId))} · ${html(current.node.word)} → ${html(current.node.coreMeaning)}</p></header><div class="networkLayout" data-network-step="${html(step)}"><section class="panel networkMapPanel networkSystems"><div class="networkPanelTitle"><span>01</span><div><p>认知系统</p><h3>选择你要理解的系统</h3></div></div><div class="tags">${systems}</div></section><section class="panel networkMapPanel networkNodes"><p class="networkMobileNav"><button type="button" class="backBtn" data-action="network-mobile-systems">← 选择系统</button></p><div class="networkPanelTitle"><span>02</span><div><p>${html(v2SystemTitleFor(v2Data,current.systemId))}</p><h3>当前词与真实关系</h3></div></div>${mindMap}<section class="mindMapSystemNodes"><h4>系统里的其他知识</h4><div class="grid contentGrid">${nodes||'<p class="mini">该系统暂未提供词条。</p>'}</div></section></section><section class="panel networkMapPanel networkExplain"><p class="networkMobileNav"><button type="button" class="backBtn" data-action="network-mobile-nodes">← 选择词条</button></p>${back}${relationPanel}</section></div>${returnTopButton()}</section>`;
 }
 function isCompleteV2Node(node) {
  return isPlainObject(node)
@@ -394,11 +409,12 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{state.view=button.dataset.view; if(state.view==='network') state.networkStep=networkStepForAction(state.networkStep,'nav-network'); render();}));
  app.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;
-  const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation}=target.dataset;
+  const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation,relationTarget}=target.dataset;
   if(action==='return-top') { if(typeof window.scrollTo==='function') window.scrollTo({top:0,behavior:'smooth'}); return; }
   if(action==='open-word') openWord(word);
   else if(['lesson-layer-quick','lesson-layer-deep','lesson-layer-network'].includes(action)) { state.lessonLayer=lessonLayerForAction(state.lessonLayer,action); state.view='lesson'; render(); }
   else if(action==='view') { if(view==='network') { if(nodeId) Object.assign(state,selectNetworkDirect(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,nodeId?'lesson-network':'nav-network'); } state.view=view; render(); }
+  else if(action==='select-network-relation') { state.networkRelation=selectedNetworkRelation(V2,V2Network,networkNodeFor(V2,state.networkNode),relationTarget)?.target||null; state.networkStep=networkStepForAction(state.networkStep,'select-network-relation'); state.view='network'; render(); }
   else if(action==='select-network-node') { Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,networkRelation==='true'?'select-network-relation':'select-network-node'); state.view='network'; render(); }
   else if(action==='select-network-system') { Object.assign(state,selectNetworkSystem(state,V2,systemId,preservePath==='true')); state.networkStep=networkStepForAction(state.networkStep,networkRelation==='true'?'select-network-relation':'select-network-system'); state.view='network'; render(); }
   else if(action==='network-back') { Object.assign(state,selectNetworkBack(state,V2,V2Network)); state.networkStep=networkStepForAction(state.networkStep,'network-back'); state.view='network'; render(); }

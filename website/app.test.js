@@ -520,6 +520,30 @@ test('renderNetworkContent shows only relations verified as explorable', () => {
   assert.doesNotMatch(markup, /不应出现的关系|目标不存在/);
 });
 
+test('renderNetworkContent renders the selected real relation as a mind-map branch', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const markup = core.renderNetworkContent(v2, network, {
+    networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: 'into', networkStep: 'detail',
+  });
+  assert.match(markup, /class="mindMapRoot"/);
+  assert.match(markup, /class="mindBranch mindBranch-combination"/);
+  assert.match(markup, /data-action="select-network-relation" data-relation-target="into"/);
+  assert.match(markup, /class="networkRelationPanel"/);
+  assert.match(markup, /TO \+ IN/);
+  assert.doesNotMatch(markup, /mindBranch mindBranch-growth/);
+});
+
+test('renderNetworkContent falls back to core origin for an invalid selected relation', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const markup = core.renderNetworkContent(v2, network, {
+    networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: 'not-a-relation', networkStep: 'detail',
+  });
+  assert.match(markup, /核心本源/);
+  assert.doesNotMatch(markup, /not-a-relation/);
+});
+
 test('renderNetworkContent includes the current node core origin with safe HTML', () => {
   const v2 = structuredClone(require('./v2-data.js'));
   const network = require('./v2-network.js');
