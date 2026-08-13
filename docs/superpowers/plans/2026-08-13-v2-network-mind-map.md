@@ -18,7 +18,7 @@
   - 在既有 `#app` 单一事件委托内处理 `select-network-relation`。
 - Modify: `website/styles.css`
   - 只新增 `.mindMap*`、`.mindBranch*`、`.networkRelationPanel*` 等 V2 网络专用样式。
-  - 宽屏导图使用无横向滚动的网格，窄屏不改变原来的单面板选择器。
+- 宽屏导图使用无横向滚动的网格；知识网络在 1180px 以下进入原来的单面板选择器，其他页面保持 900px 全站断点。
 - Modify: `website/app.test.js`
   - 覆盖关系选择、无效关系安全回退、树状 DOM 和 V1/V2 回归。
 
@@ -208,7 +208,7 @@ Expected: FAIL，旧 CSS 没有 `.mindMapCanvas` 与分支颜色选择器。
 .networkRelationPanel{min-width:0}.networkRelationPanel .relationExplanation{padding:16px;border-radius:14px;background:rgba(245,249,255,.72)}
 ```
 
-在 `@media(max-width:900px)` 内增加 `.mindMapCanvas{grid-template-columns:minmax(0,1fr);gap:12px}.mindBranch::before{display:none}`。不改 `.networkLayout[data-network-step]` 规则。
+新增限定在 `.networkMapWorkspace` 内的 `@media(max-width:1180px)`：将该网络工作台改为单列，复用 `systems/nodes/detail` 的隐藏规则与返回导航；`.mindMapCanvas` 改为单列并隐藏连接线。详情面板追加仅窄屏可见的当前词真实关系列表，供学习者直接切换解释。不要改全站既有 900px 的 `.networkLayout[data-network-step]` 规则。
 
 - [ ] **Step 4: 运行验证**
 
@@ -252,7 +252,7 @@ Expected: 全部测试通过、所有检查退出码为 0、没有未提交产�
 1. 点击知识网络，桌面有系统栏、树状根节点/分支和解释面板。
 2. 点击组合关系分支时只更新解释；再点击继续探索，当前根节点变为目标词。
 3. 点击系统或普通节点时，已选关系被清除，解释回到核心本源。
-4. 缩窄至 900px 以下，仍能按系统、词条、详情逐层进入，页面无横向导图溢出。
+4. 缩窄至 1180px 以下，知识网络可按系统、词条、详情逐层进入，页面无横向导图溢出；其他页面仍保持原有 900px 响应式断点。
 5. 打开 `GO`，仍为 V1 课程；复习、进度和词库可正常使用。
 
 - [ ] **Step 3: 请求代码复核**

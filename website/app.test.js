@@ -306,6 +306,14 @@ test('mind map styles present direct relation branches without mobile overflow',
   assert.match(styles, /@media\(max-width:900px\)\{[^]*?\.mindBranch::before\{display:none/);
 });
 
+test('narrow desktop network styles keep the V2 map in one reachable panel', () => {
+  const styles = fs.readFileSync(require.resolve('./styles.css'), 'utf8');
+  assert.match(styles, /@media\(max-width:1180px\)\{[^]*?\.networkMapWorkspace \.networkLayout\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.match(styles, /@media\(max-width:1180px\)\{[^]*?\.networkMapWorkspace \.mindMapCanvas\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.match(styles, /@media\(max-width:1180px\)\{[^]*?\.networkMapWorkspace \.networkMobileNav\{display:block/);
+  assert.match(styles, /@media\(max-width:1180px\)\{[^]*?\.networkMobileRelationList\{display:grid/);
+});
+
 test('networkStepForAction keeps the mobile network in one panel at a time', () => {
   assert.equal(typeof core.networkStepForAction, 'function');
   assert.equal(core.networkStepForAction('systems', 'select-network-system'), 'nodes');
@@ -554,6 +562,24 @@ test('renderNetworkContent renders the selected real relation as a mind-map bran
   assert.match(markup, /class="networkRelationPanel"/);
   assert.match(markup, /TO \+ IN/);
   assert.doesNotMatch(markup, /mindBranch mindBranch-growth/);
+});
+
+test('network detail keeps all current-word relation choices beside the explanation', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const inNode = network.nodeById(v2, 'in');
+  const selected = inNode.relations.find(relation => relation.type === 'combination' && relation.target === 'into');
+  const selectedKey = core.relationSelectionKey(selected).replace(/"/g, '&quot;');
+  const markup = core.renderNetworkContent(v2, network, {
+    networkSystem: 'space-relations', networkNode: 'in', explorePath: [], networkRelation: core.relationSelectionKey(selected), networkStep: 'detail',
+  });
+  const start = markup.indexOf('<section class="networkMobileRelationList">');
+  const mobileList = markup.slice(start, markup.indexOf('</section>', start) + 10);
+  assert.ok(start >= 0);
+  assert.match(mobileList, /选择要理解的关系/);
+  assert.match(mobileList, /mindBranch mindBranch-combination/);
+  assert.match(mobileList, /mindBranch mindBranch-contrast/);
+  assert.ok(mobileList.includes(`data-relation-key="${selectedKey}" aria-pressed="true"`));
 });
 
 test('renderNetworkContent falls back to core origin for an invalid selected relation', () => {
