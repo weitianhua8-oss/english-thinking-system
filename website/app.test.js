@@ -290,6 +290,8 @@ test('lessonLayerForAction switches only among the three V2 learning layers', ()
   assert.equal(core.lessonLayerForAction('quick','lesson-layer-deep'),'deep');
   assert.equal(core.lessonLayerForAction('deep','lesson-layer-network'),'network');
   assert.equal(core.lessonLayerForAction('network','unknown'),'network');
+  ['toString', 'constructor', '__proto__'].forEach(action => assert.equal(core.lessonLayerForAction('network', action), 'network'));
+  assert.equal(core.lessonLayerForAction(null, 'toString'), 'quick');
 });
 
 test('renderLessonMiniNetwork shows the selected V2 lesson and safe network entry points', () => {
@@ -322,6 +324,20 @@ test('renderLessonMiniNetwork shows a neutral message without explorable relatio
   v2.nodes.forEach(node => { node.relations = []; });
   const markup = core.renderLessonMiniNetwork(v2, network, core.v2LessonFor(v2, 'to'));
   assert.match(markup, /该关联内容暂未开放/);
+});
+
+test('renderLessonMiniNetwork safely handles null and throwing relation APIs', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const node = core.v2LessonFor(v2, 'to');
+  [
+    { ...network, explorableRelations: () => null },
+    { ...network, explorableRelations: () => { throw new Error('relation api failed'); } },
+  ].forEach(graphApi => {
+    let markup;
+    assert.doesNotThrow(() => { markup = core.renderLessonMiniNetwork(v2, graphApi, node); });
+    assert.match(markup, /该关联内容暂未开放/);
+  });
 });
 
 test('reviewContentFor preserves V1 cards and renders revealed V2 review details safely', () => {

@@ -168,12 +168,10 @@ function networkStepForAction(step, action) {
 }
 function lessonLayerForAction(layer, action) {
  const current=['quick','deep','network'].includes(layer)?layer:'quick';
- const nextByAction={
-  'lesson-layer-quick':'quick',
-  'lesson-layer-deep':'deep',
-  'lesson-layer-network':'network',
- };
- return nextByAction[action]||current;
+ if(action==='lesson-layer-quick') return 'quick';
+ if(action==='lesson-layer-deep') return 'deep';
+ if(action==='lesson-layer-network') return 'network';
+ return current;
 }
 function renderLessonMiniNetwork(v2Data, graphApi, node) {
  const empty='<section class="block knowledgeConnection"><h3>Layer 3 · 知识网络</h3><p class="mini">该关联内容暂未开放。</p></section>';
@@ -181,7 +179,10 @@ function renderLessonMiniNetwork(v2Data, graphApi, node) {
  const current=networkNodeFor(v2Data,node.id);
  if(!current) return empty;
  const relationTypes={system:'所属系统',growth:'延展关系',combination:'组合关系',contrast:'对比关系'};
- const relations=graphApi.explorableRelations(v2Data,current).filter(relation=>relationTypes[relation?.type]);
+ let sourceRelations;
+ try { sourceRelations=graphApi.explorableRelations(v2Data,current); } catch(error) { return empty; }
+ if(!Array.isArray(sourceRelations)) return empty;
+ const relations=sourceRelations.filter(relation=>relationTypes[relation?.type]);
  const relationMarkup=Object.entries(relationTypes).map(([type,title])=>{
   const group=relations.filter(relation=>relation.type===type);
   if(!group.length) return '';
