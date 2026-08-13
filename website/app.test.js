@@ -340,6 +340,14 @@ test('renderLessonMiniNetwork safely handles null and throwing relation APIs', (
   });
 });
 
+test('renderV2LessonWorkspace keeps semantic content in one selected layer', () => {
+  const data = require('./v2-data.js');
+  const markup = core.renderV2LessonWorkspace(data, require('./v2-network.js'), core.v2LessonFor(data, 'to'), 'quick');
+  assert.match(markup, /data-action="lesson-layer-deep"/);
+  assert.match(markup, /workspaceLayer[^\"]* active/);
+  assert.match(markup, /核心画面/);
+});
+
 test('reviewContentFor preserves V1 cards and renders revealed V2 review details safely', () => {
   const v2 = structuredClone(require('./v2-data.js'));
   const v2Word = 'too-to';

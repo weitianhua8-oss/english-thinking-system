@@ -195,6 +195,16 @@ function renderLessonMiniNetwork(v2Data, graphApi, node) {
  }).join('');
  return `<section class="block knowledgeConnection"><h3>Layer 3 · 知识网络</h3><h4>${html(current.word)}</h4><p class="coreMeaning"><b>核心意义：${html(current.coreMeaning)}</b></p><p>所属系统：${html(v2SystemTitleFor(v2Data,current.systemId))}</p><p><button type="button" class="tag" data-action="view" data-view="network" data-node-id="${html(current.id)}">进入知识网络</button></p>${relationMarkup||'<p class="mini">该关联内容暂未开放。</p>'}</section>`;
 }
+function renderV2LessonWorkspace(v2Data, graphApi, node, layer) {
+ const current=isCompleteV2Node(node)?node:null;
+ if(!current) return '<div class="emptyState"><div><b>课程暂不可用</b><p class="mini">请返回词库选择其他词条。</p></div></div>';
+ const selected=lessonLayerForAction(layer,'');
+ const quick=current.quick, deep=current.deep;
+ const sceneMarkup=sceneGroupsFor(deep.scenes).map(scene=>`<section class="sceneGroup"><h4>${html(scene.title)}</h4><p>${html(scene.body)}</p><p class="exampleGroup">${html(scene.example)}</p></section>`).join('')||'<p class="mini">暂未提供可用学习场景。</p>';
+ const tabLabel={quick:'快速理解',deep:'深度学习',network:'知识网络'};
+ const tabs=['quick','deep','network'].map(item=>`<button type="button" class="workspaceTab" data-action="lesson-layer-${item}"${item===selected?' aria-pressed="true"':''}>${html(tabLabel[item])}</button>`).join('');
+ return `<article class="learningWorkspace" data-learning-layer="${html(selected)}"><header class="workspaceHero"><p class="workspaceEyebrow">英语思维 · 三层学习</p><div class="workspaceTitle"><h2>${html(current.word)}</h2><span class="chip">${html(v2SystemTitleFor(v2Data,current.systemId))}</span></div><div class="coreImage"><h3>核心画面</h3><p>${html(current.coreImage)}</p></div><p class="coreMeaning"><b>${html(current.coreMeaning)}</b></p></header><nav class="workspaceTabs" aria-label="课程学习层级">${tabs}</nav><section class="workspaceLayer quickLayer${selected==='quick'?' active':''}"><h3>Layer 1 · 快速理解</h3><section class="coreMeaning"><h4>一句话本源</h4><p>${html(quick.origin)}</p></section><section class="exampleGroup"><h4>典型例句</h4><p>${html(quick.example)}</p></section><section class="memoryHook"><h4>记忆钩子</h4><p><b>${html(quick.memoryHook)}</b></p></section></section><section class="workspaceLayer deepLayer${selected==='deep'?' active':''}"><h3>Layer 2 · 深度学习</h3><section class="mentalModel"><h4>底层逻辑</h4><p>${html(deep.logic)}</p></section><section class="sceneGroups"><h4>核心使用场景</h4>${sceneMarkup}</section><section class="structureBlock"><h4>高频结构</h4><p>${html(deep.structures)}</p></section><section class="chineseTrap"><h4>中文易错点</h4><p>${html(deep.chineseTrap)}</p></section><section class="studyTip"><h4>学习建议</h4><p>${html(deep.studyTip)}</p></section></section><section class="workspaceLayer networkLayer${selected==='network'?' active':''}"><div class="miniNetwork">${renderLessonMiniNetwork(v2Data,graphApi,current)}</div></section></article>`;
+}
 function returnTopButton() { return '<p class="returnTop"><button type="button" class="backBtn" data-action="return-top" aria-label="返回顶部">↑ 返回顶部</button></p>'; }
 function renderNetworkContent(v2Data, graphApi, state) {
  if(!isUsableV2Graph(v2Data,graphApi)||!isNetworkReady(v2Data,graphApi)||typeof graphApi.nodesForSystem!=='function'||typeof graphApi.explorableRelations!=='function') return '<div class="emptyState"><div><b>知识网络暂不可用</b><p class="mini">请继续使用知识树查看课程。</p></div></div>';
@@ -258,7 +268,7 @@ function sceneGroupsFor(scenes) {
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -302,24 +312,9 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  function v2SystemTitle(systemId) {
   return v2SystemTitleFor(V2,systemId);
  }
- function renderV2Scenes(scenes) {
-  const groups=sceneGroupsFor(scenes);
-  if(groups.length) return groups.map(scene=>{
-   return `<div class="block sceneGroup"><h4>${safe(scene.title||'学习场景')}</h4><p>${safe(scene.body||'暂未提供场景说明。')}</p><p class="mini">${safe(scene.example||'暂未提供示例。')}</p></div>`;
-  }).join('');
-  return '<p class="mini">暂未提供可用学习场景。</p>';
- }
  function renderV2Lesson(x) {
   title.textContent=x.word; sub.textContent=`三层学习 · ${v2SystemTitle(x.systemId)}`;
-  const quick=isPlainObject(x.quick)?x.quick:{}, deep=isPlainObject(x.deep)?x.deep:{};
-  const layer=lessonLayerForAction(state.lessonLayer,'');
-  const layers={
-   quick:`<section class="block quickUnderstanding"><h3>Layer 1 · 快速理解</h3><p class="coreMeaning"><b>${safe(x.coreMeaning||'暂未提供核心含义。')}</b></p><p class="coreImage">${safe(x.coreImage||'暂未提供核心画面。')}</p><p>${safe(quick.origin||'暂未提供来源说明。')}</p><p class="exampleGroup">${safe(quick.example||'暂未提供例句。')}</p><p><b>${safe(quick.memoryHook||'暂未提供记忆钩子。')}</b></p></section>`,
-   deep:`<section class="block mentalModel"><h3>Layer 2 · 深度学习</h3><p>${safe(deep.logic||'暂未提供底层逻辑。')}</p><h4>Scene Group</h4>${renderV2Scenes(deep.scenes)}<section class="structureBlock"><h4>常用结构</h4><p>${safe(deep.structures||'暂未提供常用结构。')}</p></section><section class="chineseTrap"><h4>中文易错点</h4><p>${safe(deep.chineseTrap||'暂未提供提示。')}</p></section><p>${safe(deep.studyTip||'暂未提供学习建议。')}</p></section>`,
-   network:renderLessonMiniNetwork(V2,V2Network,x),
-  };
-  const controls=['quick','deep','network'].map(item=>`<button type="button" class="tag" data-action="lesson-layer-${item}"${item===layer?' aria-pressed="true"':''}>${item==='quick'?'快速理解':item==='deep'?'深度学习':'知识网络'}</button>`).join('');
-  app.innerHTML=`<button type="button" class="backBtn" data-action="view" data-view="library">← 返回词库</button><div class="lesson lessonEntry"><div class="lessonTop"><div><h2>${safe(x.word)}</h2><span class="chip">三层学习</span></div></div><div class="tags" aria-label="课程层级">${controls}</div>${layers[layer]}<div class="block"><h3>这次学习感觉如何？</h3><p class="mini">选择后会更新下一次复习日期。</p>${feedbackButtons(state.word)}</div></div>${returnTopButton()}`;
+  app.innerHTML=`<button type="button" class="backBtn" data-action="view" data-view="library">← 返回词库</button><div class="lesson lessonEntry">${renderV2LessonWorkspace(V2,V2Network,x,state.lessonLayer)}<div class="block"><h3>这次学习感觉如何？</h3><p class="mini">选择后会更新下一次复习日期。</p>${feedbackButtons(state.word)}</div></div>${returnTopButton()}`;
  }
  function renderLesson() {
   const v2Lesson=v2LessonFor(V2,state.word);
