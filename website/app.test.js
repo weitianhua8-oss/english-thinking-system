@@ -258,6 +258,53 @@ test('v2LessonFor returns a V2 lesson only when the word matches a V2 node', () 
   assert.equal(core.v2LessonFor(v2, 'go'), null);
 });
 
+test('every V2 sample node has a complete three-layer lesson', () => {
+  const v2 = require('./v2-data.js');
+  v2.nodes.forEach(node => assert.ok(core.v2LessonFor(v2, node.id), `${node.id} should open a V2 lesson`));
+});
+
+test('network content opens the selected V2 sample course and exposes its mobile step', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const markup = core.renderNetworkContent(v2, network, { networkSystem: 'structural-choice', networkNode: 'too-to', explorePath: [], networkStep: 'detail' });
+  assert.match(markup, /data-network-step="detail"/);
+  assert.match(markup, /data-action="open-word" data-word="too-to"/);
+  assert.match(markup, /打开三层课程/);
+  assert.match(markup, /data-action="network-mobile-systems"/);
+  assert.match(markup, /data-action="network-mobile-nodes"/);
+});
+
+test('networkStepForAction keeps the mobile network in one panel at a time', () => {
+  assert.equal(typeof core.networkStepForAction, 'function');
+  assert.equal(core.networkStepForAction('systems', 'select-network-system'), 'nodes');
+  assert.equal(core.networkStepForAction('nodes', 'select-network-node'), 'detail');
+  assert.equal(core.networkStepForAction('nodes', 'select-network-relation'), 'detail');
+  assert.equal(core.networkStepForAction('detail', 'network-mobile-nodes'), 'nodes');
+  assert.equal(core.networkStepForAction('nodes', 'network-mobile-systems'), 'systems');
+  assert.equal(core.networkStepForAction('detail', 'network-back'), 'detail');
+  assert.equal(core.networkStepForAction('detail', 'nav-network'), 'systems');
+  assert.equal(core.networkStepForAction('systems', 'lesson-network'), 'detail');
+});
+
+test('reviewContentFor preserves V1 cards and renders revealed V2 review details safely', () => {
+  const v2 = structuredClone(require('./v2-data.js'));
+  const v2Word = 'too-to';
+  const node = v2.nodes.find(item => item.id === v2Word);
+  node.coreImage = '<img src=x onerror=alert(1)>';
+  node.quick.origin = '<script>alert(2)</script>';
+  const markup = core.reviewContentFor(['I', v2Word], {
+    I: { card: '第一人称画面', tagline: 'I 是说话的人。', examples: ['I am ready.'], contrast: '不是 you。' },
+  }, v2, { I: { category: '人与指向' } }, { I: true, [v2Word]: true });
+  assert.match(markup, /I 是说话的人。/);
+  assert.match(markup, /I am ready\./);
+  assert.match(markup, /不是 you。/);
+  assert.match(markup, /状态与动作/);
+  assert.match(markup, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.match(markup, /&lt;script&gt;alert\(2\)&lt;\/script&gt;/);
+  assert.match(markup, /data-feedback="understood"/);
+  assert.doesNotMatch(markup, /<img src=x|<script>/);
+});
+
 test('V2 graph use requires a validator with no reported errors', () => {
   const v2 = require('./v2-data.js');
   const network = require('./v2-network.js');
