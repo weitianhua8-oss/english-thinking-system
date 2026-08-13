@@ -293,6 +293,12 @@ test('renderNetworkContent safely falls back when V2 data is invalid', () => {
   assert.match(markup, /知识网络暂不可用/);
 });
 
+test('returnTopButton renders an accessible return-to-top control', () => {
+  const markup = core.returnTopButton();
+  assert.match(markup, /data-action="return-top"/);
+  assert.match(markup, /↑ 返回顶部/);
+});
+
 test('v2LessonFor rejects a malformed matching V2 node so V1 can render it', () => {
   const invalid = structuredClone(require('./v2-data.js'));
   invalid.nodes.find(node => node.id === 'to').deep.scenes = [];
