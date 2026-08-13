@@ -111,30 +111,39 @@ function networkNodeFor(v2Data, nodeId) {
  const node=v2Data.nodes.find(item=>isCompleteV2Node(item)&&item.id===nodeId&&typeof item.systemId==='string'&&systemIds.has(item.systemId));
  return node||null;
 }
+function selectedNetworkRelation(v2Data, graphApi, node, targetId) {
+ if(!isPlainObject(graphApi)||typeof graphApi.explorableRelations!=='function'||typeof targetId!=='string'||!targetId.trim()||!isPlainObject(node)) return null;
+ const current=networkNodeFor(v2Data,node.id);
+ if(!current) return null;
+ try {
+  const relations=graphApi.explorableRelations(v2Data,current);
+  return Array.isArray(relations) ? relations.find(relation=>isPlainObject(relation)&&relation.target===targetId)||null : null;
+ } catch(error) { return null; }
+}
 function selectNetworkNode(state, v2Data, targetId) {
  const current=isPlainObject(state)?state:{};
- const unchanged={networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[]};
+ const unchanged={networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[],networkRelation:null};
  const target=networkNodeFor(v2Data,targetId);
  if(!target) return unchanged;
  const selected=networkNodeFor(v2Data,current.networkNode);
  const path=selected&&selected.id!==target.id&&unchanged.explorePath[unchanged.explorePath.length-1]!==selected.id
   ? [...unchanged.explorePath,selected.id]
   : unchanged.explorePath;
- return {networkSystem:target.systemId,networkNode:target.id,explorePath:path};
+ return {networkSystem:target.systemId,networkNode:target.id,explorePath:path,networkRelation:null};
 }
 function selectNetworkDirect(state, v2Data, targetId) {
  const current=isPlainObject(state)?state:{};
  const target=networkNodeFor(v2Data,targetId);
- if(!target) return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[]};
- return {networkSystem:target.systemId,networkNode:target.id,explorePath:[]};
+ if(!target) return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[],networkRelation:null};
+ return {networkSystem:target.systemId,networkNode:target.id,explorePath:[],networkRelation:null};
 }
 function selectNetworkBack(state, v2Data, graphApi) {
  const current=isPlainObject(state)?state:{};
  const path=Array.isArray(current.explorePath)?current.explorePath:[];
- if(!path.length||!isPlainObject(graphApi)||typeof graphApi.popExplorePath!=='function') return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:[...path]};
+ if(!path.length||!isPlainObject(graphApi)||typeof graphApi.popExplorePath!=='function') return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:[...path],networkRelation:null};
  const targetId=path[path.length-1], target=networkNodeFor(v2Data,targetId);
- if(!target) return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:[...path]};
- return {networkSystem:target.systemId,networkNode:target.id,explorePath:graphApi.popExplorePath(path)};
+ if(!target) return {networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:[...path],networkRelation:null};
+ return {networkSystem:target.systemId,networkNode:target.id,explorePath:graphApi.popExplorePath(path),networkRelation:null};
 }
 function networkStateFor(v2Data, state) {
  const systems=Array.isArray(v2Data?.systems)?v2Data.systems.filter(system=>isPlainObject(system)&&typeof system.id==='string'&&system.id.trim()&&typeof system.title==='string'&&system.title.trim()):[];
@@ -148,14 +157,14 @@ function networkStateFor(v2Data, state) {
 }
 function selectNetworkSystem(state, v2Data, systemId, preservePath) {
  const current=isPlainObject(state)?state:{};
- const unchanged={networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[]};
+ const unchanged={networkSystem:current.networkSystem,networkNode:current.networkNode,explorePath:Array.isArray(current.explorePath)?[...current.explorePath]:[],networkRelation:null};
  const next=networkStateFor(v2Data,{networkSystem:systemId,networkNode:null,explorePath:[]});
  if(!next.node||next.systemId!==systemId) return unchanged;
  const selected=networkNodeFor(v2Data,current.networkNode);
  const path=preservePath&&selected&&unchanged.explorePath[unchanged.explorePath.length-1]!==selected.id
   ? [...unchanged.explorePath,selected.id]
   : preservePath?unchanged.explorePath:[];
- return {networkSystem:next.systemId,networkNode:next.node.id,explorePath:path};
+ return {networkSystem:next.systemId,networkNode:next.node.id,explorePath:path,networkRelation:null};
 }
 function networkStepForAction(step, action) {
  const current=['systems','nodes','detail'].includes(step)?step:'systems';
@@ -268,7 +277,7 @@ function sceneGroupsFor(scenes) {
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -285,7 +294,7 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  function saveProgress(progress) { memoryProgress=progress; try { window.localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); } catch(error) { state.storageNotice='学习记录暂未保存，已保留在当前页面。'; } return memoryProgress; }
  const initialProgress=loadProgress();
  const initialNetwork=networkStateFor(V2,{networkSystem:'space-relations',networkNode:'to',explorePath:[]});
- let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,lessonLayer:'quick',filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,networkStep:'systems',storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
+ let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,lessonLayer:'quick',filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,networkRelation:null,networkStep:'systems',storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
  const vocabularyByWord=new Map((D.vocabulary||[]).map(item=>[item.word,item]));
  const safe=value=>html(value);
  const wordButton=(word,className='tag')=>`<button type="button" class="${className}" data-action="open-word" data-word="${safe(word)}">${safe(word)}</button>`;

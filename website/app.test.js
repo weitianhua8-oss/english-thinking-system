@@ -421,25 +421,34 @@ test('network readiness requires usable V2 data and a valid graph API', () => {
   assert.equal(core.isNetworkReady(v2, {}), false);
 });
 
-test('selectNetworkNode follows an explorable V2 node and ignores an unknown target', () => {
+test('selectedNetworkRelation returns only the current node’s real explorable relation', () => {
   const v2 = require('./v2-data.js');
-  const start = { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] };
+  const graph = require('./v2-network.js');
+  const node = graph.nodeById(v2, 'to');
+  assert.equal(core.selectedNetworkRelation(v2, graph, node, 'into')?.target, 'into');
+  assert.equal(core.selectedNetworkRelation(v2, graph, node, 'be'), null);
+  assert.equal(core.selectedNetworkRelation(v2, graph, node, null), null);
+});
+
+test('selectNetworkNode follows an explorable V2 node and clears selected relation', () => {
+  const v2 = require('./v2-data.js');
+  const start = { networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: 'into' };
   assert.deepEqual(core.selectNetworkNode(start, v2, 'into'), {
-    networkSystem: 'space-relations', networkNode: 'into', explorePath: ['to'],
+    networkSystem: 'space-relations', networkNode: 'into', explorePath: ['to'], networkRelation: null,
   });
   const unchanged = core.selectNetworkNode(start, v2, 'missing');
-  assert.deepEqual(unchanged, start);
+  assert.deepEqual(unchanged, {...start, networkRelation: null});
   assert.notEqual(unchanged, start);
   const invalid = structuredClone(v2);
   invalid.nodes.find(node => node.id === 'into').deep.scenes = [];
-  assert.deepEqual(core.selectNetworkNode(start, invalid, 'into'), start);
+  assert.deepEqual(core.selectNetworkNode(start, invalid, 'into'), {...start, networkRelation: null});
 });
 
 test('selectNetworkBack restores the last explored node and removes it from the path', () => {
   const v2 = require('./v2-data.js');
   const network = require('./v2-network.js');
   assert.deepEqual(core.selectNetworkBack({ networkSystem: 'space-relations', networkNode: 'into', explorePath: ['to'] }, v2, network), {
-    networkSystem: 'space-relations', networkNode: 'to', explorePath: [],
+    networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: null,
   });
 });
 
@@ -448,14 +457,14 @@ test('selectNetworkSystem preserves the current node in the path for a system re
   const network = require('./v2-network.js');
   const start = { networkSystem: 'space-relations', networkNode: 'at', explorePath: [] };
   const selected = core.selectNetworkSystem(start, v2, 'space-relations', true);
-  assert.deepEqual(selected, { networkSystem: 'space-relations', networkNode: 'at', explorePath: ['at'] });
-  assert.deepEqual(core.selectNetworkBack(selected, v2, network), start);
+  assert.deepEqual(selected, { networkSystem: 'space-relations', networkNode: 'at', explorePath: ['at'], networkRelation: null });
+  assert.deepEqual(core.selectNetworkBack(selected, v2, network), {...start, networkRelation: null});
 });
 
 test('selectNetworkDirect opens a course node without inheriting a prior explore path', () => {
   const v2 = require('./v2-data.js');
   assert.deepEqual(core.selectNetworkDirect({ networkSystem: 'space-relations', networkNode: 'to', explorePath: ['at'] }, v2, 'at'), {
-    networkSystem: 'space-relations', networkNode: 'at', explorePath: [],
+    networkSystem: 'space-relations', networkNode: 'at', explorePath: [], networkRelation: null,
   });
 });
 
