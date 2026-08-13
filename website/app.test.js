@@ -290,6 +290,11 @@ test('renderNetworkContent exposes only the relation type badges present on each
   assert.match(beMarkup, /relationBadge relation-growth/);
 });
 
+test('network growth relation badge uses a teal visual language', () => {
+  const styles = fs.readFileSync(require.resolve('./styles.css'), 'utf8');
+  assert.match(styles, /\.networkMapWorkspace \.relation-growth\{border-color:#99f6e4;background:#f0fdfa;color:#0f766e\}/);
+});
+
 test('networkStepForAction keeps the mobile network in one panel at a time', () => {
   assert.equal(typeof core.networkStepForAction, 'function');
   assert.equal(core.networkStepForAction('systems', 'select-network-system'), 'nodes');
