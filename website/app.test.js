@@ -286,6 +286,40 @@ test('networkStepForAction keeps the mobile network in one panel at a time', () 
   assert.equal(core.networkStepForAction('systems', 'lesson-network'), 'detail');
 });
 
+test('lessonLayerForAction switches only among the three V2 learning layers', () => {
+  assert.equal(core.lessonLayerForAction('quick','lesson-layer-deep'),'deep');
+  assert.equal(core.lessonLayerForAction('deep','lesson-layer-network'),'network');
+  assert.equal(core.lessonLayerForAction('network','unknown'),'network');
+});
+
+test('renderLessonMiniNetwork shows the selected V2 lesson and safe network entry points', () => {
+  const v2 = require('./v2-data.js');
+  const network = require('./v2-network.js');
+  const markup = core.renderLessonMiniNetwork(v2, network, core.v2LessonFor(v2, 'to'));
+  assert.match(markup, /TO/);
+  assert.match(markup, /核心意义/);
+  assert.match(markup, /所属系统/);
+  assert.match(markup, /IN \+ TO → INTO/);
+  assert.match(markup, /data-action="view" data-view="network" data-node-id="into"/);
+  assert.doesNotMatch(markup, /AT 属于空间关系系统/);
+
+  const unsafe = structuredClone(v2);
+  unsafe.nodes.find(node => node.id === 'to').coreMeaning = '<script>alert(1)<\/script>';
+  unsafe.nodes.find(node => node.id === 'to').relations.find(relation => relation.target === 'into').label = '<img src=x onerror=alert(2)>';
+  const unsafeMarkup = core.renderLessonMiniNetwork(unsafe, network, core.v2LessonFor(unsafe, 'to'));
+  assert.match(unsafeMarkup, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+  assert.match(unsafeMarkup, /&lt;img src=x onerror=alert\(2\)&gt;/);
+  assert.doesNotMatch(unsafeMarkup, /<script>|<img src=x/);
+});
+
+test('renderLessonMiniNetwork shows a neutral message without explorable relations', () => {
+  const v2 = structuredClone(require('./v2-data.js'));
+  const network = require('./v2-network.js');
+  v2.nodes.forEach(node => { node.relations = []; });
+  const markup = core.renderLessonMiniNetwork(v2, network, core.v2LessonFor(v2, 'to'));
+  assert.match(markup, /该关联内容暂未开放/);
+});
+
 test('reviewContentFor preserves V1 cards and renders revealed V2 review details safely', () => {
   const v2 = structuredClone(require('./v2-data.js'));
   const v2Word = 'too-to';
