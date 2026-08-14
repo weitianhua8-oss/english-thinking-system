@@ -18,12 +18,50 @@
     "meaning_growth": {"type": "array", "items": {"type": "string"}},
     "scenes": {"type": "array", "items": {"type": "string"}},
     "collocations": {"type": "array", "items": {"type": "string"}},
-    "confusions": {"type": "array", "items": {"type": "string"}},
+    "confusions": {"type": "array", "items": {}},
     "pitfalls": {"type": "array", "items": {"type": "string"}},
     "memory_hook": {"type": ["string", "null"]},
     "root_affix": {"type": ["string", "null"]},
     "knowledge_links": {"type": "array", "items": {"type": "string"}},
     "card_metaphor": {"type": ["string", "null"]},
+    "learning_layers": {
+      "type": ["object", "null"],
+      "required": ["quick", "deep", "network"],
+      "properties": {
+        "quick": {
+          "type": "object",
+          "required": ["hook", "core_image", "one_line", "prototype"],
+          "properties": {
+            "hook": {"type": "string"},
+            "core_image": {"type": "string"},
+            "one_line": {"type": "string"},
+            "prototype": {"type": "string"}
+          }
+        },
+        "deep": {
+          "type": "object",
+          "required": ["logic", "growth", "examples", "confusions"],
+          "properties": {
+            "logic": {"type": "string"},
+            "growth": {"type": "array", "items": {"type": "string"}},
+            "examples": {"type": "array", "items": {"type": "string"}},
+            "collocations": {"type": "array", "items": {"type": "string"}},
+            "confusions": {"type": "array", "items": {}},
+            "pitfalls": {"type": "array", "items": {"type": "string"}},
+            "root_affix": {"type": ["string", "null"]}
+          }
+        },
+        "network": {
+          "type": "object",
+          "required": ["nodes", "relations"],
+          "properties": {
+            "nodes": {"type": "array", "items": {"type": "string"}},
+            "relations": {"type": "array", "items": {"type": "string"}},
+            "next_recommended": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
     "content_status": {"type": "string", "enum": ["legacy", "draft", "reviewed", "canonical"]}
   }
 }
