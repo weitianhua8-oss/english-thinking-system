@@ -1,0 +1,1300 @@
+[
+  {
+    "lesson_no": 1,
+    "word": "I",
+    "tagline": "I = 说话者把镜头对准自己。",
+    "image": "诺诺手指自己；镜头中心就是“当前说话者”。",
+    "logic": "I 不是固定指某个人，而是永远指“此刻正在说话的人”。说话者一换，I 的指向也换。",
+    "examples": [
+      "I am ready.",
+      "I know.",
+      "I want to go."
+    ],
+    "contrast": "I vs me：I 是动作/状态的出发位置；me 是动作到达的对象。",
+    "hook": "I = 镜头对准我自己。",
+    "card": "人物视角卡：诺诺居中，胸前 I / SPEAKER 标签。",
+    "master_id": 1,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "人称指代",
+    "related": [
+      "you",
+      "he",
+      "she",
+      "it"
+    ]
+  },
+  {
+    "lesson_no": 2,
+    "word": "you",
+    "tagline": "you = 说话者把镜头转向正在交流的对象。",
+    "image": "I 的箭头指向对面的人：YOU。",
+    "logic": "you 的核心是“当前被我说话的人”。它可以指一个人，也可以指一群人。",
+    "examples": [
+      "You are here.",
+      "Can you help?",
+      "I see you."
+    ],
+    "contrast": "you vs your：you 指人；your 把某物连接到“你”的所属范围。",
+    "hook": "YOU = 镜头对准对方。",
+    "card": "对话站位卡：I → YOU。",
+    "master_id": 2,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "人称指代",
+    "related": [
+      "I",
+      "he",
+      "she",
+      "it"
+    ]
+  },
+  {
+    "lesson_no": 3,
+    "word": "he",
+    "tagline": "he = 指向一个男性第三方。",
+    "image": "I 与 YOU 在前景，远处另一个男性被聚光灯圈住。",
+    "logic": "he 不在当前 I–YOU 的说话位置，而是“我们正在谈论的那个男性”。",
+    "examples": [
+      "He is here.",
+      "He has a dog.",
+      "I know him."
+    ],
+    "contrast": "he vs him：he 做主语；him 是动作目标。",
+    "hook": "HE = 我们正在谈的那个男的。",
+    "card": "第三方站位卡：I / YOU / HE。",
+    "master_id": 3,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "人称指代",
+    "related": [
+      "I",
+      "you",
+      "she",
+      "it"
+    ]
+  },
+  {
+    "lesson_no": 4,
+    "word": "she",
+    "tagline": "she = 指向一个女性第三方。",
+    "image": "I 与 YOU 在前景，远处一个女性被聚光灯圈住。",
+    "logic": "she 和 he 占同一个“第三方”位置，只是指向女性。",
+    "examples": [
+      "She is happy.",
+      "She comes here.",
+      "I know her."
+    ],
+    "contrast": "she vs her：she 做主语；her 可作动作目标，也可建立所属关系。",
+    "hook": "SHE = 我们正在谈的那个女的。",
+    "card": "第三方站位卡：I / YOU / SHE。",
+    "master_id": 4,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "人称指代",
+    "related": [
+      "you",
+      "he",
+      "it",
+      "we"
+    ]
+  },
+  {
+    "lesson_no": 5,
+    "word": "it",
+    "tagline": "it = 给已知的事物、动物或当前情况一个“继续指代的代号”。",
+    "image": "先指向一个球 THIS BALL，下一格把标签换成 IT。",
+    "logic": "对象一旦已经进入共同注意力，就可以用 it 继续说；天气、时间等也可把“整个当前情况”放到 it 这个主语支点上。",
+    "examples": [
+      "It is red.",
+      "It is raining.",
+      "I like it."
+    ],
+    "contrast": "this/that 用来主动指出；it 用来继续指已知对象或情境。",
+    "hook": "IT = 刚才那个东西 / 当前这个情况。",
+    "card": "THIS → IT 指代切换卡。",
+    "master_id": 5,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "人称指代",
+    "related": [
+      "he",
+      "she",
+      "we",
+      "they"
+    ]
+  },
+  {
+    "lesson_no": 6,
+    "word": "we",
+    "tagline": "we = I + 其他人，被圈成同一个群体。",
+    "image": "诺诺和其他人一起站进一个透明圆圈。",
+    "logic": "we 一定包含说话者 I；是否包含听话者 you 要看语境。",
+    "examples": [
+      "We are ready.",
+      "We have time.",
+      "We can go."
+    ],
+    "contrast": "we vs they：we 的圈里一定有 I；they 的圈里没有当前说话者。",
+    "hook": "WE = 我把自己和别人圈在一起。",
+    "card": "群体圆圈卡：I + others = WE。",
+    "master_id": 6,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "人称指代",
+    "related": [
+      "she",
+      "it",
+      "they",
+      "me"
+    ]
+  },
+  {
+    "lesson_no": 7,
+    "word": "they",
+    "tagline": "they = 把多个第三方对象打包成一组。",
+    "image": "I / YOU 在前景，远处多人被一个圆圈框住。",
+    "logic": "they 可以是一群人、动物或物体；核心是“多个不含当前说话者的第三方对象”。",
+    "examples": [
+      "They are outside.",
+      "They have a car.",
+      "I see them."
+    ],
+    "contrast": "they vs we：是否包含 I。",
+    "hook": "THEY = 远处那一组。",
+    "card": "第三方群体卡。",
+    "master_id": 7,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "人称指代",
+    "related": [
+      "it",
+      "we",
+      "me",
+      "him"
+    ]
+  },
+  {
+    "lesson_no": 8,
+    "word": "this",
+    "tagline": "this = 指向心理或物理距离“近”的单个对象。",
+    "image": "诺诺手里拿着一本书，书被 THIS 光圈标记。",
+    "logic": "“近”可以是空间近，也可以是刚提到、正关注、心理上更贴近。",
+    "examples": [
+      "This is my book.",
+      "Look at this.",
+      "I like this."
+    ],
+    "contrast": "this vs that：近 vs 远。",
+    "hook": "THIS = 我手边这个。",
+    "card": "近距离指向卡。",
+    "master_id": 8,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "指示与位置",
+    "related": [
+      "that",
+      "these",
+      "those",
+      "here"
+    ]
+  },
+  {
+    "lesson_no": 9,
+    "word": "that",
+    "tagline": "that = 指向心理或物理距离“较远”的单个对象。",
+    "image": "诺诺指向远处一个物体，目标被 THAT 标记。",
+    "logic": "“远”不仅是空间，也可以是时间距离或心理距离。",
+    "examples": [
+      "That is my car.",
+      "Look at that.",
+      "That day was special."
+    ],
+    "contrast": "this vs that：近 vs 远。",
+    "hook": "THAT = 那边那个。",
+    "card": "远距离指向卡。",
+    "master_id": 9,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "指示与位置",
+    "related": [
+      "this",
+      "these",
+      "those",
+      "here"
+    ]
+  },
+  {
+    "lesson_no": 10,
+    "word": "here",
+    "tagline": "here = 把当前焦点位置标成“这里”。",
+    "image": "诺诺脚下出现发光 HERE 圆点。",
+    "logic": "here 是对话中的当前空间焦点，不一定永远等于说话者真实脚下。",
+    "examples": [
+      "Come here.",
+      "I am here.",
+      "Put it here."
+    ],
+    "contrast": "here vs there：当前焦点 vs 另一个位置。",
+    "hook": "HERE = 镜头脚下这个点。",
+    "card": "HERE 地面焦点卡。",
+    "master_id": 10,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "指示与位置",
+    "related": [
+      "these",
+      "those",
+      "there",
+      "this"
+    ]
+  },
+  {
+    "lesson_no": 11,
+    "word": "there",
+    "tagline": "there = 指向“不是当前这里”的另一个位置。",
+    "image": "HERE 点在脚下，远处另一个点被标成 THERE。",
+    "logic": "there 建立第二个空间位置；there is/are 进一步用于把某个对象引入当前场景。",
+    "examples": [
+      "Go there.",
+      "Put it there.",
+      "There is a cat outside."
+    ],
+    "contrast": "there vs here：另一个位置 vs 当前焦点。",
+    "hook": "THERE = 那边那个位置。",
+    "card": "HERE ↔ THERE 双点卡。",
+    "master_id": 11,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "指示与位置",
+    "related": [
+      "those",
+      "here",
+      "this",
+      "that"
+    ]
+  },
+  {
+    "lesson_no": 12,
+    "word": "who",
+    "tagline": "who = 在“人物槽位”放一个未知问号。",
+    "image": "人物剪影的脸部是一个问号。",
+    "logic": "你已经知道答案类型是“人”，只是还不知道具体是哪一个人。",
+    "examples": [
+      "Who is she?",
+      "Who are you?",
+      "Who knows?"
+    ],
+    "contrast": "who vs what：未知的人 vs 未知的事物/信息。",
+    "hook": "WHO = 人的位置打问号。",
+    "card": "? PERSON 问号人物卡。",
+    "master_id": 12,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "人与指向",
+    "subcategory": "疑问指向",
+    "related": [
+      "whom",
+      "whose",
+      "what",
+      "which"
+    ]
+  },
+  {
+    "lesson_no": 13,
+    "word": "be",
+    "tagline": "be = 把主语连接到它当前所处的身份、状态、位置或过程。",
+    "image": "人物通过一根连接线接到 HAPPY / AT SCHOOL / A STUDENT 三个状态块。",
+    "logic": "普通动词回答“做什么”；be 更像状态连接器，回答“主语现在是什么情况”。am/is/are/was/were 都只是 be 配合人称和时间换的外形。",
+    "examples": [
+      "I am happy.",
+      "She is at school.",
+      "He is sleeping."
+    ],
+    "contrast": "be vs do：be 管状态；do 管执行事情。be vs get：be 在状态里；get 进入状态。",
+    "hook": "BE = 状态连接器。",
+    "card": "主卡：Subject → BE → State；配套 be/do、be/get 对比卡。",
+    "master_id": 13,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "have",
+      "do",
+      "get",
+      "go"
+    ]
+  },
+  {
+    "lesson_no": 14,
+    "word": "have",
+    "tagline": "have = 某物、关系或经历处在主语的“拥有/经历范围”里。",
+    "image": "人物周围有一个透明“我的范围圈”，里面放 DOG / PHONE / TIME。",
+    "logic": "have 不只表示拥有物品，也可表示拥有特征、经历事件。底层都是“它现在在我的范围里”。",
+    "examples": [
+      "I have a dog.",
+      "She has blue eyes.",
+      "I have breakfast at seven."
+    ],
+    "contrast": "get vs have：get 是进入范围/到手；have 是已经在范围里。",
+    "hook": "HAVE = 在我的圈里。",
+    "card": "GET → 进圈；HAVE → 已在圈内。",
+    "master_id": 14,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "be",
+      "do",
+      "get",
+      "go"
+    ]
+  },
+  {
+    "lesson_no": 15,
+    "word": "do",
+    "tagline": "do = 把一件事情、任务或活动执行出来。",
+    "image": "任务卡 HOMEWORK 被诺诺逐项完成。",
+    "logic": "do 关注“执行事情”，也可作为普通动作句疑问/否定/强调的结构支架。",
+    "examples": [
+      "I do my homework.",
+      "Do you like it?",
+      "I do not know."
+    ],
+    "contrast": "do vs make：do 执行任务；make 产生结果。",
+    "hook": "DO = 做事情。",
+    "card": "任务清单卡；配套 DO vs MAKE。",
+    "master_id": 15,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "be",
+      "have",
+      "get",
+      "go"
+    ]
+  },
+  {
+    "lesson_no": 16,
+    "word": "get",
+    "tagline": "get = 经过一个过程，最终触达到目标。",
+    "image": "起点 → 发光目标；目标可换成 BOOK / HOME / MESSAGE / IDEA / TIRED。",
+    "logic": "get 的中文意思看似很多，其实目标类型不同：触达到东西、地点、信息、理解或状态。看见 get 先找“目标是什么”。",
+    "examples": [
+      "I got a book.",
+      "I get home at six.",
+      "I get tired."
+    ],
+    "contrast": "get vs have：到手 vs 持有；get vs take：结果触达 vs 抓住带走；get vs become：口语化进入状态 vs 变成。",
+    "hook": "GET = 到点；先找目标。",
+    "card": "五目标主卡 + get in/out/up/back/into/over/through 空间扩展卡。",
+    "master_id": 16,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "have",
+      "do",
+      "go",
+      "come"
+    ]
+  },
+  {
+    "lesson_no": 17,
+    "word": "go",
+    "tagline": "go = 从当前参照点离开，朝别处移动。",
+    "image": "HERE 起点上的人物沿箭头离开。",
+    "logic": "go 的方向核心是“离开当前焦点”；后面的空间词继续告诉你朝哪边去。",
+    "examples": [
+      "I go to school.",
+      "Go out.",
+      "Go back."
+    ],
+    "contrast": "go vs come：离开焦点 vs 朝焦点靠近。",
+    "hook": "GO = 从这里走开。",
+    "card": "HERE → ELSEWHERE 方向卡。",
+    "master_id": 17,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "do",
+      "get",
+      "come",
+      "take"
+    ]
+  },
+  {
+    "lesson_no": 18,
+    "word": "come",
+    "tagline": "come = 朝说话者、听话者或当前心理焦点靠近。",
+    "image": "人物从远处沿箭头进入 HERE 光圈。",
+    "logic": "come 的参照点是对话中的焦点，因此说话者也可以把焦点放在对方所在地。",
+    "examples": [
+      "Come here.",
+      "Come in.",
+      "Come back."
+    ],
+    "contrast": "come vs go：朝焦点靠近 vs 离开焦点。",
+    "hook": "COME = 朝焦点靠近。",
+    "card": "远处 → HERE；配套 GO vs COME。",
+    "master_id": 18,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "get",
+      "go",
+      "take",
+      "give"
+    ]
+  },
+  {
+    "lesson_no": 19,
+    "word": "take",
+    "tagline": "take = 把某人/物纳入控制，并带离原来的参照点。",
+    "image": "手抓住桌上的书，然后箭头把书带离桌面。",
+    "logic": "take 的关键是“控制 + 带走”，因此可延伸到带某人、使用交通方式等。",
+    "examples": [
+      "Take this book.",
+      "I take my son to school.",
+      "Take a bus."
+    ],
+    "contrast": "take vs bring：带走 vs 带来；take vs get：动作过程 vs 最终到手。",
+    "hook": "TAKE = 抓住，然后带走。",
+    "card": "桌面 → 手 → 远处。",
+    "master_id": 19,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "go",
+      "come",
+      "give",
+      "put"
+    ]
+  },
+  {
+    "lesson_no": 20,
+    "word": "give",
+    "tagline": "give = 把某物从自己的控制范围转移到别人那里。",
+    "image": "礼物盒从“我”沿箭头移动到“你”。",
+    "logic": "具体物品、时间、机会、帮助都能被看成“从一方转移到另一方”。",
+    "examples": [
+      "Give me the book.",
+      "Give it to me.",
+      "Give me some time."
+    ],
+    "contrast": "give vs take：转出去 vs 纳入控制并带走。",
+    "hook": "GIVE = 从我这里到你那里。",
+    "card": "控制权转移卡。",
+    "master_id": 20,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "come",
+      "take",
+      "put",
+      "make"
+    ]
+  },
+  {
+    "lesson_no": 21,
+    "word": "put",
+    "tagline": "put = 让一个东西进入指定的位置或状态。",
+    "image": "手里的球沿箭头落到 IN BOX / ON TABLE / HERE 三个目标位。",
+    "logic": "put 自然会追问“放到哪里”，所以后面的空间关系词特别重要。",
+    "examples": [
+      "Put it here.",
+      "Put it on the table.",
+      "Put it in the box."
+    ],
+    "contrast": "put vs take：安排落点 vs 带离原处。",
+    "hook": "PUT = 给东西安排一个位置。",
+    "card": "多目标落点卡。",
+    "master_id": 21,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "take",
+      "give",
+      "make",
+      "keep"
+    ]
+  },
+  {
+    "lesson_no": 22,
+    "word": "make",
+    "tagline": "make = 通过作用，让一个结果出现。",
+    "image": "原料/动作 → 发光 RESULT。",
+    "logic": "既可以制造东西，也可以让某个状态发生；共同点是“之前没有这个结果，现在出现了”。",
+    "examples": [
+      "I make a cake.",
+      "Make a plan.",
+      "You make me happy."
+    ],
+    "contrast": "make vs do：产生结果 vs 执行事情。",
+    "hook": "MAKE = 让结果出现。",
+    "card": "TASK vs RESULT 对比卡。",
+    "master_id": 22,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "give",
+      "put",
+      "keep",
+      "bring"
+    ]
+  },
+  {
+    "lesson_no": 23,
+    "word": "keep",
+    "tagline": "keep = 让某物或某状态继续留住，不让它离开或改变。",
+    "image": "一个状态球被透明 KEEP 力场保护。",
+    "logic": "keep 的两大方向是留住某物、维持状态；keep + -ing 就是让动作过程继续。",
+    "examples": [
+      "Keep the door open.",
+      "Keep going.",
+      "Keep safe."
+    ],
+    "contrast": "keep vs have：继续留住 vs 当前拥有；keep vs stay：主动维持 vs 自身停留。",
+    "hook": "KEEP = 别让它跑掉、别让状态变。",
+    "card": "KEEP 力场卡。",
+    "master_id": 23,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "put",
+      "make",
+      "bring",
+      "turn"
+    ]
+  },
+  {
+    "lesson_no": 24,
+    "word": "bring",
+    "tagline": "bring = 带着人或物，朝“这里/当前焦点”移动。",
+    "image": "人物抱着书从远处走向 HERE。",
+    "logic": "bring 与 take 都含携带，差别主要在参照方向。",
+    "examples": [
+      "Bring your book here.",
+      "Bring me some water.",
+      "Bring it back."
+    ],
+    "contrast": "bring vs take：朝焦点带来 vs 从焦点带走。",
+    "hook": "BRING = 带着东西朝这里来。",
+    "card": "远处 + BOOK → HERE。",
+    "master_id": 24,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "make",
+      "keep",
+      "turn",
+      "be"
+    ]
+  },
+  {
+    "lesson_no": 25,
+    "word": "turn",
+    "tagline": "turn = 从原来的方向或状态转到另一个方向或状态。",
+    "image": "道路从直行转弯；旁边白天切换到黑夜。",
+    "logic": "turn 的核心是“切换”，因此既能转方向，也能 turn on/off、turn red、turn cold。",
+    "examples": [
+      "Turn left.",
+      "Turn the key.",
+      "The sky turned dark."
+    ],
+    "contrast": "turn vs get/become：turn 强调明显切换；get 更口语、动态；become 更中性地变成。",
+    "hook": "TURN = 从这边转到那边。",
+    "card": "方向切换 + 状态切换双场景卡。",
+    "master_id": 25,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "核心动作引擎",
+    "subcategory": "核心动作母词",
+    "related": [
+      "keep",
+      "bring",
+      "be",
+      "have"
+    ]
+  },
+  {
+    "lesson_no": 26,
+    "word": "see",
+    "tagline": "see = 某物进入视觉范围，视觉结果已经发生。",
+    "image": "OBJECT → EYES。",
+    "logic": "see 关注“看到了没有”，不强调你是否主动把目光投过去。",
+    "examples": [
+      "I see a bird.",
+      "I see what you mean.",
+      "See you tomorrow."
+    ],
+    "contrast": "LOOK = 方向；SEE = 结果；WATCH = 持续过程。",
+    "hook": "SEE = 东西进了眼睛。",
+    "card": "OBJECT → EYES 结果卡。",
+    "master_id": 26,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "感知·思考·交流",
+    "subcategory": "感知与思考",
+    "related": [
+      "look",
+      "watch",
+      "hear",
+      "listen"
+    ]
+  },
+  {
+    "lesson_no": 27,
+    "word": "look",
+    "tagline": "look = 主动把目光和注意力投向某个方向。",
+    "image": "EYES → TARGET。",
+    "logic": "look 是方向动作，所以经常需要空间词来说明目光朝哪里：look at/up/down/back。",
+    "examples": [
+      "Look at me.",
+      "Look up.",
+      "Look around."
+    ],
+    "contrast": "look vs see：主动目光动作 vs 视觉结果。",
+    "hook": "LOOK = 把眼睛当箭头射过去。",
+    "card": "EYES → AT → TARGET。",
+    "master_id": 27,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "感知·思考·交流",
+    "subcategory": "感知与思考",
+    "related": [
+      "see",
+      "watch",
+      "hear",
+      "listen"
+    ]
+  },
+  {
+    "lesson_no": 28,
+    "word": "watch",
+    "tagline": "watch = 把注意力持续放在会变化的对象或过程上。",
+    "image": "眼睛持续跟随 bird₁ → bird₂ → bird₃。",
+    "logic": "watch 的两个关键词是“持续 + 变化”，因此特别适合节目、比赛、电影、孩子、风险。",
+    "examples": [
+      "I watch TV.",
+      "Watch the baby.",
+      "Watch out!"
+    ],
+    "contrast": "LOOK = 方向；SEE = 结果；WATCH = 过程。",
+    "hook": "WATCH = 眼睛不走，跟着变化。",
+    "card": "三帧连续动作卡。",
+    "master_id": 28,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "感知·思考·交流",
+    "subcategory": "感知与思考",
+    "related": [
+      "see",
+      "look",
+      "hear",
+      "listen"
+    ]
+  },
+  {
+    "lesson_no": 29,
+    "word": "hear",
+    "tagline": "hear = 声音进入耳朵，听觉结果发生。",
+    "image": "SOUND → EAR。",
+    "logic": "hear 不要求主动注意；声音可能自己进入你的听觉范围。",
+    "examples": [
+      "I hear a sound.",
+      "Can you hear me?",
+      "I heard the news."
+    ],
+    "contrast": "hear vs listen：结果 vs 主动听。",
+    "hook": "HEAR = 声音进耳朵。",
+    "card": "声波 → 耳朵。",
+    "master_id": 29,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "感知·思考·交流",
+    "subcategory": "感知与思考",
+    "related": [
+      "look",
+      "watch",
+      "listen",
+      "feel"
+    ]
+  },
+  {
+    "lesson_no": 30,
+    "word": "listen",
+    "tagline": "listen = 主动把听觉注意力投向声音目标。",
+    "image": "EAR → SOUND。",
+    "logic": "listen 是主动方向动作，to 用来指出听觉注意力朝向的目标。",
+    "examples": [
+      "Listen to me.",
+      "Listen to music.",
+      "I am listening."
+    ],
+    "contrast": "HEAR = SOUND → EAR；LISTEN = EAR → SOUND。",
+    "hook": "LISTEN = 把耳朵当箭头指过去。",
+    "card": "EAR → TO → SOUND。",
+    "master_id": 30,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "感知·思考·交流",
+    "subcategory": "感知与思考",
+    "related": [
+      "watch",
+      "hear",
+      "feel",
+      "smell"
+    ]
+  },
+  {
+    "lesson_no": 31,
+    "word": "feel",
+    "tagline": "feel = 直接感知身体、情绪或接触带来的内部体验。",
+    "image": "温度、触觉、情绪的箭头都进入人物内部。",
+    "logic": "feel 的焦点不是外部客观状态本身，而是“我内部体验到了什么”。",
+    "examples": [
+      "I feel cold.",
+      "I feel happy.",
+      "Feel the water."
+    ],
+    "contrast": "feel vs be：体验到状态 vs 陈述状态。",
+    "hook": "FEEL = 从身体和内心里面知道。",
+    "card": "BODY/HEART 内部体验卡。",
+    "master_id": 31,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "感知·思考·交流",
+    "subcategory": "感知与思考",
+    "related": [
+      "hear",
+      "listen",
+      "smell",
+      "taste"
+    ]
+  },
+  {
+    "lesson_no": 32,
+    "word": "know",
+    "tagline": "know = 信息已经稳定存在于你的认知范围里。",
+    "image": "大脑中 ANSWER 知识块已经点亮。",
+    "logic": "know 偏已有的认知结果：知道事实、认识人、熟悉地方。",
+    "examples": [
+      "I know the answer.",
+      "I know Tom.",
+      "I know this place."
+    ],
+    "contrast": "know vs think：已有认知 vs 正在加工/形成判断。",
+    "hook": "KNOW = 信息已经在脑子里。",
+    "card": "已点亮知识块。",
+    "master_id": 32,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "感知·思考·交流",
+    "subcategory": "感知与思考",
+    "related": [
+      "notice",
+      "recognize",
+      "think",
+      "understand"
+    ]
+  },
+  {
+    "lesson_no": 33,
+    "word": "think",
+    "tagline": "think = 大脑正在处理信息、形成想法或判断。",
+    "image": "信息 A + B → 脑内齿轮 → IDEA。",
+    "logic": "think 偏加工过程与观点形成，而不是已经确定的知识库存。",
+    "examples": [
+      "I am thinking.",
+      "I think it is good.",
+      "Think about it."
+    ],
+    "contrast": "think vs know：正在加工/判断 vs 已经知道。",
+    "hook": "THINK = 脑子正在加工。",
+    "card": "INPUT → BRAIN → IDEA。",
+    "master_id": 33,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "感知·思考·交流",
+    "subcategory": "感知与思考",
+    "related": [
+      "recognize",
+      "know",
+      "understand",
+      "remember"
+    ]
+  },
+  {
+    "lesson_no": 34,
+    "word": "in",
+    "tagline": "in = 处在一个边界的内部。",
+    "image": "透明盒子里有一个球。",
+    "logic": "物理空间、国家、时间段、抽象状态都可以被英语想成“容器范围”。",
+    "examples": [
+      "in the box",
+      "in China",
+      "in trouble"
+    ],
+    "contrast": "in vs into：已经在里面 vs 从外面进入里面。",
+    "hook": "IN = 在圈里面。",
+    "card": "透明容器卡。",
+    "master_id": 34,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "on",
+      "at",
+      "to",
+      "from"
+    ]
+  },
+  {
+    "lesson_no": 35,
+    "word": "on",
+    "tagline": "on = 与表面接触，并处于依附/支撑关系。",
+    "image": "球接触桌面；接触点发光。",
+    "logic": "on 从物理“接触表面”进一步延伸到接通、运行等状态。",
+    "examples": [
+      "on the table",
+      "on the wall",
+      "The light is on."
+    ],
+    "contrast": "in vs on：内部 vs 表面接触。",
+    "hook": "ON = 贴上 / 接上。",
+    "card": "接触表面 + ON 开关双场景。",
+    "master_id": 35,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "in",
+      "at",
+      "to",
+      "from"
+    ]
+  },
+  {
+    "lesson_no": 36,
+    "word": "at",
+    "tagline": "at = 把地点、时间或目标当成一个点来精准定位。",
+    "image": "地图 pin 落在 SCHOOL；时间线 pin 落在 6:00。",
+    "logic": "at 不强调空间内部大小，而是把对象压缩成“一个定位点”。",
+    "examples": [
+      "at school",
+      "at six",
+      "look at me"
+    ],
+    "contrast": "AT = 点；IN = 里面；ON = 表面。",
+    "hook": "AT = 手指点一下。",
+    "card": "点定位卡。",
+    "master_id": 36,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "in",
+      "on",
+      "to",
+      "from"
+    ]
+  },
+  {
+    "lesson_no": 37,
+    "word": "to",
+    "tagline": "to = 朝一个目标点移动或延伸。",
+    "image": "起点 → 发光目标。",
+    "logic": "to 提供“方向 + 终点”，因此可连接 go、give、listen、talk 等动作。",
+    "examples": [
+      "go to school",
+      "give it to me",
+      "listen to music"
+    ],
+    "contrast": "to vs at：朝目标移动 vs 锁定目标点。",
+    "hook": "TO = 箭头指向目标。",
+    "card": "起点 → TARGET。",
+    "master_id": 37,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "on",
+      "at",
+      "from",
+      "into"
+    ]
+  },
+  {
+    "lesson_no": 38,
+    "word": "from",
+    "tagline": "from = 从某个起点、来源或原点出发。",
+    "image": "箭头从一个发光源点向外长出。",
+    "logic": "空间、时间、身份、信息都可以有“来源起点”。",
+    "examples": [
+      "from China",
+      "from Monday",
+      "a letter from Tom"
+    ],
+    "contrast": "from vs to：起点 vs 终点。",
+    "hook": "FROM = 箭头从这里长出来。",
+    "card": "SOURCE → 外部。",
+    "master_id": 38,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "at",
+      "to",
+      "into",
+      "out"
+    ]
+  },
+  {
+    "lesson_no": 39,
+    "word": "into",
+    "tagline": "into = 朝内部移动，并真正跨过边界进入其中。",
+    "image": "球从盒外穿过边界进入透明盒。",
+    "logic": "可以把 into 看成 in（内部）+ to（朝目标），因此特别适合表达动态进入与状态转化。",
+    "examples": [
+      "go into the room",
+      "put it into the box",
+      "turn into ice"
+    ],
+    "contrast": "in vs into：内部状态 vs 进入过程。",
+    "hook": "INTO = 箭头钻进盒子。",
+    "card": "外 → 穿界 → 内。",
+    "master_id": 39,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "to",
+      "from",
+      "out",
+      "up"
+    ]
+  },
+  {
+    "lesson_no": 40,
+    "word": "out",
+    "tagline": "out = 从内部越过边界，到外面。",
+    "image": "球从盒内冲出边界。",
+    "logic": "out 与 in 构成最基础的边界对立，也可把时间、资源等抽象成有边界的容器。",
+    "examples": [
+      "go out",
+      "get out",
+      "take it out"
+    ],
+    "contrast": "in vs out：内部 vs 离开内部。",
+    "hook": "OUT = 跑出边界。",
+    "card": "内 → 穿界 → 外。",
+    "master_id": 40,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "from",
+      "into",
+      "up",
+      "down"
+    ]
+  },
+  {
+    "lesson_no": 41,
+    "word": "up",
+    "tagline": "up = 朝上方，或朝更高、更多、更完整的方向发展。",
+    "image": "人物从坐姿到站姿；箭头向上。",
+    "logic": "物理向上可抽象成数量增加、活跃度提升、完成度提高。",
+    "examples": [
+      "stand up",
+      "get up",
+      "Prices go up."
+    ],
+    "contrast": "up vs down：提升/增加 vs 降低/减少。",
+    "hook": "UP = 箭头往上。",
+    "card": "物理向上 + 数值上升。",
+    "master_id": 41,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "into",
+      "out",
+      "down",
+      "over"
+    ]
+  },
+  {
+    "lesson_no": 42,
+    "word": "down",
+    "tagline": "down = 朝下方，或朝更低、更少、更弱的方向发展。",
+    "image": "人物站 → 坐；箭头向下。",
+    "logic": "物理向下可抽象成数值降低、速度降低、情绪/活动强度降低。",
+    "examples": [
+      "sit down",
+      "slow down",
+      "Prices go down."
+    ],
+    "contrast": "down vs up：降低 vs 提升。",
+    "hook": "DOWN = 箭头往下。",
+    "card": "物理向下 + 数值下降。",
+    "master_id": 42,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "out",
+      "up",
+      "over",
+      "under"
+    ]
+  },
+  {
+    "lesson_no": 43,
+    "word": "over",
+    "tagline": "over = 位于上方，并带有跨越、覆盖一个范围的关系。",
+    "image": "人物沿抛物线越过箱子。",
+    "logic": "over 比单纯的“更高”更强调跨过/盖住一个范围，因此可延伸到克服、结束。",
+    "examples": [
+      "jump over the box",
+      "a blanket over the baby",
+      "get over a problem"
+    ],
+    "contrast": "over vs above：跨越/覆盖感更强 vs 单纯更高。",
+    "hook": "OVER = 从上面跨过去。",
+    "card": "抛物线跨越卡。",
+    "master_id": 43,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "up",
+      "down",
+      "under",
+      "above"
+    ]
+  },
+  {
+    "lesson_no": 44,
+    "word": "under",
+    "tagline": "under = 位于下方，并处在上方事物的覆盖、控制或压力范围下。",
+    "image": "猫在桌子下，桌面形成覆盖区域。",
+    "logic": "物理下方可抽象成数量低于、压力/控制之下。",
+    "examples": [
+      "under the table",
+      "under ten dollars",
+      "under pressure"
+    ],
+    "contrast": "under vs below：覆盖/支配感更强 vs 单纯更低。",
+    "hook": "UNDER = 在下面，被上方罩住。",
+    "card": "覆盖阴影区卡。",
+    "master_id": 44,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "down",
+      "over",
+      "above",
+      "below"
+    ]
+  },
+  {
+    "lesson_no": 45,
+    "word": "back",
+    "tagline": "back = 回到原来的位置、方向、状态或关系。",
+    "image": "A → B，再用回旋箭头返回 A。",
+    "logic": "back 给动作增加“返回原点”的方向，所以能自然组合 come/go/get/give/take/look。",
+    "examples": [
+      "come back",
+      "give it back",
+      "get back to work"
+    ],
+    "contrast": "back 不等于某个固定中文动作，它给前面的动作加“返回原点”的方向。",
+    "hook": "BACK = 回原点。",
+    "card": "A → B → A 回旋卡。",
+    "master_id": 45,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "空间与方向",
+    "subcategory": "基础空间关系",
+    "related": [
+      "below",
+      "behind",
+      "in",
+      "on"
+    ]
+  },
+  {
+    "lesson_no": 46,
+    "word": "and",
+    "tagline": "and = 把两个同方向的信息连接、追加在一起。",
+    "image": "A 与 B 被一个 + 连接件扣住。",
+    "logic": "and 像加号：前面有一个信息，后面再加一个同层信息。",
+    "examples": [
+      "you and me",
+      "bread and milk",
+      "smart and kind"
+    ],
+    "contrast": "and vs but：同方向追加 vs 后面改变预期。",
+    "hook": "AND = 再加一个。",
+    "card": "A + B。",
+    "master_id": 46,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "英语逻辑与结构",
+    "subcategory": "逻辑连接",
+    "related": [
+      "but",
+      "or",
+      "so",
+      "because"
+    ]
+  },
+  {
+    "lesson_no": 47,
+    "word": "but",
+    "tagline": "but = 后面的信息让前面建立的预期发生转向。",
+    "image": "道路直行后在 BUT 路牌处突然转弯。",
+    "logic": "but 的本质不是“但是”这个翻译，而是“预期被修正”。",
+    "examples": [
+      "small but strong",
+      "tired but happy",
+      "I want to go, but I am busy."
+    ],
+    "contrast": "but vs and：逻辑转向 vs 同向追加。",
+    "hook": "BUT = 逻辑拐弯。",
+    "card": "直路 → 转弯。",
+    "master_id": 47,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "英语逻辑与结构",
+    "subcategory": "逻辑连接",
+    "related": [
+      "and",
+      "or",
+      "so",
+      "because"
+    ]
+  },
+  {
+    "lesson_no": 48,
+    "word": "or",
+    "tagline": "or = 在两个或多个可能之间打开选择分叉。",
+    "image": "岔路左 TEA、右 COFFEE。",
+    "logic": "or 把一个单一路径变成多个可选路径。",
+    "examples": [
+      "tea or coffee?",
+      "yes or no",
+      "today or tomorrow"
+    ],
+    "contrast": "or vs and：选择分叉 vs 同时追加。",
+    "hook": "OR = 路口分叉。",
+    "card": "Y 型分叉路。",
+    "master_id": 48,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "英语逻辑与结构",
+    "subcategory": "逻辑连接",
+    "related": [
+      "and",
+      "but",
+      "so",
+      "because"
+    ]
+  },
+  {
+    "lesson_no": 49,
+    "word": "so",
+    "tagline": "so = 前面的情况向前推出一个结果。",
+    "image": "A 多米诺倒下推动 B。",
+    "logic": "so 让思维沿“原因/情况 → 结果”的方向向前走。",
+    "examples": [
+      "I am tired, so I go home.",
+      "It is raining, so I stay home."
+    ],
+    "contrast": "so vs because：往前推结果 vs 往后补原因。",
+    "hook": "SO = 往前推出结果。",
+    "card": "CAUSE → RESULT。",
+    "master_id": 49,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "英语逻辑与结构",
+    "subcategory": "逻辑连接",
+    "related": [
+      "but",
+      "or",
+      "because",
+      "if"
+    ]
+  },
+  {
+    "lesson_no": 50,
+    "word": "because",
+    "tagline": "because = 为已经说出的事情向后补上原因。",
+    "image": "从 RESULT 沿箭头回溯到 REASON。",
+    "logic": "because 的思维方向是“这个结果为什么发生？”然后把原因接回来。",
+    "examples": [
+      "I stay home because it is raining.",
+      "I am happy because you are here."
+    ],
+    "contrast": "because vs so：RESULT ← REASON vs REASON → RESULT。",
+    "hook": "BECAUSE = 往后找原因。",
+    "card": "因果双向对比卡。",
+    "master_id": 50,
+    "grade": "S",
+    "level": "Level 1｜50骨架词",
+    "category": "英语逻辑与结构",
+    "subcategory": "逻辑连接",
+    "related": [
+      "or",
+      "so",
+      "if",
+      "when"
+    ]
+  }
+]
