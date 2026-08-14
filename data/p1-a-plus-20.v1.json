@@ -1,0 +1,128 @@
+{
+  "version": "1.0",
+  "status": "P1-a-plus-golden-template",
+  "purpose": "Level 1 首批 20 个 A+ 骨架词的 Quick / Deep / Network 三层母版。后续 800 词内容生产以此作为质量标尺，而不是机械复制措辞。",
+  "items": [
+    {
+      "word": "BE",
+      "system": "state-action",
+      "quick": {"core_image":"主语通过连接桥接到身份、位置或状态。","core_logic":"BE 不发动动作，而是说明主语处在什么情况。","example":"She is at home.","memory_hook":"BE = 状态连接器。"},
+      "deep": {"meaning_growth":["身份：be a teacher","位置：be at home","状态/特征：be happy","过程入口：be + V-ing","被动入口：be + past participle"],"structures":["subject + be + noun","subject + be + adjective","subject + be + place","be + V-ing"],"confusions":["BE vs DO：状态连接 vs 执行动作","BE vs GET：已处于状态 vs 进入状态"],"pitfalls":["不要把 be 固定翻成“是”","be + V-ing 是组合结构，不等于 be 自己表示动作"]},
+      "network":{"system":"状态与动作","relations":[{"type":"growth","target":"-ING","explanation":"BE 把主体放进正在展开的动作过程。"},{"type":"contrast","target":"GET","explanation":"BE 描述已处于状态；GET 常表达进入结果状态。"},{"type":"contrast","target":"DO","explanation":"BE 连接状态；DO 执行事情或承担语法支架。"}]}
+    },
+    {
+      "word":"GET","system":"state-action",
+      "quick":{"core_image":"从起点经过过程，最终触达到目标/结果。","core_logic":"GET 先看终点：得到、到达、进入状态、理解，都是触达不同类型的结果。","example":"I get tired after work.","memory_hook":"GET = 到点；先找目标。"},
+      "deep":{"meaning_growth":["获得：get a book","到达：get home","状态变化：get tired","理解/接收信息：get it"],"structures":["get + object","get + place expression","get + adjective","get it"],"confusions":["GET vs HAVE：进入拥有/状态 vs 已经拥有/处于","GET vs TAKE：结果触达 vs 主动采取/携带"],"pitfalls":["不要背成一串互不相关中文义","不同构式仍需分别学习，核心画面不是万能翻译器"]},
+      "network":{"system":"状态与核心动作","relations":[{"type":"contrast","target":"HAVE","explanation":"GET 强调进入结果；HAVE 强调当前关系已建立。"},{"type":"contrast","target":"TAKE","explanation":"GET 聚焦触达结果；TAKE 更聚焦主动采取或携带。"},{"type":"growth","target":"INTO","explanation":"GET 与方向词组合可具体化进入/离开/返回等路径。"}]}
+    },
+    {
+      "word":"GO","system":"motion",
+      "quick":{"core_image":"从当前参照点离开，朝别处移动。","core_logic":"GO 的关键是离开当前/心理焦点。","example":"Go to school.","memory_hook":"GO = 从这里走开。"},
+      "deep":{"meaning_growth":["离开参照点","沿方向去目标","与方向词组合：go out/back/up/down","与形容词组合表示状态变化：go bad"],"structures":["go to + place","go + direction","go + adjective"],"confusions":["GO vs COME：离开焦点 vs 朝焦点靠近"],"pitfalls":["参照点可以是对话心理焦点，不一定只是说话者脚下"]},
+      "network":{"system":"运动与参照点","relations":[{"type":"contrast","target":"COME","explanation":"GO 离开参照焦点；COME 朝参照焦点靠近。"},{"type":"combination","target":"TO","explanation":"TO 给 GO 指定目标方向。"},{"type":"combination","target":"INTO","explanation":"GO + INTO 形成跨界进入路径。"}]}
+    },
+    {
+      "word":"COME","system":"motion",
+      "quick":{"core_image":"从远处沿路径进入当前参照焦点。","core_logic":"COME 朝说话者、听话者或对话建立的心理焦点靠近。","example":"Come here.","memory_hook":"COME = 朝焦点靠近。"},
+      "deep":{"meaning_growth":["靠近说话者","靠近听话者所在地","到达共同心理参照点","come in/back 等方向组合"],"structures":["come here","come to + place/person","come in","come back"],"confusions":["COME vs GO：朝焦点 vs 离开焦点"],"pitfalls":["不要把 come 简化成“往我这里”，参照中心可以由语境改变"]},
+      "network":{"system":"运动与参照点","relations":[{"type":"contrast","target":"GO","explanation":"COME 朝参照中心；GO 离开参照中心。"},{"type":"combination","target":"TO","explanation":"TO 可以明确 COME 的目标。"},{"type":"contrast","target":"BRING","explanation":"COME 是主体靠近；BRING 是携带对象一起朝焦点移动。"}]}
+    },
+    {
+      "word":"GIVE","system":"transfer",
+      "quick":{"core_image":"对象/资源从来源一方移动到接收方。","core_logic":"GIVE 突出向外转移：东西、时间、帮助、信息或机会从 source 到 recipient。","example":"Give me the book.","memory_hook":"GIVE = 从我这里到你那里。"},
+      "deep":{"meaning_growth":["物品转移","时间/机会提供","帮助/建议提供","效果施加给接收方"],"structures":["give + person + thing","give + thing + to + person","give help/advice/time"],"confusions":["GIVE vs GET：发出端 vs 接收/获得端","GIVE vs TAKE：转交出去 vs 主动采取"],"pitfalls":["抽象名词可当作可转移资源，但不必把所有 give 构式画成实体礼物"]},
+      "network":{"system":"资源与控制转移","relations":[{"type":"contrast","target":"GET","explanation":"GIVE 是转出；GET 是获得/触达。"},{"type":"combination","target":"TO","explanation":"TO 标出转移终点。"},{"type":"contrast","target":"TAKE","explanation":"GIVE 把控制交出去；TAKE 主动纳入行动。"}]}
+    },
+    {
+      "word":"PUT","system":"placement",
+      "quick":{"core_image":"把对象移动到一个指定落点/关系中。","core_logic":"PUT 天然等待一个“放到哪里/什么状态”的补足信息。","example":"Put it in the box.","memory_hook":"PUT = 给东西安排落点。"},
+      "deep":{"meaning_growth":["位置落点","进入容器/表面关系","安排到某状态或顺序","与方向词构成 put on/in/down/away"],"structures":["put + object + place","put + object + in/on..."],"confusions":["PUT vs TAKE：安排落点 vs 从原处采取/带离"],"pitfalls":["PUT 单独往往语义不完整，必须关注后面的目标关系"]},
+      "network":{"system":"动作与空间","relations":[{"type":"combination","target":"IN","explanation":"PUT + IN 把对象放入内部。"},{"type":"combination","target":"ON","explanation":"PUT + ON 把对象建立在表面接触关系。"},{"type":"contrast","target":"TAKE","explanation":"PUT 设置目的落点；TAKE 从当前情境主动采取。"}]}
+    },
+    {
+      "word":"MAKE","system":"result",
+      "quick":{"core_image":"材料/行动经过作用后，一个结果出现。","core_logic":"MAKE 关注“之前没有这个结果，现在被做出来/造成了”。","example":"You make me happy.","memory_hook":"MAKE = 让结果出现。"},
+      "deep":{"meaning_growth":["制造物体","形成计划/决定","造成状态","使役：make + object + verb/adjective"],"structures":["make + thing","make a plan","make + object + adjective","make + object + verb"],"confusions":["MAKE vs DO：产生结果 vs 执行事情"],"pitfalls":["make 的结果可以是物体、决定、状态或动作，不局限于“制造”"]},
+      "network":{"system":"动作与结果","relations":[{"type":"contrast","target":"DO","explanation":"MAKE 关注产出/造成；DO 关注执行。"},{"type":"growth","target":"BE","explanation":"MAKE 可让对象进入一个新状态，而 BE 描述该状态本身。"}]}
+    },
+    {
+      "word":"KEEP","system":"state-maintenance",
+      "quick":{"core_image":"用一个稳定力场让对象/状态不要离开或改变。","core_logic":"KEEP 的共同感觉是维持：留住东西、维持状态、让过程继续。","example":"Keep the door open.","memory_hook":"KEEP = 别让它跑掉/变掉。"},
+      "deep":{"meaning_growth":["保留对象","维持状态","keep + V-ing 让过程继续"],"structures":["keep + object","keep + object + adjective","keep + V-ing"],"confusions":["KEEP vs HAVE：继续维持/保留 vs 当前拥有","KEEP vs STAY：使某物维持/主动保持 vs 主体自身停留"],"pitfalls":["keep going 中 keep 的重点是持续，不是“拥有 go”"]},
+      "network":{"system":"状态维持","relations":[{"type":"contrast","target":"HAVE","explanation":"HAVE 陈述关系存在；KEEP 强调让关系/状态继续。"},{"type":"growth","target":"-ING","explanation":"KEEP + -ING 把动作维持为持续过程。"}]}
+    },
+    {
+      "word":"BRING","system":"motion-transfer",
+      "quick":{"core_image":"携带某人/物一起朝当前参照焦点移动。","core_logic":"BRING = carry + toward reference point。","example":"Bring your book here.","memory_hook":"BRING = 带着东西朝这里来。"},
+      "deep":{"meaning_growth":["带物来","带人来","bring back 返回焦点","抽象引入：bring help/change（后续课程扩展）"],"structures":["bring + object + here","bring + person + thing","bring + object + back"],"confusions":["BRING vs TAKE：朝焦点携带 vs 从焦点/当前位置带走","BRING vs COME：携带对象靠近 vs 主体自身靠近"],"pitfalls":["参照点由语境确定，不必永远等于说话者所在地"]},
+      "network":{"system":"运动与转移","relations":[{"type":"contrast","target":"TAKE","explanation":"BRING 朝参照中心带来；TAKE 原型更偏主动采取并带离。"},{"type":"contrast","target":"COME","explanation":"BRING 多了携带对象；COME 只表达靠近。"}]}
+    },
+    {
+      "word":"SEE","system":"attention",
+      "quick":{"core_image":"视觉信息从对象进入眼睛/意识。","core_logic":"SEE 关注视觉结果发生，而不是主动转动目光。","example":"I see a bird.","memory_hook":"SEE = 东西进了眼睛。"},
+      "deep":{"meaning_growth":["视觉感知","由“看见”扩展到理解：I see what you mean","见面/再见等高频构式后续展开"],"structures":["see + object","see + clause"],"confusions":["SEE vs LOOK：接收结果 vs 主动定向","SEE vs WATCH：结果 vs 持续跟踪过程"],"pitfalls":["See you 是固定表达，不应机械画成视觉输入"]},
+      "network":{"system":"注意力与感知","relations":[{"type":"contrast","target":"LOOK","explanation":"SEE 接收视觉结果；LOOK 主动定向注意。"},{"type":"contrast","target":"WATCH","explanation":"SEE 是结果；WATCH 是持续观察过程。"}]}
+    },
+    {
+      "word":"LOOK","system":"attention",
+      "quick":{"core_image":"眼睛/注意力主动转向一个目标。","core_logic":"LOOK 是定向动作，目标常由 AT 等空间词给出。","example":"Look at me.","memory_hook":"LOOK = 把眼睛当箭头射过去。"},
+      "deep":{"meaning_growth":["主动转向目标","look up/down/back 等方向组合","look at + target"],"structures":["look at","look up","look down","look back"],"confusions":["LOOK vs SEE：主动方向 vs 感知结果","LOOK vs WATCH：转向目标 vs 持续跟踪"],"pitfalls":["look at 中目标关系主要由 AT 标出"]},
+      "network":{"system":"注意力与感知","relations":[{"type":"combination","target":"AT","explanation":"LOOK 提供主动定向；AT 锁定目标点。"},{"type":"contrast","target":"SEE","explanation":"LOOK 发出注意箭头；SEE 接收视觉结果。"},{"type":"contrast","target":"WATCH","explanation":"LOOK 可是瞬时定向；WATCH 持续跟随变化。"}]}
+    },
+    {
+      "word":"WATCH","system":"attention",
+      "quick":{"core_image":"眼睛持续跟随一个会变化的对象/过程。","core_logic":"WATCH = 持续注意 + 时间中的变化。","example":"Watch the baby.","memory_hook":"WATCH = 眼睛不走，跟着变化。"},
+      "deep":{"meaning_growth":["观察节目/比赛/电影","看护/监控变化中的对象","watch out 为高频固定警示构式"],"structures":["watch + object","watch TV/movie/game","watch + object + V-ing"],"confusions":["WATCH vs LOOK：持续过程 vs 定向动作","WATCH vs SEE：持续监看 vs 感知结果"],"pitfalls":["watch out 需要作为构式识别，不能硬解释成“持续看外面”"]},
+      "network":{"system":"注意力与感知","relations":[{"type":"contrast","target":"LOOK","explanation":"WATCH 持续跟随；LOOK 把注意指过去。"},{"type":"contrast","target":"SEE","explanation":"WATCH 是过程；SEE 是感知结果。"}]}
+    },
+    {
+      "word":"HEAR","system":"attention",
+      "quick":{"core_image":"声波进入耳朵，听觉结果发生。","core_logic":"HEAR 不要求主动注意；声音可以自己进入感知范围。","example":"I hear a sound.","memory_hook":"HEAR = 声音进耳朵。"},
+      "deep":{"meaning_growth":["听到声音","听到消息/信息"],"structures":["hear + sound/person","hear + clause/about"],"confusions":["HEAR vs LISTEN：感知结果 vs 主动听觉定向"],"pitfalls":["Can you hear me? 问的是声音是否成功到达，不等于“你有没有认真听”"]},
+      "network":{"system":"注意力与感知","relations":[{"type":"contrast","target":"LISTEN","explanation":"HEAR 接收声音；LISTEN 主动把注意指向声音。"},{"type":"parallel","target":"SEE","explanation":"SEE/HEAR 都可作为非主动感知结果。"}]}
+    },
+    {
+      "word":"LISTEN","system":"attention",
+      "quick":{"core_image":"耳朵/注意力主动朝声音目标定向。","core_logic":"LISTEN 是主动听，TO 常把听觉箭头接到目标。","example":"Listen to me.","memory_hook":"LISTEN = 把耳朵当箭头指过去。"},
+      "deep":{"meaning_growth":["主动听某人","主动听音乐/声音","无目标时可单独使用 I am listening"],"structures":["listen to + target","listen"],"confusions":["LISTEN vs HEAR：主动方向 vs 听觉结果"],"pitfalls":["listen to 中 TO 是目标关系的重要组成，不要省掉"]},
+      "network":{"system":"注意力与感知","relations":[{"type":"combination","target":"TO","explanation":"LISTEN 提供听觉定向；TO 给出目标。"},{"type":"contrast","target":"HEAR","explanation":"LISTEN 主动定向；HEAR 是声音到达的结果。"}]}
+    },
+    {
+      "word":"IN","system":"space-relations",
+      "quick":{"core_image":"对象已经处在一个有边界区域的内部。","core_logic":"IN = within boundaries；空间、时间和状态都能被概念化为容器。","example":"The keys are in the bag.","memory_hook":"IN = 在圈里面。"},
+      "deep":{"meaning_growth":["物理容器","区域/国家","时间容器","抽象状态：in trouble/in love"],"structures":["in + container/area","in + time period","in + state"],"confusions":["IN vs ON：内部 vs 表面接触","IN vs AT：内部范围 vs 点定位","IN vs INTO：已在内部 vs 跨界进入"],"pitfalls":["IN 自身不表达进入动作"]},
+      "network":{"system":"空间关系","relations":[{"type":"contrast","target":"ON","explanation":"IN 在边界内部；ON 建立表面接触。"},{"type":"contrast","target":"AT","explanation":"IN 保留容器范围；AT 压缩为定位点。"},{"type":"combination","target":"INTO","explanation":"IN 的内部落点与 TO 的方向结合形成 INTO。"}]}
+    },
+    {
+      "word":"ON","system":"space-relations",
+      "quick":{"core_image":"两个表面建立接触/依附关系。","core_logic":"ON 的空间原型是 contact/support，不是简单“在上面”。","example":"The book is on the table.","memory_hook":"ON = 贴上、接上。"},
+      "deep":{"meaning_growth":["表面接触","依附/支撑","接通/运行等高频状态分支"],"structures":["on + surface","be on","turn on"],"confusions":["ON vs IN：表面接触 vs 内部","ON vs AT：保留接触面 vs 点定位"],"pitfalls":["The light is on 属于高频状态用法，不必把每个 on 都画成物理表面"]},
+      "network":{"system":"空间关系","relations":[{"type":"contrast","target":"IN","explanation":"ON 接触表面；IN 在边界内部。"},{"type":"contrast","target":"AT","explanation":"ON 保留接触关系；AT 只锁定点。"}]}
+    },
+    {
+      "word":"AT","system":"space-relations",
+      "quick":{"core_image":"一根手指/图钉精准锁定一个点。","core_logic":"AT 把地点、时间或目标压缩成可定位的点。","example":"Meet me at the door.","memory_hook":"AT = 手指点一下。"},
+      "deep":{"meaning_growth":["地点点位","时间点","动作/注意目标：look at"],"structures":["at + place point","at + time point","verb + at + target"],"confusions":["AT vs IN：点 vs 内部范围","AT vs ON：点 vs 表面接触","AT vs TO：锁定点 vs 朝点移动"],"pitfalls":["at school 不等于必须在学校建筑内部"]},
+      "network":{"system":"空间关系","relations":[{"type":"contrast","target":"IN","explanation":"AT 压成点；IN 展开为容器内部。"},{"type":"contrast","target":"ON","explanation":"AT 是点；ON 是接触面。"},{"type":"contrast","target":"TO","explanation":"AT 锁定目标；TO 画出朝目标的向量。"},{"type":"combination","target":"LOOK","explanation":"LOOK + AT = 主动视觉定向 + 精准目标。"}]}
+    },
+    {
+      "word":"TO","system":"space-relations",
+      "quick":{"core_image":"从起点朝目标画出一支方向箭头。","core_logic":"TO 的空间核心是 target-directed orientation；目标可以是地点、接收者等。","example":"Go to school.","memory_hook":"TO = 箭头指向目标。"},
+      "deep":{"meaning_growth":["移动目标","转移接收者","listen/talk 等关系目标","不定式 to 是语法分支，不能一律当空间箭头"],"structures":["go/come + to + place","give + thing + to + person","listen to + target","to + verb (infinitive marker)"],"confusions":["TO vs FROM：目标 vs 来源","TO vs AT：方向 vs 锁定点"],"pitfalls":["不定式 to 与介词 to 要区分，Level 1 先知道存在两类工作"]},
+      "network":{"system":"空间关系/目标关系","relations":[{"type":"contrast","target":"FROM","explanation":"TO 朝终点；FROM 从起点。"},{"type":"contrast","target":"AT","explanation":"TO 是方向箭头；AT 是定位点。"},{"type":"combination","target":"INTO","explanation":"TO 的方向进入 IN 的内部落点形成 INTO。"},{"type":"combination","target":"LISTEN","explanation":"LISTEN + TO 把听觉注意连接到目标。"}]}
+    },
+    {
+      "word":"FROM","system":"space-relations",
+      "quick":{"core_image":"箭头从一个来源/起点向外长出。","core_logic":"FROM 标记 source/origin：空间、时间、信息都可以有来源点。","example":"I am from China.","memory_hook":"FROM = 箭头从这里长出来。"},
+      "deep":{"meaning_growth":["空间来源","时间起点","人物/信息来源","材料/原因等高阶分支后续展开"],"structures":["from + place","from + time","message/letter from + source"],"confusions":["FROM vs TO：来源起点 vs 目标终点"],"pitfalls":["FROM 不是“离开动作”本身，它主要标记来源关系"]},
+      "network":{"system":"空间与来源","relations":[{"type":"contrast","target":"TO","explanation":"FROM 给出源点；TO 给出目标。"},{"type":"combination","target":"GO","explanation":"运动动词可用 FROM 标记路径起点。"}]}
+    },
+    {
+      "word":"INTO","system":"space-relations",
+      "quick":{"core_image":"一支箭头从外部穿过边界，落到内部。","core_logic":"INTO = toward + inside：方向、边界跨越和内部落点同时出现。","example":"She walked into the room.","memory_hook":"INTO = 箭头钻进盒子。"},
+      "deep":{"meaning_growth":["物理进入","把对象放入容器","状态转化：turn into"],"structures":["move/go/walk + into + container","put + object + into + container","turn into + new state/form"],"confusions":["INTO vs IN：进入过程 vs 已在内部","INTO vs TO：终点必须位于一个“内部”"],"pitfalls":["不要把 every into 拆词源式硬解释；IN + TO 是非常好用的同步教学模型，但具体构式仍需按现代用法学习"]},
+      "network":{"system":"空间关系","relations":[{"type":"combination","target":"IN","explanation":"IN 提供内部落点。"},{"type":"combination","target":"TO","explanation":"TO 提供朝向内部的路径。"},{"type":"contrast","target":"IN","explanation":"IN 是位置；INTO 是跨界变化。"}]}
+    }
+  ]
+}
