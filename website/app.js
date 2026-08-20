@@ -326,13 +326,26 @@ function sceneGroupsFor(scenes) {
  return scenes.filter(scene=>isPlainObject(scene)&&['title','body','example'].every(field=>typeof scene[field]==='string'&&scene[field].trim()));
 }
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
-function viewKind(view) { return ['today','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
-function activeNavView(view) { return ['today','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,viewKind,activeNavView};
+function learningRouteStages(data) {
+ const allowedViews=new Set(['today','library']);
+ if(!isPlainObject(data)||!Array.isArray(data.stages)) return [];
+ const stages=data.stages.filter(stage=>isPlainObject(stage)&&typeof stage.id==='string'&&typeof stage.order==='number'&&typeof stage.code==='string'&&typeof stage.title==='string'&&typeof stage.subtitle==='string'&&typeof stage.summary==='string'&&['available','planned'].includes(stage.status)&&(stage.status==='available'?allowedViews.has(stage.view):stage.view===null));
+ return [...stages].sort((left,right)=>left.order-right.order);
+}
+function renderLearningRoute(data) {
+ const stages=learningRouteStages(data);
+ if(!stages.length) return '<div class="emptyState"><div><b>学习路线暂不可用</b><p class="mini">请继续使用今日学习和词库入口。</p></div></div>';
+ const stageMarkup=stages.map(stage=>`<article class="routeStage routeStage-${html(stage.status)}"><div class="routeStageIndex">${html(stage.code)}</div><div class="routeStageContent"><p class="routeStageEnglish">${html(stage.title)}</p><h3>${html(stage.subtitle)}</h3><p>${html(stage.summary)}</p>${stage.status==='available'?`<button type="button" class="routeOpen" data-action="view" data-view="${html(stage.view)}">${stage.id==='world'?'进入今天的 5 个词':'查看已开放词条'} →</button>`:'<span class="routePlanned" aria-label="该模块准备中">准备中</span>'}</div></article>`).join('');
+ const support=Array.isArray(data.supportLinks)?data.supportLinks.filter(link=>isPlainObject(link)&&typeof link.id==='string'&&typeof link.title==='string'&&typeof link.summary==='string'&&link.view==='network').map(link=>`<button type="button" class="routeSupport" data-action="view" data-view="network"><b>${html(link.title)}</b><span>${html(link.summary)}</span><em>打开 →</em></button>`).join(''):'';
+ return `<section class="learningRoute" aria-label="V2 学习路线"><header class="routeHero"><p class="workspaceEyebrow">English Thinking System · V2</p><h2>从 Start 到自由表达</h2><p>先看英语怎样组织画面，再用词汇、句子和场景逐步建立表达。当前已开放的入口可以直接使用；其余模块会在内容完成后按顺序开放。</p></header><section class="routeJourney" aria-label="学习阶段">${stageMarkup}</section>${support?`<section class="routeSupportSection"><h3>现在可补充探索</h3>${support}</section>`:''}</section>`;
+}
+function viewKind(view) { return ['today','roadmap','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
+function activeNavView(view) { return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
+if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
- const D=window.ENGLISH850_DATA, V2Network=window.ENGLISH850_V2_NETWORK, app=document.getElementById('app');
+ const D=window.ENGLISH850_DATA, V2Network=window.ENGLISH850_V2_NETWORK, Curriculum=window.ENGLISH850_V2_CURRICULUM, app=document.getElementById('app');
  let V2=window.ENGLISH850_V2_DATA, v2Notice='';
  if(!isUsableV2Graph(V2,V2Network)) { V2=null; v2Notice='扩展课程数据暂不可用，已继续使用基础课程。'; }
  const title=document.getElementById('pageTitle'), sub=document.getElementById('pageSub');
@@ -367,6 +380,10 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
   const completion=dayCompletion(planDay,state.progress);
   const cards=todayCards(planDay,D.lessons,state.progress).map(card=>`<button type="button" class="wordCard" data-action="open-word" data-word="${safe(card.word)}"><div class="word">${safe(card.word)}</div><span class="chip">${safe(card.category)}</span><div class="mini">${safe(card.tagline)}</div><div class="mini">掌握度 ${card.mastery}/4</div></button>`).join('');
   app.innerHTML=`<div class="panel"><span class="statusPill">Day ${planDay.day}</span><span class="mini"> · 已开始 ${completion.completed}/${completion.total}</span><div class="grid contentGrid">${cards}</div><p><button type="button" class="primaryAction" data-action="continue-day" data-day="${planDay.day}">继续学习</button></p></div><div class="panel"><b>切换学习日</b><div class="dayPicker">${(D.plan||[]).map(day=>`<button type="button" class="tag dayButton" data-action="select-day" data-day="${day.day}">Day ${day.day}</button>`).join('')}</div></div>`;
+ }
+ function renderRoadmap() {
+  title.textContent='学习路线'; sub.textContent='从理解英语如何组织画面，到逐步形成自己的表达。';
+  app.innerHTML=renderLearningRoute(Curriculum);
  }
  function feedbackButtons(word) { return feedbackButtonsFor(word); }
  function v2SystemTitle(systemId) {
@@ -428,7 +445,7 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  }
  function syncNav() { const current=activeNavView(state.view); document.querySelectorAll('.nav').forEach(button=>{const active=button.dataset.view===current; button.classList.toggle('active',active); if(active) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current');}); }
  function renderStorageNotice() { if(!state.storageNotice) return; const notice=document.createElement('p'); notice.className='notice'; notice.setAttribute('role','status'); notice.textContent=state.storageNotice; app.prepend(notice); state.storageNotice=''; }
- function render() { state.view=viewKind(state.view); syncNav(); ({today:renderToday,review:renderReview,library:renderLibrary,tree:renderTree,compare:renderCompare,progress:renderProgress,network:renderNetwork,lesson:renderLesson}[state.view])(); renderStorageNotice(); }
+ function render() { state.view=viewKind(state.view); syncNav(); ({today:renderToday,roadmap:renderRoadmap,review:renderReview,library:renderLibrary,tree:renderTree,compare:renderCompare,progress:renderProgress,network:renderNetwork,lesson:renderLesson}[state.view])(); renderStorageNotice(); }
  document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{state.view=button.dataset.view; if(state.view==='network') state.networkStep=networkStepForAction(state.networkStep,'nav-network'); render();}));
  app.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;

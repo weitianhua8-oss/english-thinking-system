@@ -7,6 +7,7 @@ const path = require('node:path');
 const core = require('./app.js');
 const manifest = require('./assets/cards/manifest.json');
 const cardManifestGenerator = require('../scripts/build_level1_card_manifest.js');
+const curriculum = require('./v2-curriculum-data.js');
 
 test('manifest covers fifty unique cards', () => {
  assert.equal(manifest.length,50); assert.equal(new Set(manifest.map(c=>c.filename)).size,50); assert.equal(manifest[0].filename,'01-i.png'); assert.equal(manifest.at(-1).filename,'50-because.png'); assert.ok(manifest.every(c=>!(/诺诺|固定人物角色/.test(c.prompt))));
@@ -968,12 +969,13 @@ test('V2 network helpers return nodes, relations, and immutable explore paths', 
 
 test('V2 browser scripts load after Level 1 data without CommonJS globals', () => {
   const context = vm.createContext({});
-  ['data.js', 'v2-data.js', 'v2-network.js'].forEach(file => {
+  ['data.js', 'v2-data.js', 'v2-network.js', 'v2-curriculum-data.js'].forEach(file => {
     vm.runInContext(fs.readFileSync(require.resolve(`./${file}`), 'utf8'), context, { filename: file });
   });
   assert.ok(context.ENGLISH850_DATA);
   assert.ok(context.ENGLISH850_V2_DATA);
   assert.ok(context.ENGLISH850_V2_NETWORK);
+  assert.ok(context.ENGLISH850_V2_CURRICULUM);
   assert.equal(typeof context.ENGLISH850_V2_NETWORK.validateGraph, 'function');
 });
 
@@ -1010,4 +1012,29 @@ test('V2 relation exploration ignores null, unknown, and incomplete relations', 
   assert.deepEqual(network.nodesForSystem({ nodes: {} }, 'attention'), []);
   assert.deepEqual(network.pushExplorePath(Symbol('path'), Symbol('id')), []);
   assert.deepEqual(network.popExplorePath({}), []);
+});
+
+test('learning route maps the full Start-to-Output journey without inventing unavailable pages', () => {
+ assert.deepEqual(curriculum.stages.map(stage => stage.id), ['start','culture','camera','world','word-image','sentence','grammar','scene-training','output']);
+ assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['world','today'],['word-image','library']]);
+ assert.deepEqual(curriculum.supportLinks.map(link => [link.id, link.view]), [['knowledge-network','network']]);
+ assert.ok(curriculum.stages.filter(stage => stage.status === 'planned').every(stage => stage.view === null));
+ assert.deepEqual(core.learningRouteStages(curriculum).map(stage => stage.order), [0,1,2,3,4,5,6,7,8]);
+});
+
+test('learning route renderer keeps existing destinations clickable and planned stages non-interactive', () => {
+ const markup = core.renderLearningRoute(curriculum);
+ assert.match(markup, /从 Start 到自由表达/);
+ assert.match(markup, /data-action="view" data-view="today"/);
+ assert.match(markup, /data-action="view" data-view="library"/);
+ assert.match(markup, /data-action="view" data-view="network"/);
+ assert.match(markup, /准备中/);
+ assert.doesNotMatch(markup, /data-view="culture"|data-view="camera"|data-view="sentence"|data-view="grammar"|data-view="scene-training"|data-view="output"/);
+});
+
+test('learning route becomes a main view without changing legacy view routing', () => {
+ assert.equal(core.viewKind('roadmap'), 'roadmap');
+ assert.equal(core.activeNavView('roadmap'), 'roadmap');
+ assert.equal(core.viewKind('today'), 'today');
+ assert.equal(core.activeNavView('lesson'), null);
 });
