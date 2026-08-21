@@ -1016,7 +1016,7 @@ test('V2 relation exploration ignores null, unknown, and incomplete relations', 
 
 test('learning route maps the full Start-to-Output journey without inventing unavailable pages', () => {
  assert.deepEqual(curriculum.stages.map(stage => stage.id), ['start','culture','camera','world','word-image','sentence','grammar','scene-training','output']);
- assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['world','today'],['word-image','library']]);
+ assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['camera','camera'],['world','today'],['word-image','library']]);
  assert.deepEqual(curriculum.supportLinks.map(link => [link.id, link.view]), [['knowledge-network','network']]);
  assert.ok(curriculum.stages.filter(stage => stage.status === 'planned').every(stage => stage.view === null));
  assert.deepEqual(core.learningRouteStages(curriculum).map(stage => stage.order), [0,1,2,3,4,5,6,7,8]);
@@ -1026,17 +1026,20 @@ test('learning route renderer keeps existing destinations clickable and planned 
  const markup = core.renderLearningRoute(curriculum);
  assert.match(markup, /从 Start 到自由表达/);
  assert.match(markup, /data-action="view" data-view="culture"/);
+ assert.match(markup, /data-action="view" data-view="camera"/);
  assert.match(markup, /data-action="view" data-view="today"/);
  assert.match(markup, /data-action="view" data-view="library"/);
  assert.match(markup, /data-action="view" data-view="network"/);
  assert.match(markup, /准备中/);
- assert.doesNotMatch(markup, /data-view="camera"|data-view="sentence"|data-view="grammar"|data-view="scene-training"|data-view="output"/);
+ assert.doesNotMatch(markup, /data-view="sentence"|data-view="grammar"|data-view="scene-training"|data-view="output"/);
 });
 
 test('learning route becomes a main view without changing legacy view routing', () => {
  assert.equal(core.viewKind('roadmap'), 'roadmap');
  assert.equal(core.activeNavView('roadmap'), 'roadmap');
  assert.equal(core.viewKind('culture'), 'culture');
+ assert.equal(core.viewKind('camera'), 'camera');
+ assert.equal(core.activeNavView('camera'), 'roadmap');
  assert.equal(core.viewKind('today'), 'today');
  assert.equal(core.activeNavView('lesson'), null);
 });
@@ -1088,4 +1091,54 @@ test('Culture styles keep one primary lesson readable on a 375px screen', () => 
  assert.match(styles, /\.cultureExamples\{[^}]*grid-template-columns:repeat\(2/);
  assert.match(styles, /\.cultureExamples\{[^}]*grid-template-columns:1fr/);
  assert.match(styles, /\.cultureActions\{[^}]*grid-template-columns/);
+});
+
+test('Camera curriculum contains one four-step library scene with a recommended observation path', () => {
+ const scenes = core.cameraScenesFor(curriculum);
+ assert.equal(scenes.length, 1);
+ const scene = scenes[0];
+ assert.equal(scene.id, 'camera-library-01');
+ assert.equal(scene.title, '镜头思维：从画面到一句英语');
+ assert.equal(scene.recommendedSentence, 'The boy is doing homework in the library.');
+ assert.deepEqual(core.cameraStepsFor(scene).map(step => step.id), ['focus','action','relation','expansion-library']);
+ assert.equal(core.cameraStepsFor(scene).every(step => step.choices.filter(choice => choice.recommended).length === 1), true);
+ assert.match(scene.focusChoices.find(choice => !choice.recommended).feedback, /这也是一个可以观察的角度/);
+});
+
+test('Camera advances only along its recommended path without changing Culture or V1 progress', () => {
+ const scene = core.cameraSceneFor(curriculum, 'camera-library-01');
+ const legacy = { words: { I: { mastery: 3, nextReview: '2026-08-21' } }, studyDates: ['2026-08-20'], v2: { culture: { completed: ['culture-01'] } } };
+ assert.equal(core.cameraStepForAction(scene, 0, 'focus-book'), 0);
+ assert.equal(core.cameraStepForAction(scene, 0, 'focus-boy'), 1);
+ assert.equal(core.cameraStepForAction(scene, 1, 'action-homework'), 2);
+ const next = core.completeCameraScene(legacy, scene.id);
+ assert.deepEqual(next.words, legacy.words);
+ assert.deepEqual(next.studyDates, legacy.studyDates);
+ assert.deepEqual(next.v2.culture.completed, ['culture-01']);
+ assert.deepEqual(next.v2.camera.completed, ['camera-library-01']);
+ assert.deepEqual(core.dueWords(next, '2026-08-21'), ['I']);
+ assert.deepEqual(core.cameraProgressFor(core.parseStoredProgress(JSON.stringify({ words: {}, studyDates: [] }))), { completed: [] });
+ assert.deepEqual(core.cameraProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"camera":{"completed":["camera-library-01",42,"camera-library-01"]}}}')), { completed: ['camera-library-01'] });
+});
+
+test('Camera workspace shows one step, explains alternate focus, and keeps Sentence unavailable', () => {
+ const scene = core.cameraSceneFor(curriculum, 'camera-library-01');
+ const alternate = core.renderCameraWorkspace(curriculum, scene.id, 0, 'focus-book', core.emptyProgress());
+ const ready = core.renderCameraWorkspace(curriculum, scene.id, 3, 'expansion-library', core.emptyProgress());
+ const final = core.renderCameraWorkspace(curriculum, scene.id, 3, 'expansion-library', core.completeCameraScene(core.emptyProgress(), scene.id));
+ assert.match(alternate, /步骤 1 \/ 4/);
+ assert.match(alternate, /这也是一个可以观察的角度；本次样板先跟随男孩，练习当前这条表达路径。/);
+ assert.doesNotMatch(alternate, /错误/);
+ assert.match(final, /The boy is doing homework in the library\./);
+ assert.match(ready, /完成本次 Camera 训练/);
+ assert.match(final, /Sentence 当前准备中/);
+ assert.doesNotMatch(final, /data-view="sentence"/);
+});
+
+test('Camera styles keep the four-step choice flow readable at 375px', () => {
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /\.cameraWorkspace\{[^}]*max-width/);
+ assert.match(styles, /\.cameraChoice\{[^}]*min-height:44px/);
+ assert.match(styles, /\.cameraChoices\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.cameraActions\{[^}]*grid-template-columns:1fr/);
 });

@@ -4,7 +4,7 @@ const payload = {
   stages: [
     { id:'start', order:0, code:'00', title:'Start', subtitle:'英语思维是什么', summary:'先知道这条路线会带你从画面走到表达。', status:'planned', view:null },
     { id:'culture', order:1, code:'01', title:'Culture', subtitle:'中英语言差异从哪里来', summary:'理解信息组织的不同倾向，不把语言分成高低。', status:'available', view:'culture' },
-    { id:'camera', order:2, code:'02', title:'Camera', subtitle:'英语镜头感', summary:'从焦点出发，看动作、对象、关系和背景。', status:'planned', view:null },
+    { id:'camera', order:2, code:'02', title:'Camera', subtitle:'英语镜头感', summary:'从焦点出发，看动作、对象、关系和背景。', status:'available', view:'camera' },
     { id:'world', order:3, code:'03', title:'World', subtitle:'850 核心词世界', summary:'用今天的 5 个词开始建立英语世界的基础零件。', status:'available', view:'today' },
     { id:'word-image', order:4, code:'04', title:'Word Image', subtitle:'单词本源画面', summary:'从核心画面、逻辑和真实场景理解已开放的 Level 1 词条。', status:'available', view:'library' },
     { id:'sentence', order:5, code:'05', title:'Sentence', subtitle:'英语句子生成', summary:'从最短核心句开始，一次补上一项画面信息。', status:'planned', view:null },
@@ -62,6 +62,43 @@ const payload = {
       takeaway:'学英语不是替换词表，而是重新观察画面、确定关系，再组织表达。',
       boundary:'中文和英语都可以精确、模糊、省略或依赖语境；不能用民族性格、文明类型或语言优劣解释语言形式。',
       nextHint:'Culture 已完成。下一站是 Camera：英语通常先把镜头对准哪里？Camera 当前准备中。',
+    },
+  ],
+  cameraScenes: [
+    {
+      id:'camera-library-01', order:1, title:'镜头思维：从画面到一句英语',
+      scene:'图书馆里，一个男孩正在桌边做作业。书桌、书和其他读者都在画面里。',
+      focusQuestion:'先拍谁？本次镜头要围绕谁来组织？',
+      focusChoices:[
+        { id:'focus-boy', label:'男孩', recommended:true, feedback:'先把男孩放到镜头中心。接下来，我们只看他正在发生什么。' },
+        { id:'focus-book', label:'书', recommended:false, feedback:'这也是一个可以观察的角度；本次样板先跟随男孩，练习当前这条表达路径。' },
+        { id:'focus-library', label:'图书馆', recommended:false, feedback:'这也是一个可以观察的角度；本次样板先跟随男孩，练习当前这条表达路径。' },
+      ],
+      actionQuestion:'镜头里的男孩正在发生什么？',
+      actionChoices:[
+        { id:'action-homework', label:'正在做作业', recommended:true, feedback:'男孩的动作进入镜头：他正在做作业。现在画面已有“谁”和“在做什么”。' },
+        { id:'action-reading', label:'正在看书', recommended:false, feedback:'画面里也有书，但本次样板要跟随男孩正在做作业的动作。' },
+        { id:'action-walking', label:'正在走路', recommended:false, feedback:'男孩没有在移动；本次先观察他桌边正在展开的动作。' },
+      ],
+      relationQuestion:'这个动作和什么有关？',
+      relationChoices:[
+        { id:'relation-homework', label:'homework', recommended:true, feedback:'补上 homework，动作落到具体事情上：The boy is doing homework.' },
+        { id:'relation-library', label:'the library', recommended:false, feedback:'图书馆是背景地点；这一步先补出男孩在做的事情。' },
+        { id:'relation-book', label:'a book', recommended:false, feedback:'书在画面里，但本次动作要先连到 homework。' },
+      ],
+      expansionSteps:[
+        {
+          id:'expansion-library', title:'再补一项背景', question:'最后只补一项背景：男孩在哪里？',
+          choices:[
+            { id:'expansion-library', label:'in the library', recommended:true, feedback:'补上地点后，镜头多了一项背景信息：The boy is doing homework in the library.' },
+            { id:'expansion-home', label:'at home', recommended:false, feedback:'本次画面发生在图书馆；先让背景和眼前画面对齐。' },
+            { id:'expansion-school', label:'at school', recommended:false, feedback:'图书馆可以在学校里，但本次镜头明确拍到的是图书馆。' },
+          ],
+        },
+      ],
+      recommendedSentence:'The boy is doing homework in the library.',
+      feedback:{ alternateFocus:'这也是一个可以观察的角度；本次样板先跟随男孩，练习当前这条表达路径。', completion:'你已经按一次镜头路径，把画面逐步组织成一句英语。' },
+      nextLink:{ stage:'sentence', text:'下一站是 Sentence：从最短核心句开始，一次补上一项画面信息。Sentence 当前准备中。' },
     },
   ],
   supportLinks: [
