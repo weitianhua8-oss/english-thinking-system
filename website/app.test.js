@@ -1016,7 +1016,7 @@ test('V2 relation exploration ignores null, unknown, and incomplete relations', 
 
 test('learning route maps the full Start-to-Output journey without inventing unavailable pages', () => {
  assert.deepEqual(curriculum.stages.map(stage => stage.id), ['start','culture','camera','world','word-image','sentence','grammar','scene-training','output']);
- assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['world','today'],['word-image','library']]);
+ assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['world','today'],['word-image','library']]);
  assert.deepEqual(curriculum.supportLinks.map(link => [link.id, link.view]), [['knowledge-network','network']]);
  assert.ok(curriculum.stages.filter(stage => stage.status === 'planned').every(stage => stage.view === null));
  assert.deepEqual(core.learningRouteStages(curriculum).map(stage => stage.order), [0,1,2,3,4,5,6,7,8]);
@@ -1025,16 +1025,67 @@ test('learning route maps the full Start-to-Output journey without inventing una
 test('learning route renderer keeps existing destinations clickable and planned stages non-interactive', () => {
  const markup = core.renderLearningRoute(curriculum);
  assert.match(markup, /从 Start 到自由表达/);
+ assert.match(markup, /data-action="view" data-view="culture"/);
  assert.match(markup, /data-action="view" data-view="today"/);
  assert.match(markup, /data-action="view" data-view="library"/);
  assert.match(markup, /data-action="view" data-view="network"/);
  assert.match(markup, /准备中/);
- assert.doesNotMatch(markup, /data-view="culture"|data-view="camera"|data-view="sentence"|data-view="grammar"|data-view="scene-training"|data-view="output"/);
+ assert.doesNotMatch(markup, /data-view="camera"|data-view="sentence"|data-view="grammar"|data-view="scene-training"|data-view="output"/);
 });
 
 test('learning route becomes a main view without changing legacy view routing', () => {
  assert.equal(core.viewKind('roadmap'), 'roadmap');
  assert.equal(core.activeNavView('roadmap'), 'roadmap');
+ assert.equal(core.viewKind('culture'), 'culture');
  assert.equal(core.viewKind('today'), 'today');
  assert.equal(core.activeNavView('lesson'), null);
+});
+
+test('Culture curriculum contains exactly five short lessons with safe teaching boundaries', () => {
+ const lessons = core.cultureLessonsFor(curriculum);
+ assert.equal(lessons.length, 5);
+ assert.deepEqual(lessons.map(lesson => lesson.id), ['culture-01','culture-02','culture-03','culture-04','culture-05']);
+ assert.deepEqual(lessons.map(lesson => lesson.title), [
+  '语言不是给世界贴不同标签',
+  '中文：很多信息可以留在语境里',
+  '英语：先把画面里的角色摆清楚',
+  '同一个画面，两种组织方法',
+  '不是谁更高级，而是观察习惯不同',
+ ]);
+ lessons.forEach(lesson => {
+  ['question','scene','chineseExample','englishExample','explanation','takeaway','boundary','nextHint'].forEach(field => assert.ok(lesson[field]));
+  assert.match(lesson.boundary, /倾向|不是绝对|不代表|不能/);
+ });
+});
+
+test('Culture completion stays in v2.culture and never enters the V1 review queue', () => {
+ const legacy = { words: { I: { mastery: 3, nextReview: '2026-08-21' } }, studyDates: ['2026-08-20'] };
+ const next = core.completeCultureLesson(legacy, 'culture-01');
+ assert.equal(next.words.I.mastery, legacy.words.I.mastery);
+ assert.equal(next.words.I.nextReview, legacy.words.I.nextReview);
+ assert.deepEqual(next.studyDates, legacy.studyDates);
+ assert.deepEqual(next.v2.culture.completed, ['culture-01']);
+ assert.deepEqual(core.dueWords(next, '2026-08-21'), ['I']);
+ assert.deepEqual(core.cultureProgressFor(core.parseStoredProgress(JSON.stringify(legacy))), { completed: [] });
+ assert.deepEqual(core.cultureProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"culture":{"completed":["culture-01",42,"culture-01"]}}}')), { completed: ['culture-01'] });
+});
+
+test('Culture workspace renders one lesson at a time with completion and a non-interactive Camera hint', () => {
+ const incomplete = core.renderCultureWorkspace(curriculum, 'culture-05', core.emptyProgress());
+ const progress = ['culture-01','culture-02','culture-03','culture-04','culture-05'].reduce((current, lessonId) => core.completeCultureLesson(current, lessonId), core.emptyProgress());
+ const markup = core.renderCultureWorkspace(curriculum, 'culture-05', progress);
+ assert.match(markup, /5 \/ 5/);
+ assert.match(incomplete, /完成当前节/);
+ assert.match(markup, /Camera 当前准备中/);
+ assert.match(markup, /data-action="view" data-view="roadmap"/);
+ assert.doesNotMatch(markup, /data-view="camera"/);
+ assert.doesNotMatch(markup, /中文没有逻辑|英语比中文严谨|农耕文明决定中文|海洋文明决定英语/);
+});
+
+test('Culture styles keep one primary lesson readable on a 375px screen', () => {
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /\.cultureWorkspace\{[^}]*max-width/);
+ assert.match(styles, /\.cultureExamples\{[^}]*grid-template-columns:repeat\(2/);
+ assert.match(styles, /\.cultureExamples\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.cultureActions\{[^}]*grid-template-columns/);
 });

@@ -31,9 +31,23 @@ function sanitizeWordRecord(record) {
 function sanitizeProgress(progress) {
  if(!isProgressProfile(progress)) return emptyProgress();
  const words=Object.fromEntries(Object.entries(progress.words).filter(([,record])=>isPlainObject(record)).map(([word,record])=>[word,sanitizeWordRecord(record)]));
- return {...progress,words};
+ const safe={...progress,words};
+ if(isPlainObject(progress.v2)) safe.v2={...progress.v2,culture:cultureProgressFor(progress)};
+ else delete safe.v2;
+ return safe;
 }
 function parseStoredProgress(saved) { try { return sanitizeProgress(JSON.parse(saved)); } catch(error) { return emptyProgress(); } }
+function cultureProgressFor(progress) {
+ const completed=progress?.v2?.culture?.completed;
+ return {completed:[...new Set((Array.isArray(completed)?completed:[]).filter(id=>typeof id==='string'&&/^culture-\d{2}$/.test(id)))]};
+}
+function completeCultureLesson(progress, lessonId) {
+ const current=sanitizeProgress(isProgressProfile(progress)?progress:emptyProgress());
+ if(typeof lessonId!=='string'||!/^culture-\d{2}$/.test(lessonId)) return current;
+ const culture=cultureProgressFor(current);
+ if(culture.completed.includes(lessonId)) return current;
+ return {...current,v2:{...(isPlainObject(current.v2)?current.v2:{}),culture:{...culture,completed:[...culture.completed,lessonId]}}};
+}
 function applyFeedback(progress, word, feedback, now) {
  if(!['again','unsure','understood'].includes(feedback)) throw new Error(`Unknown feedback: ${feedback}`);
  progress=progress||emptyProgress();
@@ -327,7 +341,7 @@ function sceneGroupsFor(scenes) {
 }
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function learningRouteStages(data) {
- const allowedViews=new Set(['today','library']);
+ const allowedViews=new Set(['today','library','culture']);
  if(!isPlainObject(data)||!Array.isArray(data.stages)) return [];
  const stages=data.stages.filter(stage=>isPlainObject(stage)&&typeof stage.id==='string'&&typeof stage.order==='number'&&typeof stage.code==='string'&&typeof stage.title==='string'&&typeof stage.subtitle==='string'&&typeof stage.summary==='string'&&['available','planned'].includes(stage.status)&&(stage.status==='available'?allowedViews.has(stage.view):stage.view===null));
  return [...stages].sort((left,right)=>left.order-right.order);
@@ -335,13 +349,30 @@ function learningRouteStages(data) {
 function renderLearningRoute(data) {
  const stages=learningRouteStages(data);
  if(!stages.length) return '<div class="emptyState"><div><b>学习路线暂不可用</b><p class="mini">请继续使用今日学习和词库入口。</p></div></div>';
- const stageMarkup=stages.map(stage=>`<article class="routeStage routeStage-${html(stage.status)}"><div class="routeStageIndex">${html(stage.code)}</div><div class="routeStageContent"><p class="routeStageEnglish">${html(stage.title)}</p><h3>${html(stage.subtitle)}</h3><p>${html(stage.summary)}</p>${stage.status==='available'?`<button type="button" class="routeOpen" data-action="view" data-view="${html(stage.view)}">${stage.id==='world'?'进入今天的 5 个词':'查看已开放词条'} →</button>`:'<span class="routePlanned" aria-label="该模块准备中">准备中</span>'}</div></article>`).join('');
+ const stageMarkup=stages.map(stage=>`<article class="routeStage routeStage-${html(stage.status)}"><div class="routeStageIndex">${html(stage.code)}</div><div class="routeStageContent"><p class="routeStageEnglish">${html(stage.title)}</p><h3>${html(stage.subtitle)}</h3><p>${html(stage.summary)}</p>${stage.status==='available'?`<button type="button" class="routeOpen" data-action="view" data-view="${html(stage.view)}">${stage.id==='world'?'进入今天的 5 个词':stage.id==='culture'?'开始 Culture 课程':'查看已开放词条'} →</button>`:'<span class="routePlanned" aria-label="该模块准备中">准备中</span>'}</div></article>`).join('');
  const support=Array.isArray(data.supportLinks)?data.supportLinks.filter(link=>isPlainObject(link)&&typeof link.id==='string'&&typeof link.title==='string'&&typeof link.summary==='string'&&link.view==='network').map(link=>`<button type="button" class="routeSupport" data-action="view" data-view="network"><b>${html(link.title)}</b><span>${html(link.summary)}</span><em>打开 →</em></button>`).join(''):'';
  return `<section class="learningRoute" aria-label="V2 学习路线"><header class="routeHero"><p class="workspaceEyebrow">English Thinking System · V2</p><h2>从 Start 到自由表达</h2><p>先看英语怎样组织画面，再用词汇、句子和场景逐步建立表达。当前已开放的入口可以直接使用；其余模块会在内容完成后按顺序开放。</p></header><section class="routeJourney" aria-label="学习阶段">${stageMarkup}</section>${support?`<section class="routeSupportSection"><h3>现在可补充探索</h3>${support}</section>`:''}</section>`;
 }
-function viewKind(view) { return ['today','roadmap','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
-function activeNavView(view) { return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,viewKind,activeNavView};
+function cultureLessonsFor(data) {
+ const fields=['id','title','question','scene','chineseExample','englishExample','explanation','takeaway','boundary','nextHint'];
+ if(!isPlainObject(data)||!Array.isArray(data.cultureLessons)) return [];
+ const lessons=data.cultureLessons.filter(lesson=>isPlainObject(lesson)&&Number.isInteger(lesson.order)&&fields.every(field=>typeof lesson[field]==='string'&&lesson[field].trim()));
+ const ids=new Set();
+ return lessons.filter(lesson=>/^culture-\d{2}$/.test(lesson.id)&&!ids.has(lesson.id)&&ids.add(lesson.id)).sort((left,right)=>left.order-right.order);
+}
+function cultureLessonFor(data, lessonId) { return cultureLessonsFor(data).find(lesson=>lesson.id===lessonId)||null; }
+function renderCultureWorkspace(data, selectedId, progress) {
+ const lessons=cultureLessonsFor(data);
+ if(!lessons.length) return '<div class="emptyState"><div><b>Culture 课程暂不可用</b><p class="mini">请返回学习路线，稍后再试。</p></div></div>';
+ const index=Math.max(0,lessons.findIndex(lesson=>lesson.id===selectedId));
+ const lesson=lessons[index], completed=cultureProgressFor(progress).completed, isCompleted=completed.includes(lesson.id), allCompleted=lessons.every(item=>completed.includes(item.id));
+ const lessonNav=lessons.map(item=>`<button type="button" class="tag cultureLessonNav${item.id===lesson.id?' active':''}" data-action="select-culture-lesson" data-culture-lesson="${html(item.id)}" aria-current="${item.id===lesson.id?'step':'false'}">${html(String(item.order))}</button>`).join('');
+ const previous=lessons[index-1], next=lessons[index+1];
+ return `<section class="cultureWorkspace" aria-label="Culture 课程"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="cultureProgress"><span>Culture</span><b>${index+1} / ${lessons.length}</b></div><nav class="cultureLessonNavs" aria-label="Culture 课程导航">${lessonNav}</nav><article class="cultureLesson"><p class="workspaceEyebrow">Culture · Lesson ${html(String(lesson.order))}</p><h2>${html(lesson.title)}</h2><section class="cultureBlock cultureQuestion"><h3>问题</h3><p>${html(lesson.question)}</p></section><section class="cultureBlock"><h3>现实画面</h3><p>${html(lesson.scene)}</p></section><section class="cultureExamples" aria-label="中文与英语的组织示例"><div><h3>中文怎么说</h3><p>${html(lesson.chineseExample)}</p></div><div><h3>英语怎么组织</h3><p>${html(lesson.englishExample)}</p></div></section><section class="cultureBlock"><h3>我真正要理解什么</h3><p>${html(lesson.explanation)}</p><p class="cultureTakeaway">${html(lesson.takeaway)}</p></section><section class="cultureBoundary"><h3>边界提醒</h3><p>${html(lesson.boundary)}</p></section><p class="cultureNextHint">${html(lesson.nextHint)}</p><div class="cultureActions">${previous?`<button type="button" class="backBtn" data-action="select-culture-lesson" data-culture-lesson="${html(previous.id)}">← 上一节</button>`:'<span></span>'}${isCompleted?'<span class="cultureCompleted" role="status">本节已完成</span>':`<button type="button" class="primaryAction" data-action="complete-culture-lesson">完成当前节</button>`}${next?`<button type="button" class="backBtn" data-action="select-culture-lesson" data-culture-lesson="${html(next.id)}">下一节 →</button>`:'<span></span>'}</div>${allCompleted?'<section class="cultureCameraHint" role="status"><b>Culture 已完成</b><p>下一站是 Camera：英语通常先把镜头对准哪里？Camera 当前准备中。</p></section>':''}</article>${returnTopButton()}</section>`;
+}
+function viewKind(view) { return ['today','roadmap','culture','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
+function activeNavView(view) { if(view==='culture') return 'roadmap'; return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
+if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,cultureLessonsFor,cultureLessonFor,renderCultureWorkspace,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -358,7 +389,8 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  function saveProgress(progress) { memoryProgress=progress; try { window.localStorage.setItem(STORAGE_KEY,JSON.stringify(progress)); } catch(error) { state.storageNotice='学习记录暂未保存，已保留在当前页面。'; } return memoryProgress; }
  const initialProgress=loadProgress();
  const initialNetwork=networkStateFor(V2,{networkSystem:'space-relations',networkNode:'to',explorePath:[]});
- let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,lessonLayer:'quick',filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,networkRelation:null,networkStep:'systems',storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
+ const initialCultureLesson=cultureLessonsFor(Curriculum)[0]?.id||null;
+ let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,lessonLayer:'quick',cultureLesson:initialCultureLesson,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,networkRelation:null,networkStep:'systems',storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
  const vocabularyByWord=new Map((D.vocabulary||[]).map(item=>[item.word,item]));
  const safe=value=>html(value);
  const wordButton=(word,className='tag')=>`<button type="button" class="${className}" data-action="open-word" data-word="${safe(word)}">${safe(word)}</button>`;
@@ -384,6 +416,19 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  function renderRoadmap() {
   title.textContent='学习路线'; sub.textContent='从理解英语如何组织画面，到逐步形成自己的表达。';
   app.innerHTML=renderLearningRoute(Curriculum);
+ }
+ function renderCulture() {
+  const lesson=cultureLessonFor(Curriculum,state.cultureLesson)||cultureLessonsFor(Curriculum)[0]||null;
+  if(!lesson) { title.textContent='Culture'; sub.textContent='中英语言差异从哪里来。'; app.innerHTML=renderCultureWorkspace(Curriculum,null,state.progress); return; }
+  state.cultureLesson=lesson.id;
+  title.textContent='Culture'; sub.textContent='从同一个现实画面，理解不同语言的组织倾向。';
+  app.innerHTML=renderCultureWorkspace(Curriculum,lesson.id,state.progress);
+ }
+ function completeCurrentCultureLesson() {
+  const lesson=cultureLessonFor(Curriculum,state.cultureLesson);
+  if(!lesson) { setNotice('未找到当前 Culture 课程。'); render(); return; }
+  state.progress=completeCultureLesson(state.progress,lesson.id); saveProgress(state.progress);
+  setNotice(`${lesson.title} 已记录为完成；不会加入单词复习队列。`); render();
  }
  function feedbackButtons(word) { return feedbackButtonsFor(word); }
  function v2SystemTitle(systemId) {
@@ -445,13 +490,15 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  }
  function syncNav() { const current=activeNavView(state.view); document.querySelectorAll('.nav').forEach(button=>{const active=button.dataset.view===current; button.classList.toggle('active',active); if(active) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current');}); }
  function renderStorageNotice() { if(!state.storageNotice) return; const notice=document.createElement('p'); notice.className='notice'; notice.setAttribute('role','status'); notice.textContent=state.storageNotice; app.prepend(notice); state.storageNotice=''; }
- function render() { state.view=viewKind(state.view); syncNav(); ({today:renderToday,roadmap:renderRoadmap,review:renderReview,library:renderLibrary,tree:renderTree,compare:renderCompare,progress:renderProgress,network:renderNetwork,lesson:renderLesson}[state.view])(); renderStorageNotice(); }
+ function render() { state.view=viewKind(state.view); syncNav(); ({today:renderToday,roadmap:renderRoadmap,culture:renderCulture,review:renderReview,library:renderLibrary,tree:renderTree,compare:renderCompare,progress:renderProgress,network:renderNetwork,lesson:renderLesson}[state.view])(); renderStorageNotice(); }
  document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{state.view=button.dataset.view; if(state.view==='network') state.networkStep=networkStepForAction(state.networkStep,'nav-network'); render();}));
  app.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;
-  const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation,relationKey}=target.dataset;
+  const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation,relationKey,cultureLesson}=target.dataset;
   if(action==='return-top') { if(typeof window.scrollTo==='function') window.scrollTo({top:0,behavior:'smooth'}); return; }
   if(action==='open-word') openWord(word);
+  else if(action==='select-culture-lesson') { if(cultureLessonFor(Curriculum,cultureLesson)) { state.cultureLesson=cultureLesson; state.view='culture'; render(); } }
+  else if(action==='complete-culture-lesson') completeCurrentCultureLesson();
   else if(['lesson-layer-quick','lesson-layer-deep','lesson-layer-network'].includes(action)) { state.lessonLayer=lessonLayerForAction(state.lessonLayer,action); state.view='lesson'; render(); }
   else if(action==='view') { if(view==='network') { if(nodeId) Object.assign(state,selectNetworkDirect(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,nodeId?'lesson-network':'nav-network'); } state.view=view; render(); }
   else if(action==='select-network-relation') { const relation=selectedNetworkRelation(V2,V2Network,networkNodeFor(V2,state.networkNode),relationKey); state.networkRelation=relationSelectionKey(relation); state.networkStep=networkStepForAction(state.networkStep,'select-network-relation'); state.view='network'; render(); }
