@@ -1016,7 +1016,7 @@ test('V2 relation exploration ignores null, unknown, and incomplete relations', 
 
 test('learning route maps the full Start-to-Output journey without inventing unavailable pages', () => {
  assert.deepEqual(curriculum.stages.map(stage => stage.id), ['start','culture','camera','world','word-image','sentence','grammar','scene-training','output']);
- assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['camera','camera'],['world','today'],['word-image','library']]);
+ assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['camera','camera'],['world','world'],['word-image','library']]);
  assert.deepEqual(curriculum.supportLinks.map(link => [link.id, link.view]), [['knowledge-network','network']]);
  assert.ok(curriculum.stages.filter(stage => stage.status === 'planned').every(stage => stage.view === null));
  assert.deepEqual(core.learningRouteStages(curriculum).map(stage => stage.order), [0,1,2,3,4,5,6,7,8]);
@@ -1027,7 +1027,7 @@ test('learning route renderer keeps existing destinations clickable and planned 
  assert.match(markup, /从 Start 到自由表达/);
  assert.match(markup, /data-action="view" data-view="culture"/);
  assert.match(markup, /data-action="view" data-view="camera"/);
- assert.match(markup, /data-action="view" data-view="today"/);
+ assert.match(markup, /data-action="view" data-view="world"/);
  assert.match(markup, /data-action="view" data-view="library"/);
  assert.match(markup, /data-action="view" data-view="network"/);
  assert.match(markup, /准备中/);
@@ -1040,6 +1040,8 @@ test('learning route becomes a main view without changing legacy view routing', 
  assert.equal(core.viewKind('culture'), 'culture');
  assert.equal(core.viewKind('camera'), 'camera');
  assert.equal(core.activeNavView('camera'), 'roadmap');
+ assert.equal(core.viewKind('world'), 'world');
+ assert.equal(core.activeNavView('world'), 'roadmap');
  assert.equal(core.viewKind('today'), 'today');
  assert.equal(core.activeNavView('lesson'), null);
 });
@@ -1141,4 +1143,73 @@ test('Camera styles keep the four-step choice flow readable at 375px', () => {
  assert.match(styles, /\.cameraChoice\{[^}]*min-height:44px/);
  assert.match(styles, /\.cameraChoices\{[^}]*grid-template-columns:1fr/);
  assert.match(styles, /\.cameraActions\{[^}]*grid-template-columns:1fr/);
+});
+
+test('World curriculum contains one six-step observation sample with complete fields', () => {
+ const scenes = core.worldScenesFor(curriculum);
+ assert.equal(scenes.length, 1);
+ const scene = scenes[0];
+ assert.equal(scene.id, 'world-room-01');
+ assert.equal(scene.title, 'World：看见现实画面的组成部分');
+ assert.equal(scene.scene.accessibleText.includes('女孩'), true);
+ assert.equal(scene.scene.accessibleText.includes('白猫'), true);
+ assert.deepEqual(core.worldStepsFor(scene).map(step => step.id), ['people','things','action','state','relation','place']);
+ core.worldStepsFor(scene).forEach(step => {
+  assert.ok(step.question);
+  assert.ok(step.concept);
+  assert.equal(step.choices.filter(choice => choice.recommended).length, 1);
+  assert.ok(step.choices.every(choice => choice.label && choice.feedback));
+ });
+});
+
+test('World advances only after its recommended observation without changing Culture, Camera, or V1 progress', () => {
+ const scene = core.worldSceneFor(curriculum, 'world-room-01');
+ const legacy = {
+  words: { I: { mastery: 3, nextReview: '2026-08-21' } },
+  studyDates: ['2026-08-20'],
+  v2: { culture: { completed: ['culture-01'] }, camera: { completed: ['camera-library-01'] } },
+ };
+ assert.equal(core.worldStepForAction(scene, 0, 'people-girl'), 0);
+ assert.equal(core.worldStepForAction(scene, 0, 'people-girl-cat'), 1);
+ const next = core.completeWorldScene(legacy, scene.id);
+ assert.deepEqual(next.words, legacy.words);
+ assert.deepEqual(next.studyDates, legacy.studyDates);
+ assert.deepEqual(next.v2.culture.completed, ['culture-01']);
+ assert.deepEqual(next.v2.camera.completed, ['camera-library-01']);
+ assert.deepEqual(next.v2.world.completed, ['world-room-01']);
+ assert.deepEqual(core.dueWords(next, '2026-08-21'), ['I']);
+ assert.deepEqual(core.worldProgressFor(core.parseStoredProgress(JSON.stringify({ words: {}, studyDates: [] }))), { completed: [] });
+ assert.deepEqual(core.worldProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"world":{"completed":["world-room-01",42,"world-room-01"]}}}')), { completed: ['world-room-01'] });
+ assert.deepEqual(core.worldProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"world":"broken"}}')), { completed: [] });
+});
+
+test('World workspace renders one observation step, accessible scene content, safe alternate feedback, and an existing Word Image route', () => {
+ const scene = core.worldSceneFor(curriculum, 'world-room-01');
+ const alternate = core.renderWorldWorkspace(curriculum, scene.id, 2, 'action-cat', core.emptyProgress());
+ const ready = core.renderWorldWorkspace(curriculum, scene.id, 5, 'place-room', core.emptyProgress());
+ const completed = core.completeWorldScene(core.emptyProgress(), scene.id);
+ const final = core.renderWorldWorkspace(curriculum, scene.id, 5, 'place-room', completed);
+ assert.match(alternate, /步骤 3 \/ 6/);
+ assert.match(alternate, /这也是画面中可以观察到的信息；这一页先找“正在发生的事”。/);
+ assert.doesNotMatch(alternate, /完全错误|只有这个答案|你把词性分错了/);
+ assert.match(alternate, /aria-label="场景画面：/);
+ assert.match(alternate, /女孩|白猫|红色杯子/);
+ assert.equal(fs.existsSync(path.join(__dirname, 'assets', 'world-room-observation.png')), true);
+ assert.match(alternate, /class="worldSceneImage" src="assets\/world-room-observation\.png"/);
+ assert.match(alternate, /场景图片加载失败，请根据下方场景说明继续观察。/);
+ assert.doesNotMatch(alternate, /完成本次 World 观察/);
+ assert.match(ready, /完成本次 World 观察/);
+ assert.match(final, /你已经发现：一个现实画面里，不只有“东西”/);
+ assert.match(final, /下一站是 Word Image/);
+ assert.match(final, /data-action="view" data-view="library"/);
+});
+
+test('World styles keep the scene and single-column controls readable at 375px', () => {
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /\.worldWorkspace\{[^}]*max-width/);
+ assert.match(styles, /\.worldChoice\{[^}]*min-height:44px/);
+ assert.match(styles, /\.worldChoices\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.worldActions\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.worldSceneImage\{[^}]*aspect-ratio:16\/9/);
+ assert.match(styles, /\.worldSceneImage\{[^}]*object-fit:contain/);
 });

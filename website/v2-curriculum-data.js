@@ -5,7 +5,7 @@ const payload = {
     { id:'start', order:0, code:'00', title:'Start', subtitle:'英语思维是什么', summary:'先知道这条路线会带你从画面走到表达。', status:'planned', view:null },
     { id:'culture', order:1, code:'01', title:'Culture', subtitle:'中英语言差异从哪里来', summary:'理解信息组织的不同倾向，不把语言分成高低。', status:'available', view:'culture' },
     { id:'camera', order:2, code:'02', title:'Camera', subtitle:'英语镜头感', summary:'从焦点出发，看动作、对象、关系和背景。', status:'available', view:'camera' },
-    { id:'world', order:3, code:'03', title:'World', subtitle:'850 核心词世界', summary:'用今天的 5 个词开始建立英语世界的基础零件。', status:'available', view:'today' },
+    { id:'world', order:3, code:'03', title:'World', subtitle:'看见现实画面的组成部分', summary:'先从一个真实画面里看见谁、物品、动作、状态、关系和背景。', status:'available', view:'world' },
     { id:'word-image', order:4, code:'04', title:'Word Image', subtitle:'单词本源画面', summary:'从核心画面、逻辑和真实场景理解已开放的 Level 1 词条。', status:'available', view:'library' },
     { id:'sentence', order:5, code:'05', title:'Sentence', subtitle:'英语句子生成', summary:'从最短核心句开始，一次补上一项画面信息。', status:'planned', view:null },
     { id:'grammar', order:6, code:'06', title:'Grammar', subtitle:'英语标记系统', summary:'先理解画面信息变化，再认识语法标记。', status:'planned', view:null },
@@ -99,6 +99,68 @@ const payload = {
       recommendedSentence:'The boy is doing homework in the library.',
       feedback:{ alternateFocus:'这也是一个可以观察的角度；本次样板先跟随男孩，练习当前这条表达路径。', completion:'你已经按一次镜头路径，把画面逐步组织成一句英语。' },
       nextLink:{ stage:'sentence', text:'下一站是 Sentence：从最短核心句开始，一次补上一项画面信息。Sentence 当前准备中。' },
+    },
+  ],
+  worldScenes: [
+    {
+      id:'world-room-01', order:1, title:'World：看见现实画面的组成部分',
+      scene:{
+        accessibleText:'房间里，一个女孩坐在桌边读书。她手里拿着一本书，桌上有一个红色杯子，一只白猫安静地待在桌下。',
+        caption:'房间里，一个女孩坐在桌边读书；书在她手里，红色杯子在桌上，白猫安静地待在桌下。',
+      },
+      steps:[
+        {
+          id:'people', concept:'谁 / 动物', question:'谁在画面里？',
+          choices:[
+            { id:'people-girl-cat', label:'女孩和白猫', recommended:true, feedback:'你刚才找到的是“谁 / 动物”：画面里出现的角色。' },
+            { id:'people-girl', label:'女孩', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找画面里的谁。' },
+            { id:'people-cat', label:'白猫', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找画面里的谁。' },
+          ],
+        },
+        {
+          id:'things', concept:'物品', question:'画面里有什么？',
+          choices:[
+            { id:'things-book-cup-table', label:'书、红色杯子和桌子', recommended:true, feedback:'你刚才找到的是“物品”：画面里可以指认的东西。' },
+            { id:'things-book', label:'一本书', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找画面里的物品。' },
+            { id:'things-cup', label:'一个红色杯子', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找画面里的物品。' },
+          ],
+        },
+        {
+          id:'action', concept:'动作', question:'正在发生什么？',
+          choices:[
+            { id:'action-girl-reading', label:'女孩正在读书', recommended:true, feedback:'你刚才找到的是“动作”：画面中正在发生的事。' },
+            { id:'action-cat', label:'白猫待在桌下', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找“正在发生的事”。' },
+            { id:'action-cup', label:'杯子是红色的', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找“正在发生的事”。' },
+          ],
+        },
+        {
+          id:'state', concept:'状态', question:'它们现在是什么样？',
+          choices:[
+            { id:'state-cat-cup', label:'白猫很安静，杯子是红色的', recommended:true, feedback:'你刚才找到的是“状态”：画面现在呈现的样子。' },
+            { id:'state-reading', label:'女孩正在读书', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看现在呈现的样子。' },
+            { id:'state-book-hand', label:'书在女孩手里', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看现在呈现的样子。' },
+          ],
+        },
+        {
+          id:'relation', concept:'关系', question:'它们彼此有什么联系？',
+          choices:[
+            { id:'relation-book-cup', label:'书在女孩手里，杯子在桌上', recommended:true, feedback:'你刚才找到的是“关系”：画面里的元素怎样连在一起。' },
+            { id:'relation-reading', label:'女孩正在读书', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看元素之间怎样连在一起。' },
+            { id:'relation-room', label:'这是一个房间', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看元素之间怎样连在一起。' },
+          ],
+        },
+        {
+          id:'place', concept:'背景', question:'这一切发生在哪里？',
+          choices:[
+            { id:'place-room', label:'在房间里', recommended:true, feedback:'你刚才找到的是“背景”：这一整个画面发生的空间。' },
+            { id:'place-table', label:'在桌边', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看整个画面发生的地方。' },
+            { id:'place-under-table', label:'在桌子下面', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看整个画面发生的地方。' },
+          ],
+        },
+      ],
+      completion:'你已经发现：一个现实画面里，不只有“东西”，还有谁、物品、动作、状态、关系和背景。英语单词会从这些真实画面中长出来。',
+      boundary:'这六步是六个观察入口，不是绝对、互斥的分类盒子。同一个元素可以同时提供多种信息：例如“猫在桌下”既体现猫和桌子的关系，也提供位置信息。不需要进行语言学分类。',
+      nextLink:{ stage:'word-image', view:'library', text:'下一站是 Word Image：进入一个词的核心画面，看看它怎样从现实中长出不同用法。' },
     },
   ],
   supportLinks: [
