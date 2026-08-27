@@ -1016,7 +1016,7 @@ test('V2 relation exploration ignores null, unknown, and incomplete relations', 
 
 test('learning route maps the full Start-to-Output journey without inventing unavailable pages', () => {
  assert.deepEqual(curriculum.stages.map(stage => stage.id), ['start','culture','camera','world','word-image','sentence','grammar','scene-training','output']);
- assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['camera','camera'],['world','world'],['word-image','word-image']]);
+ assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['camera','camera'],['world','world'],['word-image','word-image'],['sentence','sentence']]);
  assert.deepEqual(curriculum.supportLinks.map(link => [link.id, link.view]), [['knowledge-network','network']]);
  assert.ok(curriculum.stages.filter(stage => stage.status === 'planned').every(stage => stage.view === null));
  assert.deepEqual(core.learningRouteStages(curriculum).map(stage => stage.order), [0,1,2,3,4,5,6,7,8]);
@@ -1030,9 +1030,11 @@ test('learning route renderer keeps existing destinations clickable and planned 
  assert.match(markup, /data-action="view" data-view="world"/);
  assert.match(markup, /data-action="view" data-view="word-image"/);
  assert.match(markup, /开始 Word Image/);
+ assert.match(markup, /data-action="view" data-view="sentence"/);
+ assert.match(markup, /开始 Sentence/);
  assert.match(markup, /data-action="view" data-view="network"/);
  assert.match(markup, /准备中/);
- assert.doesNotMatch(markup, /data-view="sentence"|data-view="grammar"|data-view="scene-training"|data-view="output"/);
+ assert.doesNotMatch(markup, /data-view="grammar"|data-view="scene-training"|data-view="output"/);
 });
 
 test('learning route becomes a main view without changing legacy view routing', () => {
@@ -1045,6 +1047,8 @@ test('learning route becomes a main view without changing legacy view routing', 
  assert.equal(core.activeNavView('world'), 'roadmap');
  assert.equal(core.viewKind('word-image'), 'word-image');
  assert.equal(core.activeNavView('word-image'), 'roadmap');
+ assert.equal(core.viewKind('sentence'), 'sentence');
+ assert.equal(core.activeNavView('sentence'), 'roadmap');
  assert.equal(core.viewKind('today'), 'today');
  assert.equal(core.activeNavView('lesson'), null);
 });
@@ -1463,4 +1467,84 @@ test('Word Image styles keep the focused relation and actions readable at 375px'
   assert.match(styles, /\.phonicsCards\{[^}]*grid-template-columns/);
  assert.match(styles, /\.wordImageSentenceFlow\{[^}]*text-align:left/);
  assert.match(styles, /\.wordImageSentenceAudio\{[^}]*grid-template-columns/);
+});
+
+test('Sentence curriculum defines one focus-information-connection sample that reuses the reviewed Word Image flow', () => {
+ assert.equal(typeof core.sentenceLessonsFor, 'function');
+ const lessons = core.sentenceLessonsFor(curriculum);
+ assert.equal(lessons.length, 1);
+ const lesson = lessons[0];
+ assert.equal(lesson.id, 'sentence-cup-on-table-01');
+ assert.equal(lesson.source.worldSceneId, 'world-room-01');
+ assert.equal(lesson.source.wordImageLessonId, 'word-image-on-01');
+ assert.equal(lesson.sentence, 'The cup is on the table.');
+ assert.deepEqual(core.sentenceStepsFor(lesson).map(step => step.id), ['scene','focus','lock-focus','gap-focus','gap-relation','relation','complete','path','flow']);
+ assert.match(core.sentenceStepsFor(lesson)[4].explanation, /在这一句话里/);
+ assert.match(core.sentenceStepsFor(lesson)[4].explanation, /状态\/关系画面/);
+ assert.match(core.sentenceStepsFor(lesson)[3].prompt, /听的人知道杯子怎么了吗/);
+ assert.match(core.sentenceStepsFor(lesson)[4].prompt, /处于什么画面了吗/);
+ assert.equal(core.sentenceFlowFor(curriculum, lesson).text, 'The cup is on the table.');
+ assert.equal(core.sentenceFlowFor(curriculum, lesson), core.wordImageLessonFor(curriculum, 'word-image-on-01').sentenceFlow);
+});
+
+test('Sentence completion stays isolated from V1 and every completed P2-P5 module', () => {
+ assert.equal(typeof core.completeSentenceLesson, 'function');
+ const legacy = {
+  words: { I: { mastery: 3, nextReview: '2026-08-21' } },
+  studyDates: ['2026-08-20'],
+  v2: { culture: { completed: ['culture-01'] }, camera: { completed: ['camera-library-01'] }, world: { completed: ['world-room-01'] }, wordImage: { completed: ['word-image-on-01'] } },
+ };
+ const next = core.completeSentenceLesson(legacy, 'sentence-cup-on-table-01');
+ assert.deepEqual(next.words, legacy.words);
+ assert.deepEqual(next.studyDates, legacy.studyDates);
+ assert.deepEqual(next.v2.culture, legacy.v2.culture);
+ assert.deepEqual(next.v2.camera, legacy.v2.camera);
+ assert.deepEqual(next.v2.world, legacy.v2.world);
+ assert.deepEqual(next.v2.wordImage, legacy.v2.wordImage);
+ assert.deepEqual(next.v2.sentence.completed, ['sentence-cup-on-table-01']);
+ assert.deepEqual(core.dueWords(next, '2026-08-21'), ['I']);
+});
+
+test('Sentence workspace keeps information gaps visible and ends in the reviewed sound layer without grammar labels', () => {
+ assert.equal(typeof core.renderSentenceWorkspace, 'function');
+ const lesson = core.sentenceLessonFor(curriculum, 'sentence-cup-on-table-01');
+ const focus = core.renderSentenceWorkspace(curriculum, lesson.id, 1, null, core.emptyProgress(), { supported: false, speaking: false });
+ const firstGap = core.renderSentenceWorkspace(curriculum, lesson.id, 3, 'focus-cup', core.emptyProgress(), { supported: false, speaking: false });
+ const secondGap = core.renderSentenceWorkspace(curriculum, lesson.id, 4, 'focus-cup', core.emptyProgress(), { supported: false, speaking: false });
+ const relation = core.renderSentenceWorkspace(curriculum, lesson.id, 5, 'focus-cup', core.emptyProgress(), { supported: false, speaking: false });
+ const flow = core.renderSentenceWorkspace(curriculum, lesson.id, 8, 'focus-cup', core.emptyProgress(), { supported: false, speaking: false });
+ assert.match(focus, /这句话先拍谁？/);
+ assert.match(focus, /focus-cup/);
+ assert.match(firstGap, /The cup \.\.\./);
+ assert.match(firstGap, /听的人知道杯子怎么了吗/);
+ assert.match(secondGap, /The cup is \.\.\./);
+ assert.match(secondGap, /处于什么画面了吗/);
+ assert.match(relation, /on the table/);
+ assert.match(relation, /整体关系画面/);
+ assert.match(flow, /写出来的结构和自然说出来的声音/);
+ assert.match(flow, /\[ðə ˈkʌp‿ɪz‿ɑn ðə ˈteɪbəl\]/);
+ assert.doesNotMatch(flow, /主语|谓语|宾语|介词短语/);
+});
+
+test('Sentence advances only after its recommended focus and stops shared speech after leaving Sentence', () => {
+ assert.equal(typeof core.sentenceStepForAction, 'function');
+ assert.equal(typeof core.shouldStopSentenceSpeech, 'function');
+ const lesson = core.sentenceLessonFor(curriculum, 'sentence-cup-on-table-01');
+ assert.equal(core.sentenceStepForAction(lesson, 1, 'focus-girl'), 1);
+ assert.equal(core.sentenceStepForAction(lesson, 1, 'focus-cup'), 2);
+ assert.equal(core.sentenceStepForAction(lesson, 4, 'focus-cup'), 5);
+ assert.equal(core.shouldStopSentenceSpeech('sentence', 'library'), true);
+ assert.equal(core.shouldStopSentenceSpeech('sentence', 'word-image'), true);
+ assert.equal(core.shouldStopSentenceSpeech('sentence', 'sentence'), false);
+ assert.equal(core.shouldStopSentenceSpeech('word-image', 'sentence'), true);
+});
+
+test('Sentence styles keep one focus decision and one information block readable at 375px', () => {
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /\.sentenceWorkspace\{[^}]*max-width/);
+ assert.match(styles, /\.sentenceSceneImage\{[^}]*aspect-ratio:16\/9/);
+ assert.match(styles, /\.sentenceChoices\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.sentenceActions\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.sentenceChoice\{[^}]*min-height:44px/);
+ assert.match(styles, /@media\(max-width:480px\)\{[^}]*\.sentenceLesson\{[^}]*padding/);
 });

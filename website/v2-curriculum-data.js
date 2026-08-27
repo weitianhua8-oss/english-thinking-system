@@ -7,7 +7,7 @@ const payload = {
     { id:'camera', order:2, code:'02', title:'Camera', subtitle:'英语镜头感', summary:'从焦点出发，看动作、对象、关系和背景。', status:'available', view:'camera' },
     { id:'world', order:3, code:'03', title:'World', subtitle:'看见现实画面的组成部分', summary:'先从一个真实画面里看见谁、物品、动作、状态、关系和背景。', status:'available', view:'world' },
     { id:'word-image', order:4, code:'04', title:'Word Image', subtitle:'单词本源画面', summary:'从现实画面出发，先把一个英语词连到它的核心画面。', status:'available', view:'word-image' },
-    { id:'sentence', order:5, code:'05', title:'Sentence', subtitle:'英语句子生成', summary:'从最短核心句开始，一次补上一项画面信息。', status:'planned', view:null },
+    { id:'sentence', order:5, code:'05', title:'Sentence', subtitle:'英语句子生成', summary:'从表达焦点出发，逐步补足听者还缺的信息。', status:'available', view:'sentence' },
     { id:'grammar', order:6, code:'06', title:'Grammar', subtitle:'英语标记系统', summary:'先理解画面信息变化，再认识语法标记。', status:'planned', view:null },
     { id:'scene-training', order:7, code:'07', title:'Scene Training', subtitle:'场景到英语', summary:'把真实场景逐步变成英语画面和表达。', status:'planned', view:null },
     { id:'output', order:8, code:'08', title:'Output', subtitle:'自由表达', summary:'看图、日常场景和连续故事的表达训练。', status:'planned', view:null },
@@ -231,6 +231,29 @@ const payload = {
       },
       boundary:'ON 不是简单等于一个中文“在”；当前先抓住“接触在表面上”这个核心画面。更多用法进入现有 ON 词条继续理解。',
       completion:'你已经把一种现实关系，直接连到了英语词 ON。',
+    },
+  ],
+  sentenceLessons: [
+    {
+      id:'sentence-cup-on-table-01', order:1, title:'Sentence：把画面组织成一句英语',
+      source:{ worldSceneId:'world-room-01', wordImageLessonId:'word-image-on-01' },
+      sentence:'The cup is on the table.',
+      steps:[
+        { id:'scene', title:'先看完整现实画面', prompt:'房间里有许多信息。这次我们只准备说其中一个关系。', explanation:'句子从现实画面开始，不从中文逐词翻译开始。', action:'开始决定焦点' },
+        { id:'focus', title:'这句话先拍谁？', prompt:'这次你想让听的人先注意画面里的哪一个？', explanation:'女孩、白猫和杯子都可以成为另一句话的焦点；本次先跟随红色杯子。', action:'锁定这次焦点', choices:[
+          { id:'focus-cup', label:'红色杯子', recommended:true, feedback:'这次先把红色杯子放到表达焦点。接下来，要让听的人准确找到它。' },
+          { id:'focus-girl', label:'正在读书的女孩', recommended:false, feedback:'这也是合理的表达焦点，可以长成另一句话；本次样板先跟随红色杯子。' },
+          { id:'focus-cat', label:'桌下的白猫', recommended:false, feedback:'这也是合理的表达焦点，可以长成另一句话；本次样板先跟随红色杯子。' },
+        ] },
+        { id:'lock-focus', title:'先锁定 The cup', prompt:'现在，听的人和你一起把注意力放在这一个杯子上。', explanation:'这里的 The cup 是当前共同看见的焦点，不展开冠词规则。', action:'看看信息够不够' },
+        { id:'gap-focus', title:'只说 The cup ...', prompt:'如果现在停下来，听的人知道杯子怎么了吗？', explanation:'还不知道。焦点已经出现，但听的人仍缺少它现在的关键信息。', action:'继续补信息' },
+        { id:'gap-relation', title:'建立连接 The cup is ...', prompt:'如果现在停下来，听的人知道杯子处于什么画面了吗？', explanation:'在这一句话里，is 帮我们把当前焦点 The cup 接到它现在的状态/关系画面。还不知道：连接已经搭起，但真正的关系画面还没有补完整。P6 不进一步解释 be 的完整语法。', action:'回到画面补关系' },
+        { id:'relation', title:'从画面补出 on the table', prompt:'看看杯子和桌面：杯底接触并由桌面承载。', explanation:'on the table 在这里是一个整体关系画面，不做逐词中文替换。', action:'形成完整表达' },
+        { id:'complete', title:'形成完整句', prompt:'焦点、缺少的信息和关系现在都补齐了。', explanation:'The cup is on the table. 不是套句型，而是把当前画面说完整。', action:'回看这条路径' },
+        { id:'path', title:'回看整条认知路径', prompt:'画面 → 焦点 → 信息缺口 → 补信息 → 完整表达。', explanation:'先说谁、再说什么，是这条路径给初学者的简单口诀；底层是 Focus → Information → Connection → Sentence。', action:'听同一句话' },
+        { id:'flow', title:'同一句话的声音层', prompt:'写出来的结构和自然说出来的声音，是同一句英语的两个层面。', explanation:'下面复用 Word Image 已审校的自然语流、连读、弱读、重音和播放样板。', action:'完成这个 Sentence' },
+      ],
+      completion:'你已经发现：一句英语会围绕当前焦点，把听者还缺的信息逐步补完整。',
     },
   ],
   supportLinks: [
