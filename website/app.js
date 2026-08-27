@@ -32,7 +32,7 @@ function sanitizeProgress(progress) {
  if(!isProgressProfile(progress)) return emptyProgress();
  const words=Object.fromEntries(Object.entries(progress.words).filter(([,record])=>isPlainObject(record)).map(([word,record])=>[word,sanitizeWordRecord(record)]));
  const safe={...progress,words};
- if(isPlainObject(progress.v2)) safe.v2={...progress.v2,culture:cultureProgressFor(progress),camera:cameraProgressFor(progress),world:worldProgressFor(progress)};
+ if(isPlainObject(progress.v2)) safe.v2={...progress.v2,culture:cultureProgressFor(progress),camera:cameraProgressFor(progress),world:worldProgressFor(progress),wordImage:wordImageProgressFor(progress)};
  else delete safe.v2;
  return safe;
 }
@@ -69,6 +69,41 @@ function completeWorldScene(progress, sceneId) {
  const world=worldProgressFor(current);
  if(world.completed.includes(sceneId)) return current;
  return {...current,v2:{...(isPlainObject(current.v2)?current.v2:{}),world:{...world,completed:[...world.completed,sceneId]}}};
+}
+function wordImageProgressFor(progress) {
+ const completed=progress?.v2?.wordImage?.completed;
+ return {completed:[...new Set((Array.isArray(completed)?completed:[]).filter(id=>typeof id==='string'&&/^word-image-[a-z0-9-]+$/.test(id)))]};
+}
+function completeWordImageLesson(progress, lessonId) {
+ const current=isProgressProfile(progress)?progress:emptyProgress();
+ if(typeof lessonId!=='string'||!/^word-image-[a-z0-9-]+$/.test(lessonId)) return current;
+ const wordImage=wordImageProgressFor(current);
+ if(wordImage.completed.includes(lessonId)) return current;
+ return {...current,v2:{...(isPlainObject(current.v2)?current.v2:{}),wordImage:{...wordImage,completed:[...wordImage.completed,lessonId]}}};
+}
+function preferredUSVoice(voices) {
+ const safe=Array.isArray(voices)?voices.filter(voice=>voice&&typeof voice.lang==='string'):[];
+ return safe.find(voice=>voice.lang.toLowerCase()==='en-us')||safe.find(voice=>voice.lang.toLowerCase().startsWith('en-us'))||null;
+}
+function createWordImageSpeechController(synthesis, Utterance, onState) {
+ const notify=typeof onState==='function'?onState:()=>{};
+ const supported=Boolean(synthesis&&typeof synthesis.cancel==='function'&&typeof synthesis.speak==='function'&&typeof Utterance==='function');
+ let requestId=0;
+ function stop() { requestId+=1; if(supported) synthesis.cancel(); notify(false); }
+ function play(text, lang, rate=1, playbackMode=null) {
+  if(!supported||typeof text!=='string'||!text.trim()||typeof lang!=='string'||!lang.trim()) return false;
+  stop();
+  const current=++requestId, utterance=new Utterance(text);
+  utterance.lang=lang;
+  utterance.rate=typeof rate==='number'&&rate>0&&rate<=2?rate:1;
+  const voice=preferredUSVoice(typeof synthesis.getVoices==='function'?synthesis.getVoices():[]);
+  if(voice) utterance.voice=voice;
+  utterance.onstart=()=>{ if(current===requestId) notify(true,playbackMode); };
+  utterance.onend=utterance.onerror=()=>{ if(current===requestId) notify(false,playbackMode); };
+  try { synthesis.speak(utterance); notify(true,playbackMode); return true; }
+  catch(error) { if(current===requestId) notify(false,playbackMode); return false; }
+ }
+ return {isSupported:()=>supported,play,stop};
 }
 function applyFeedback(progress, word, feedback, now) {
  if(!['again','unsure','understood'].includes(feedback)) throw new Error(`Unknown feedback: ${feedback}`);
@@ -363,7 +398,7 @@ function sceneGroupsFor(scenes) {
 }
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function learningRouteStages(data) {
- const allowedViews=new Set(['today','library','culture','camera','world']);
+ const allowedViews=new Set(['today','library','culture','camera','world','word-image']);
  if(!isPlainObject(data)||!Array.isArray(data.stages)) return [];
  const stages=data.stages.filter(stage=>isPlainObject(stage)&&typeof stage.id==='string'&&typeof stage.order==='number'&&typeof stage.code==='string'&&typeof stage.title==='string'&&typeof stage.subtitle==='string'&&typeof stage.summary==='string'&&['available','planned'].includes(stage.status)&&(stage.status==='available'?allowedViews.has(stage.view):stage.view===null));
  return [...stages].sort((left,right)=>left.order-right.order);
@@ -371,7 +406,7 @@ function learningRouteStages(data) {
 function renderLearningRoute(data) {
  const stages=learningRouteStages(data);
  if(!stages.length) return '<div class="emptyState"><div><b>学习路线暂不可用</b><p class="mini">请继续使用今日学习和词库入口。</p></div></div>';
- const stageMarkup=stages.map(stage=>`<article class="routeStage routeStage-${html(stage.status)}"><div class="routeStageIndex">${html(stage.code)}</div><div class="routeStageContent"><p class="routeStageEnglish">${html(stage.title)}</p><h3>${html(stage.subtitle)}</h3><p>${html(stage.summary)}</p>${stage.status==='available'?`<button type="button" class="routeOpen" data-action="view" data-view="${html(stage.view)}">${stage.id==='world'?'开始 World 观察':stage.id==='culture'?'开始 Culture 课程':stage.id==='camera'?'开始 Camera 训练':'查看已开放词条'} →</button>`:'<span class="routePlanned" aria-label="该模块准备中">准备中</span>'}</div></article>`).join('');
+ const stageMarkup=stages.map(stage=>`<article class="routeStage routeStage-${html(stage.status)}"><div class="routeStageIndex">${html(stage.code)}</div><div class="routeStageContent"><p class="routeStageEnglish">${html(stage.title)}</p><h3>${html(stage.subtitle)}</h3><p>${html(stage.summary)}</p>${stage.status==='available'?`<button type="button" class="routeOpen" data-action="view" data-view="${html(stage.view)}">${stage.id==='world'?'开始 World 观察':stage.id==='culture'?'开始 Culture 课程':stage.id==='camera'?'开始 Camera 训练':stage.id==='word-image'?'开始 Word Image':'查看已开放词条'} →</button>`:'<span class="routePlanned" aria-label="该模块准备中">准备中</span>'}</div></article>`).join('');
  const support=Array.isArray(data.supportLinks)?data.supportLinks.filter(link=>isPlainObject(link)&&typeof link.id==='string'&&typeof link.title==='string'&&typeof link.summary==='string'&&link.view==='network').map(link=>`<button type="button" class="routeSupport" data-action="view" data-view="network"><b>${html(link.title)}</b><span>${html(link.summary)}</span><em>打开 →</em></button>`).join(''):'';
  return `<section class="learningRoute" aria-label="V2 学习路线"><header class="routeHero"><p class="workspaceEyebrow">English Thinking System · V2</p><h2>从 Start 到自由表达</h2><p>先看英语怎样组织画面，再用词汇、句子和场景逐步建立表达。当前已开放的入口可以直接使用；其余模块会在内容完成后按顺序开放。</p></header><section class="routeJourney" aria-label="学习阶段">${stageMarkup}</section>${support?`<section class="routeSupportSection"><h3>现在可补充探索</h3>${support}</section>`:''}</section>`;
 }
@@ -439,7 +474,7 @@ function isWorldChoice(choice) { return isPlainObject(choice)&&typeof choice.id=
 function worldScenesFor(data) {
  if(!isPlainObject(data)||!Array.isArray(data.worldScenes)) return [];
  const ids=new Set();
- return data.worldScenes.filter(scene=>isPlainObject(scene)&&Number.isInteger(scene.order)&&typeof scene.id==='string'&&/^world-[a-z0-9-]+$/.test(scene.id)&&!ids.has(scene.id)&&ids.add(scene.id)&&typeof scene.title==='string'&&scene.title.trim()&&isPlainObject(scene.scene)&&['accessibleText','caption'].every(field=>typeof scene.scene[field]==='string'&&scene.scene[field].trim())&&Array.isArray(scene.steps)&&scene.steps.length===6&&scene.steps.every(step=>isPlainObject(step)&&typeof step.id==='string'&&typeof step.concept==='string'&&typeof step.question==='string'&&Array.isArray(step.choices)&&step.choices.length>0&&step.choices.every(isWorldChoice)&&step.choices.filter(choice=>choice.recommended).length===1)&&typeof scene.completion==='string'&&scene.completion.trim()&&typeof scene.boundary==='string'&&scene.boundary.trim()&&isPlainObject(scene.nextLink)&&scene.nextLink.view==='library'&&typeof scene.nextLink.text==='string'&&scene.nextLink.text.trim()).sort((left,right)=>left.order-right.order);
+ return data.worldScenes.filter(scene=>isPlainObject(scene)&&Number.isInteger(scene.order)&&typeof scene.id==='string'&&/^world-[a-z0-9-]+$/.test(scene.id)&&!ids.has(scene.id)&&ids.add(scene.id)&&typeof scene.title==='string'&&scene.title.trim()&&isPlainObject(scene.scene)&&['accessibleText','caption'].every(field=>typeof scene.scene[field]==='string'&&scene.scene[field].trim())&&Array.isArray(scene.steps)&&scene.steps.length===6&&scene.steps.every(step=>isPlainObject(step)&&typeof step.id==='string'&&typeof step.concept==='string'&&typeof step.question==='string'&&Array.isArray(step.choices)&&step.choices.length>0&&step.choices.every(isWorldChoice)&&step.choices.filter(choice=>choice.recommended).length===1)&&typeof scene.completion==='string'&&scene.completion.trim()&&typeof scene.boundary==='string'&&scene.boundary.trim()&&isPlainObject(scene.nextLink)&&scene.nextLink.view==='word-image'&&typeof scene.nextLink.text==='string'&&scene.nextLink.text.trim()).sort((left,right)=>left.order-right.order);
 }
 function worldSceneFor(data, sceneId) { return worldScenesFor(data).find(scene=>scene.id===sceneId)||null; }
 function worldStepsFor(scene) { return worldScenesFor({worldScenes:[scene]})[0]?.steps||[]; }
@@ -461,9 +496,53 @@ function renderWorldWorkspace(data, selectedId, stepIndex, choiceId, progress) {
  const completion=finalReady?`<div class="worldActions"><button type="button" class="backBtn" data-action="restart-world-scene">重新观察</button></div><section class="worldSummary" role="status"><h3>你已经完成 World 观察</h3><p>${html(scene.completion)}</p><p class="worldBoundary">${html(scene.boundary)}</p><p>${html(scene.nextLink.text)}</p><button type="button" class="primaryAction" data-action="view" data-view="${html(scene.nextLink.view)}">进入 Word Image</button></section>`:standardActions;
  return `<section class="worldWorkspace" aria-label="World 现实画面观察"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="worldProgress"><span>World</span><b>步骤 ${index+1} / ${steps.length}</b></div><article class="worldLesson"><p class="workspaceEyebrow">World · 单场景观察</p><h2>${html(scene.title)}</h2>${renderWorldSceneVisual(scene)}<section class="worldQuestion"><h3>${html(step.question)}</h3><div class="worldChoices">${choices}</div></section>${feedback}${completion}</article>${returnTopButton()}</section>`;
 }
-function viewKind(view) { return ['today','roadmap','culture','camera','world','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
-function activeNavView(view) { if(['culture','camera','world'].includes(view)) return 'roadmap'; return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,cameraProgressFor,completeCameraScene,worldProgressFor,completeWorldScene,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,cultureLessonsFor,cultureLessonFor,renderCultureWorkspace,cameraScenesFor,cameraSceneFor,cameraStepsFor,cameraChoiceFor,cameraStepForAction,renderCameraWorkspace,worldScenesFor,worldSceneFor,worldStepsFor,worldChoiceFor,worldStepForAction,renderWorldWorkspace,viewKind,activeNavView};
+function isWordImageSentenceFlow(flow) {
+ const audio=flow?.audio, natural=flow?.natural, stress=flow?.stress;
+ return isPlainObject(flow)&&typeof flow.text==='string'&&flow.text.trim()&&typeof flow.chineseConfirm==='string'&&flow.chineseConfirm.trim()&&typeof flow.clearIpaUS==='string'&&flow.clearIpaUS.trim()&&Array.isArray(flow.clearWords)&&flow.clearWords.length>0&&flow.clearWords.every(word=>isPlainObject(word)&&typeof word.text==='string'&&word.text.trim()&&typeof word.ipaUS==='string'&&word.ipaUS.trim())&&isPlainObject(natural)&&typeof natural.ipaUS==='string'&&natural.ipaUS.trim()&&typeof natural.markerExplanation==='string'&&natural.markerExplanation.trim()&&Array.isArray(natural.links)&&natural.links.length>0&&natural.links.every(link=>isPlainObject(link)&&typeof link.markedText==='string'&&link.markedText.includes('‿')&&typeof link.explanation==='string'&&link.explanation.trim())&&typeof natural.weakFormExplanation==='string'&&natural.weakFormExplanation.trim()&&isPlainObject(stress)&&typeof stress.markedText==='string'&&stress.markedText.trim()&&typeof stress.explanation==='string'&&stress.explanation.trim()&&isPlainObject(flow.phrase)&&typeof flow.phrase.text==='string'&&flow.phrase.text.trim()&&typeof flow.intonation==='string'&&flow.intonation.trim()&&isPlainObject(audio)&&['clear','natural'].every(mode=>isPlainObject(audio[mode])&&audio[mode].text===flow.text&&audio[mode].lang==='en-US'&&typeof audio[mode].rate==='number'&&audio[mode].rate>0&&audio[mode].rate<=2&&typeof audio[mode].label==='string'&&audio[mode].label.trim());
+}
+function wordImageLessonsFor(data) {
+ const textFields=['id','title','wordId','sourceSceneId','spelling','displayForm','ipaUS','speechText','speechLang','core','example','chineseConfirm','boundary','completion'];
+ if(!isPlainObject(data)||!Array.isArray(data.wordImageLessons)) return [];
+ const ids=new Set();
+ return data.wordImageLessons.filter(lesson=>isPlainObject(lesson)&&Number.isInteger(lesson.order)&&textFields.every(field=>typeof lesson[field]==='string'&&lesson[field].trim())&&/^word-image-[a-z0-9-]+$/.test(lesson.id)&&!ids.has(lesson.id)&&ids.add(lesson.id)&&isPlainObject(lesson.scene)&&isPlainObject(lesson.focus)&&['accessibleText','caption'].every(field=>typeof lesson.scene[field]==='string'&&lesson.scene[field].trim()&&typeof lesson.focus[field]==='string'&&lesson.focus[field].trim())&&Array.isArray(lesson.steps)&&lesson.steps.length===3&&lesson.steps.every(step=>isPlainObject(step)&&typeof step.id==='string'&&step.id.trim()&&typeof step.title==='string'&&step.title.trim()&&typeof step.action==='string'&&step.action.trim())&&Array.isArray(lesson.phonicsGroups)&&lesson.phonicsGroups.length>0&&lesson.phonicsGroups.every(group=>isPlainObject(group)&&typeof group.letters==='string'&&group.letters.trim()&&typeof group.sound==='string'&&group.sound.trim()&&['vowel','consonant'].includes(group.colorToken))&&lesson.phonicsGroups.map(group=>group.letters).join('')===lesson.displayForm&&lesson.spelling===lesson.displayForm&&lesson.speechText===lesson.displayForm&&lesson.speechLang==='en-US'&&isWordImageSentenceFlow(lesson.sentenceFlow)&&worldSceneFor(data,lesson.sourceSceneId)&&!lesson.steps.some((step,index,steps)=>steps.findIndex(item=>item.id===step.id)!==index)).sort((left,right)=>left.order-right.order);
+}
+function wordImageLessonFor(data, lessonId) { return wordImageLessonsFor(data).find(lesson=>lesson.id===lessonId)||null; }
+function renderWordImageScene(scene, focused) {
+ const className=focused?'wordImageFocus':'wordImageScene';
+ const imageClass=focused?'wordImageFocusImage':'wordImageSceneImage';
+ return `<section class="${className}" aria-label="${html(scene.accessibleText)}"><img class="${imageClass}" src="assets/world-room-observation.png" width="1672" height="941" alt="${html(scene.accessibleText)}" onerror="this.hidden=true;this.nextElementSibling.hidden=false;"><p class="wordImageImageFallback" role="status" hidden>场景图片加载失败，请根据下方场景说明继续理解。</p><p class="wordImageCaption">${html(scene.caption)}</p></section>`;
+}
+function renderWordImageSentenceFlow(flow, speechSupported, speakingMode) {
+ const clearWords=flow.clearWords.map(word=>`<span class="wordImageClearWord"><b>${html(word.text)}</b> <span>${html(word.ipaUS)}</span></span>`).join('');
+ const links=flow.natural.links.map(link=>`<li><b>${html(link.markedText)}</b><span>${html(link.explanation)}</span></li>`).join('');
+ const stress=html(flow.stress.markedText).replace('CUP','<strong>CUP</strong>').replace('TABLE','<strong>TABLE</strong>');
+ const audio=Object.entries(flow.audio).map(([mode,sample])=>`<button type="button" class="wordImageSpeechButton" data-action="play-word-image-sentence-${html(mode)}" aria-label="播放 The cup is on the table. 的${html(sample.label)}美式发音"${speechSupported?'':' disabled'}>🔊 ${speakingMode===mode?'播放中…':html(sample.label)}</button>`).join('');
+ return `<section class="wordImageSentenceFlow" aria-label="The cup is on the table 的真实语流样板"><h3>用一句完整英语听这个关系</h3><section class="wordImageSentenceLayer"><h4>英文原句</h4><p class="wordImageSentenceText">${html(flow.text)}</p><p class="wordImageSentenceChinese"><b>中文画面确认</b>：${html(flow.chineseConfirm)}</p></section><section class="wordImageSentenceLayer"><h4>清晰美式音标</h4><p class="wordImageSentenceIpa">${html(flow.clearIpaUS)}</p><div class="wordImageClearWords" aria-label="逐词清晰美式音标">${clearWords}</div></section><section class="wordImageSentenceLayer"><h4>自然语流</h4><p class="wordImageSentenceIpa">${html(flow.natural.ipaUS)}</p><ul class="wordImageFlowNotes">${links}</ul><p>${html(flow.natural.markerExplanation)}</p><p>${html(flow.natural.weakFormExplanation)}</p></section><section class="wordImageSentenceLayer"><h4>句子重音</h4><p class="wordImageStress" aria-label="${html(flow.stress.markedText)}">${stress}</p><p>${html(flow.stress.explanation)}</p><p>${html(flow.phrase.text)} ${html(flow.intonation)}</p></section><section class="wordImageLegend" aria-label="语流标记图例"><span><b>‿</b>：声音自然连起来</span><span><b>粗体</b>：当前信息重音</span><span><b>/ /</b>：清晰音标</span><span><b>[ ]</b>：自然语流中的实际发音</span></section><section class="wordImageSentenceAudio" aria-live="polite">${audio}${speechSupported?'<p>设备语音仅用于当前样板预览，不同设备的音色、语速和语流可能不同。</p>':'<p>当前浏览器不支持语音播放。</p>'}</section></section>`;
+}
+function renderWordImageWorkspace(data, v2Data, selectedId, stepIndex, progress, speechState) {
+ const lesson=wordImageLessonFor(data,selectedId), node=lesson?v2LessonFor(v2Data,lesson.wordId):null;
+ if(!lesson||!node) return '<div class="emptyState"><div><b>Word Image 暂不可用</b><p class="mini">请返回学习路线，稍后再试。</p></div></div>';
+ const index=Math.max(0,Math.min(Number(stepIndex)||0,lesson.steps.length-1)), step=lesson.steps[index], complete=wordImageProgressFor(progress).completed.includes(lesson.id), speech=isPlainObject(speechState)?speechState:{}, speechSupported=speech.supported===true, speakingMode=typeof speech.speaking==='string'?speech.speaking:(speech.speaking===true?'word':null);
+ const previous=index>0?'<button type="button" class="backBtn" data-action="previous-word-image-step">← 上一步</button>':'';
+ let content='';
+ if(index===0) content=`${renderWordImageScene(lesson.scene,false)}<p class="wordImageLead">${html(lesson.scene.caption)}</p>`;
+ else if(index===1) content=`${renderWordImageScene(lesson.focus,true)}<p class="wordImageLead">${html(lesson.focus.caption)}</p>`;
+ else {
+  const lines='<span class="handwritingLine" aria-hidden="true"></span>'.repeat(4);
+  const letters=lesson.phonicsGroups.map(group=>`<span class="phonicsLetter phonics-${html(group.colorToken)}" aria-hidden="true">${html(group.letters)}</span>`).join('');
+  const groups=lesson.phonicsGroups.map(group=>`<article class="phonicsCard phonics-${html(group.colorToken)}"><small>${html(group.colorToken==='vowel'?'元音音组':'辅音音组')}</small><strong>${html(group.letters)}</strong><span>${html(group.sound)}</span></article>`).join('');
+  const speechButton=`<button type="button" class="wordImageSpeechButton" data-action="play-word-image-speech" aria-label="播放 ${html(lesson.displayForm)} 的美式发音"${speechSupported?'':' disabled'}>🔊 ${speakingMode==='word'?'播放中…':'美式发音'}</button>`;
+  content=`<section class="wordImageCore"><div class="wordImageConceptTitle" aria-label="英语词 ${html(node.word)}">${html(node.word)}</div><div class="wordImageHandwriting" aria-label="${html(lesson.displayForm)}" role="img">${lines}<span class="wordImageHandwritingWord" aria-hidden="true">${letters}</span></div><section class="wordImagePhonics" aria-label="自然拼读音组"><h3>字母与声音对应</h3><div class="phonicsCards">${groups}</div></section><section class="wordImageIpa" aria-label="${html(lesson.displayForm)} 的美式音标 ${html(lesson.ipaUS)}"><span>美式</span><strong>${html(lesson.ipaUS)}</strong></section><section class="wordImageSpeech" aria-live="polite">${speechButton}${speechSupported?'': '<p>当前浏览器不支持语音播放。</p>'}</section><p class="wordImageCoreText">${html(lesson.core)}</p>${renderWordImageSentenceFlow(lesson.sentenceFlow,speechSupported,speakingMode)}<p class="wordImageBoundary">${html(lesson.boundary)}</p></section>`;
+ }
+ const action=complete&&index===lesson.steps.length-1
+  ? `<section class="wordImageComplete" role="status"><p>${html(lesson.completion)}</p><div class="wordImageActions"><button type="button" class="primaryAction" data-action="open-word" data-word="${html(lesson.wordId)}">继续理解 ${html(node.word)}</button><button type="button" class="backBtn" data-action="view" data-view="library">浏览 50 词库</button><button type="button" class="backBtn" data-action="restart-word-image">重新看一遍</button></div></section>`
+  : `<div class="wordImageActions">${previous}${index<lesson.steps.length-1?`<button type="button" class="primaryAction" data-action="next-word-image-step">${html(step.action)}</button>`:`<button type="button" class="primaryAction" data-action="complete-word-image">${html(step.action)}</button>`}</div>`;
+ return `<section class="wordImageWorkspace" aria-label="Word Image 单词本源画面"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="wordImageProgress"><span>Word Image</span><b>${index+1} / ${lesson.steps.length}</b></div><article class="wordImageLesson"><p class="workspaceEyebrow">Word Image · 一个现实关系</p><h2>${html(step.title)}</h2>${content}${action}</article>${returnTopButton()}</section>`;
+}
+function shouldStopWordImageSpeech(currentView, nextView) { return currentView==='word-image'&&nextView!=='word-image'; }
+function viewKind(view) { return ['today','roadmap','culture','camera','world','word-image','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
+function activeNavView(view) { if(['culture','camera','world','word-image'].includes(view)) return 'roadmap'; return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
+if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,cameraProgressFor,completeCameraScene,worldProgressFor,completeWorldScene,wordImageProgressFor,completeWordImageLesson,preferredUSVoice,createWordImageSpeechController,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,cultureLessonsFor,cultureLessonFor,renderCultureWorkspace,cameraScenesFor,cameraSceneFor,cameraStepsFor,cameraChoiceFor,cameraStepForAction,renderCameraWorkspace,worldScenesFor,worldSceneFor,worldStepsFor,worldChoiceFor,worldStepForAction,renderWorldWorkspace,wordImageLessonsFor,wordImageLessonFor,renderWordImageWorkspace,shouldStopWordImageSpeech,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -483,7 +562,25 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  const initialCultureLesson=cultureLessonsFor(Curriculum)[0]?.id||null;
  const initialCameraScene=cameraScenesFor(Curriculum)[0]?.id||null;
  const initialWorldScene=worldScenesFor(Curriculum)[0]?.id||null;
- let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,lessonLayer:'quick',cultureLesson:initialCultureLesson,cameraScene:initialCameraScene,cameraStep:0,cameraChoice:null,worldScene:initialWorldScene,worldStep:0,worldChoice:null,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,networkRelation:null,networkStep:'systems',storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
+ const initialWordImageLesson=wordImageLessonsFor(Curriculum)[0]?.id||null;
+ let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,lessonLayer:'quick',cultureLesson:initialCultureLesson,cameraScene:initialCameraScene,cameraStep:0,cameraChoice:null,worldScene:initialWorldScene,worldStep:0,worldChoice:null,wordImageLesson:initialWordImageLesson,wordImageStep:0,wordImageSpeaking:null,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,networkRelation:null,networkStep:'systems',storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
+ let wordImageSpeechController=null;
+ let activeWordImageSpeechMode=null;
+ let pendingWordImageSpeechMode=null;
+ function wordImageSpeechControllerFor() {
+  if(!wordImageSpeechController) wordImageSpeechController=createWordImageSpeechController(window.speechSynthesis,window.SpeechSynthesisUtterance,(speaking,playbackMode)=>{ if(speaking) state.wordImageSpeaking=playbackMode||activeWordImageSpeechMode||pendingWordImageSpeechMode||'word'; else if(!pendingWordImageSpeechMode) { state.wordImageSpeaking=null; activeWordImageSpeechMode=null; } if(state.view==='word-image') render(); });
+  return wordImageSpeechController;
+ }
+ function stopWordImageSpeech() { pendingWordImageSpeechMode=null; activeWordImageSpeechMode=null; const controller=wordImageSpeechControllerFor(); controller.stop(); state.wordImageSpeaking=null; }
+ function playCurrentWordImageSpeech(mode='word') {
+  const lesson=wordImageLessonFor(Curriculum,state.wordImageLesson), controller=wordImageSpeechControllerFor();
+  const sample=mode==='word'?{text:lesson?.speechText,lang:lesson?.speechLang,rate:1}:lesson?.sentenceFlow?.audio?.[mode];
+  pendingWordImageSpeechMode=mode;
+  const started=Boolean(lesson&&sample&&controller.play(sample.text,sample.lang,sample.rate,mode));
+  activeWordImageSpeechMode=started?mode:null;
+  pendingWordImageSpeechMode=null;
+  if(!started) { setNotice('当前浏览器不支持语音播放。'); render(); }
+ }
  const vocabularyByWord=new Map((D.vocabulary||[]).map(item=>[item.word,item]));
  const safe=value=>html(value);
  const wordButton=(word,className='tag')=>`<button type="button" class="${className}" data-action="open-word" data-word="${safe(word)}">${safe(word)}</button>`;
@@ -494,6 +591,7 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
   setNotice(`${word} 已记录为“${feedback==='again'?'再来一次':feedback==='unsure'?'不太确定':'理解了'}”，复习计划已更新。`); render();
  }
  function openWord(word) {
+  if(shouldStopWordImageSpeech(state.view,'lesson')) stopWordImageSpeech();
   if(lessonFor(D.lessons,word)||v2LessonFor(V2,word)) { state.view='lesson'; state.word=word; state.lessonLayer='quick'; render(); }
   else { setNotice(`${word} 目前是关联提示词，尚未开放完整课程。`); render(); }
  }
@@ -552,6 +650,22 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
   if(!scene||state.worldStep!==worldStepsFor(scene).length-1||!choice?.recommended) { setNotice('请先完成当前这一步的推荐观察。'); render(); return; }
   state.progress=completeWorldScene(state.progress,scene.id); saveProgress(state.progress);
   setNotice('World 已记录为完成；不会加入单词复习队列。'); render();
+ }
+ function renderWordImage() {
+  const lesson=wordImageLessonFor(Curriculum,state.wordImageLesson)||wordImageLessonsFor(Curriculum)[0]||null;
+  if(!lesson) { title.textContent='Word Image'; sub.textContent='从现实画面连接一个英语词。'; app.innerHTML=renderWordImageWorkspace(Curriculum,V2,null,0,state.progress); return; }
+  state.wordImageLesson=lesson.id;
+  state.wordImageStep=Math.max(0,Math.min(state.wordImageStep,lesson.steps.length-1));
+  title.textContent='Word Image'; sub.textContent='先从现实画面，建立词与核心画面的直接连接。';
+  const speech=wordImageSpeechControllerFor();
+  app.innerHTML=renderWordImageWorkspace(Curriculum,V2,lesson.id,state.wordImageStep,state.progress,{supported:speech.isSupported(),speaking:state.wordImageSpeaking});
+ }
+ function completeCurrentWordImageLesson() {
+  const lesson=wordImageLessonFor(Curriculum,state.wordImageLesson);
+  if(!lesson||state.wordImageStep!==lesson.steps.length-1) { setNotice('请先完成当前 Word Image 的三步观察。'); render(); return; }
+  stopWordImageSpeech();
+  state.progress=completeWordImageLesson(state.progress,lesson.id); saveProgress(state.progress);
+  setNotice('Word Image 已记录为完成；不会加入单词复习队列。'); render();
  }
  function feedbackButtons(word) { return feedbackButtonsFor(word); }
  function v2SystemTitle(systemId) {
@@ -613,8 +727,8 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  }
  function syncNav() { const current=activeNavView(state.view); document.querySelectorAll('.nav').forEach(button=>{const active=button.dataset.view===current; button.classList.toggle('active',active); if(active) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current');}); }
  function renderStorageNotice() { if(!state.storageNotice) return; const notice=document.createElement('p'); notice.className='notice'; notice.setAttribute('role','status'); notice.textContent=state.storageNotice; app.prepend(notice); state.storageNotice=''; }
- function render() { state.view=viewKind(state.view); syncNav(); ({today:renderToday,roadmap:renderRoadmap,culture:renderCulture,camera:renderCamera,world:renderWorld,review:renderReview,library:renderLibrary,tree:renderTree,compare:renderCompare,progress:renderProgress,network:renderNetwork,lesson:renderLesson}[state.view])(); renderStorageNotice(); }
- document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{state.view=button.dataset.view; if(state.view==='network') state.networkStep=networkStepForAction(state.networkStep,'nav-network'); render();}));
+ function render() { state.view=viewKind(state.view); syncNav(); ({today:renderToday,roadmap:renderRoadmap,culture:renderCulture,camera:renderCamera,world:renderWorld,'word-image':renderWordImage,review:renderReview,library:renderLibrary,tree:renderTree,compare:renderCompare,progress:renderProgress,network:renderNetwork,lesson:renderLesson}[state.view])(); renderStorageNotice(); }
+ document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{if(shouldStopWordImageSpeech(state.view,button.dataset.view)) stopWordImageSpeech(); state.view=button.dataset.view; if(state.view==='network') state.networkStep=networkStepForAction(state.networkStep,'nav-network'); render();}));
  app.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;
   const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation,relationKey,cultureLesson,cameraChoice,worldChoice}=target.dataset;
@@ -632,8 +746,15 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
   else if(action==='previous-world-step') { state.worldStep=Math.max(0,state.worldStep-1); state.worldChoice=null; state.view='world'; render(); }
   else if(action==='complete-world-scene') completeCurrentWorldScene();
   else if(action==='restart-world-scene') { state.worldStep=0; state.worldChoice=null; state.view='world'; render(); }
+  else if(action==='next-word-image-step') { const lesson=wordImageLessonFor(Curriculum,state.wordImageLesson); if(lesson&&state.wordImageStep<lesson.steps.length-1) { stopWordImageSpeech(); state.wordImageStep+=1; state.view='word-image'; render(); } }
+  else if(action==='previous-word-image-step') { stopWordImageSpeech(); state.wordImageStep=Math.max(0,state.wordImageStep-1); state.view='word-image'; render(); }
+  else if(action==='complete-word-image') completeCurrentWordImageLesson();
+  else if(action==='restart-word-image') { stopWordImageSpeech(); state.wordImageStep=0; state.view='word-image'; render(); }
+  else if(action==='play-word-image-speech') playCurrentWordImageSpeech();
+  else if(action==='play-word-image-sentence-clear') playCurrentWordImageSpeech('clear');
+  else if(action==='play-word-image-sentence-natural') playCurrentWordImageSpeech('natural');
   else if(['lesson-layer-quick','lesson-layer-deep','lesson-layer-network'].includes(action)) { state.lessonLayer=lessonLayerForAction(state.lessonLayer,action); state.view='lesson'; render(); }
-  else if(action==='view') { if(view==='network') { if(nodeId) Object.assign(state,selectNetworkDirect(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,nodeId?'lesson-network':'nav-network'); } state.view=view; render(); }
+  else if(action==='view') { if(shouldStopWordImageSpeech(state.view,view)) stopWordImageSpeech(); if(view==='network') { if(nodeId) Object.assign(state,selectNetworkDirect(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,nodeId?'lesson-network':'nav-network'); } state.view=view; render(); }
   else if(action==='select-network-relation') { const relation=selectedNetworkRelation(V2,V2Network,networkNodeFor(V2,state.networkNode),relationKey); state.networkRelation=relationSelectionKey(relation); state.networkStep=networkStepForAction(state.networkStep,'select-network-relation'); state.view='network'; render(); }
   else if(action==='select-network-node') { Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,networkRelation==='true'?'select-network-relation':'select-network-node'); state.view='network'; render(); }
   else if(action==='select-network-system') { Object.assign(state,selectNetworkSystem(state,V2,systemId,preservePath==='true')); state.networkStep=networkStepForAction(state.networkStep,networkRelation==='true'?'select-network-relation':'select-network-system'); state.view='network'; render(); }

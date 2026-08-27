@@ -1016,7 +1016,7 @@ test('V2 relation exploration ignores null, unknown, and incomplete relations', 
 
 test('learning route maps the full Start-to-Output journey without inventing unavailable pages', () => {
  assert.deepEqual(curriculum.stages.map(stage => stage.id), ['start','culture','camera','world','word-image','sentence','grammar','scene-training','output']);
- assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['camera','camera'],['world','world'],['word-image','library']]);
+ assert.deepEqual(curriculum.stages.filter(stage => stage.status === 'available').map(stage => [stage.id, stage.view]), [['culture','culture'],['camera','camera'],['world','world'],['word-image','word-image']]);
  assert.deepEqual(curriculum.supportLinks.map(link => [link.id, link.view]), [['knowledge-network','network']]);
  assert.ok(curriculum.stages.filter(stage => stage.status === 'planned').every(stage => stage.view === null));
  assert.deepEqual(core.learningRouteStages(curriculum).map(stage => stage.order), [0,1,2,3,4,5,6,7,8]);
@@ -1028,7 +1028,8 @@ test('learning route renderer keeps existing destinations clickable and planned 
  assert.match(markup, /data-action="view" data-view="culture"/);
  assert.match(markup, /data-action="view" data-view="camera"/);
  assert.match(markup, /data-action="view" data-view="world"/);
- assert.match(markup, /data-action="view" data-view="library"/);
+ assert.match(markup, /data-action="view" data-view="word-image"/);
+ assert.match(markup, /开始 Word Image/);
  assert.match(markup, /data-action="view" data-view="network"/);
  assert.match(markup, /准备中/);
  assert.doesNotMatch(markup, /data-view="sentence"|data-view="grammar"|data-view="scene-training"|data-view="output"/);
@@ -1042,6 +1043,8 @@ test('learning route becomes a main view without changing legacy view routing', 
  assert.equal(core.activeNavView('camera'), 'roadmap');
  assert.equal(core.viewKind('world'), 'world');
  assert.equal(core.activeNavView('world'), 'roadmap');
+ assert.equal(core.viewKind('word-image'), 'word-image');
+ assert.equal(core.activeNavView('word-image'), 'roadmap');
  assert.equal(core.viewKind('today'), 'today');
  assert.equal(core.activeNavView('lesson'), null);
 });
@@ -1183,7 +1186,7 @@ test('World advances only after its recommended observation without changing Cul
  assert.deepEqual(core.worldProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"world":"broken"}}')), { completed: [] });
 });
 
-test('World workspace renders one observation step, accessible scene content, safe alternate feedback, and an existing Word Image route', () => {
+test('World workspace renders one observation step, accessible scene content, safe alternate feedback, and the Word Image route', () => {
  const scene = core.worldSceneFor(curriculum, 'world-room-01');
  const alternate = core.renderWorldWorkspace(curriculum, scene.id, 2, 'action-cat', core.emptyProgress());
  const ready = core.renderWorldWorkspace(curriculum, scene.id, 5, 'place-room', core.emptyProgress());
@@ -1201,7 +1204,7 @@ test('World workspace renders one observation step, accessible scene content, sa
  assert.match(ready, /完成本次 World 观察/);
  assert.match(final, /你已经发现：一个现实画面里，不只有“东西”/);
  assert.match(final, /下一站是 Word Image/);
- assert.match(final, /data-action="view" data-view="library"/);
+ assert.match(final, /data-action="view" data-view="word-image"/);
 });
 
 test('World styles keep the scene and single-column controls readable at 375px', () => {
@@ -1212,4 +1215,214 @@ test('World styles keep the scene and single-column controls readable at 375px',
  assert.match(styles, /\.worldActions\{[^}]*grid-template-columns:1fr/);
  assert.match(styles, /\.worldSceneImage\{[^}]*aspect-ratio:16\/9/);
  assert.match(styles, /\.worldSceneImage\{[^}]*object-fit:contain/);
+});
+
+test('Word Image curriculum contains one ON sample linked to the World room scene', () => {
+ const lessons = core.wordImageLessonsFor(curriculum);
+ assert.equal(lessons.length, 1);
+ const lesson = lessons[0];
+ assert.equal(lesson.id, 'word-image-on-01');
+ assert.equal(lesson.wordId, 'on');
+ assert.equal(lesson.sourceSceneId, 'world-room-01');
+ assert.equal(lesson.steps.length, 3);
+ assert.deepEqual(lesson.steps.map(step => step.id), ['return-to-scene','focus-contact','connect-on']);
+ assert.ok(lesson.scene.accessibleText.includes('红色杯子'));
+ assert.ok(lesson.focus.accessibleText.includes('杯子'));
+});
+
+test('Word Image ON sample keeps explicit phonics groups and US IPA', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ assert.equal(lesson.spelling, 'on');
+ assert.equal(lesson.displayForm, 'on');
+ assert.deepEqual(lesson.phonicsGroups, [
+  { letters: 'o', sound: '/ɑ/', colorToken: 'vowel' },
+  { letters: 'n', sound: '/n/', colorToken: 'consonant' },
+ ]);
+ assert.equal(lesson.ipaUS, '/ɑn/');
+ assert.equal(lesson.speechText, 'on');
+ assert.equal(lesson.speechLang, 'en-US');
+  assert.equal(curriculum.wordImageLessons.length, 1);
+});
+
+test('Word Image ON sample carries one reviewed General American sentence flow model', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ const flow = lesson.sentenceFlow;
+ assert.equal(flow.text, 'The cup is on the table.');
+ assert.deepEqual(flow.clearWords, [
+  { text: 'The', ipaUS: '/ðə/' }, { text: 'cup', ipaUS: '/kʌp/' },
+  { text: 'is', ipaUS: '/ɪz/' }, { text: 'on', ipaUS: '/ɑn/' },
+  { text: 'the', ipaUS: '/ðə/' }, { text: 'table', ipaUS: '/ˈteɪbəl/' },
+ ]);
+ assert.equal(flow.clearIpaUS, '/ðə kʌp ɪz ɑn ðə ˈteɪbəl/');
+ assert.equal(flow.natural.ipaUS, '[ðə ˈkʌp‿ɪz‿ɑn ðə ˈteɪbəl]');
+ assert.deepEqual(flow.natural.links.map(item => item.markedText), ['cup‿is', 'is‿on']);
+ assert.match(flow.natural.links[0].explanation, /\/p\/.*\/ɪ\//);
+ assert.match(flow.natural.links[1].explanation, /\/z\/.*\/ɑ\//);
+ assert.match(flow.natural.weakFormExplanation, /the.*\/ðə\//);
+ assert.equal(flow.stress.markedText, 'The CUP is on the TABLE.');
+ assert.match(flow.stress.explanation, /改变强调重点/);
+ assert.equal(flow.phrase.text, '当前短句整体作为一个意群。');
+ assert.match(flow.intonation, /自然结束语调/);
+ assert.equal(flow.audio.clear.text, 'The cup is on the table.');
+ assert.equal(flow.audio.clear.lang, 'en-US');
+ assert.equal(flow.audio.clear.rate, 0.78);
+ assert.equal(flow.audio.natural.text, 'The cup is on the table.');
+ assert.equal(flow.audio.natural.lang, 'en-US');
+ assert.equal(flow.audio.natural.rate, 1);
+});
+
+test('Word Image completion remains isolated from V1, Culture, Camera, and World progress', () => {
+ const legacy = {
+  words: { I: { mastery: 3, nextReview: '2026-08-21' } },
+  studyDates: ['2026-08-20'],
+  v2: { culture: { completed: ['culture-01'] }, camera: { completed: ['camera-library-01'] }, world: { completed: ['world-room-01'] } },
+ };
+ const next = core.completeWordImageLesson(legacy, 'word-image-on-01');
+ assert.deepEqual(next.words, legacy.words);
+ assert.deepEqual(next.studyDates, legacy.studyDates);
+ assert.deepEqual(next.v2.culture.completed, ['culture-01']);
+ assert.deepEqual(next.v2.camera.completed, ['camera-library-01']);
+ assert.deepEqual(next.v2.world.completed, ['world-room-01']);
+ assert.deepEqual(next.v2.wordImage.completed, ['word-image-on-01']);
+ assert.deepEqual(core.dueWords(next, '2026-08-21'), ['I']);
+ assert.deepEqual(core.wordImageProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[]}')), { completed: [] });
+ assert.deepEqual(core.wordImageProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"wordImage":{"completed":["word-image-on-01",42,"word-image-on-01"]}}}')), { completed: ['word-image-on-01'] });
+ assert.deepEqual(core.wordImageProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"wordImage":"broken"}}')), { completed: [] });
+});
+
+test('Word Image renders three low-density screens and only opens the existing ON lesson or library', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ const first = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 0, core.emptyProgress());
+ const second = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 1, core.emptyProgress());
+ const complete = core.completeWordImageLesson(core.emptyProgress(), lesson.id);
+ const final = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, complete);
+ assert.match(first, /先回到刚才的房间/);
+ assert.match(first, /我找到了/);
+ assert.doesNotMatch(first, />ON</);
+ assert.match(second, /现在只看杯子和桌面/);
+ assert.match(second, /wordImageFocus/);
+ assert.match(second, /杯子没有悬在空中。它接触着桌子的表面。/);
+ assert.doesNotMatch(second, />ON</);
+ assert.match(final, /英语先抓住这个核心画面/);
+ assert.match(final, />ON</);
+ assert.match(final, /一个东西接触在另一个表面上/);
+ assert.match(final, /The cup is on the table\./);
+ assert.match(final, /ON 不是简单等于一个中文“在”/);
+ assert.match(final, /你已经把一种现实关系，直接连到了英语词 ON。/);
+ assert.match(final, /data-action="open-word" data-word="on"/);
+ assert.match(final, /data-action="view" data-view="library"/);
+ assert.doesNotMatch(final, /data-view="sentence"/);
+});
+
+test('Word Image third screen renders a lowercase handwriting guide, phonics groups, US IPA, and an accessible speech control', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ assert.match(markup, /class="wordImageHandwriting" aria-label="on"/);
+ assert.match(markup, /class="handwritingLine"/);
+ assert.match(markup, /class="phonicsLetter phonics-vowel" aria-hidden="true">o/);
+ assert.match(markup, /class="phonicsLetter phonics-consonant" aria-hidden="true">n/);
+ assert.match(markup, /自然拼读音组/);
+ assert.ok(markup.includes('<strong>o</strong><span>/ɑ/</span>'));
+ assert.ok(markup.includes('<strong>n</strong><span>/n/</span>'));
+ assert.ok(markup.includes('<span>美式</span><strong>/ɑn/</strong>'));
+ assert.match(markup, /data-action="play-word-image-speech" aria-label="播放 on 的美式发音"/);
+  assert.doesNotMatch(markup, /音节/);
+});
+
+test('Word Image third screen renders a five-layer sentence flow sample with two explicit audio speeds', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ assert.match(markup, /The cup is on the table\./);
+ assert.match(markup, /中文画面确认/);
+ assert.match(markup, /杯子在桌子上。/);
+ assert.match(markup, /清晰美式音标/);
+ assert.match(markup, /The<\/b> <span>\/ðə\/<\/span>/);
+ assert.match(markup, /自然语流/);
+ assert.match(markup, /\[ðə ˈkʌp‿ɪz‿ɑn ðə ˈteɪbəl\]/);
+ assert.match(markup, /cup‿is/);
+ assert.match(markup, /is‿on/);
+ assert.match(markup, /The CUP is on the TABLE\./);
+ assert.match(markup, /学习标记，不属于英文拼写/);
+ assert.match(markup, /声音自然连起来/);
+ assert.match(markup, /<b>粗体<\/b>：当前信息重音/);
+ assert.match(markup, /<b>\/ \/<\/b>：清晰音标/);
+ assert.match(markup, /<b>\[ \]<\/b>：自然语流中的实际发音/);
+ assert.match(markup, /data-action="play-word-image-sentence-clear"[^>]*清晰慢速/);
+ assert.match(markup, /data-action="play-word-image-sentence-natural"[^>]*自然语速/);
+ assert.match(markup, /设备语音仅用于当前样板预览/);
+});
+
+test('Word Image safely disables speech when the browser does not support speechSynthesis', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: false, speaking: false });
+ assert.match(markup, /data-action="play-word-image-speech"[^>]*disabled/);
+ assert.match(markup, /data-action="play-word-image-sentence-clear"[^>]*disabled/);
+ assert.match(markup, /data-action="play-word-image-sentence-natural"[^>]*disabled/);
+ assert.match(markup, /当前浏览器不支持语音播放/);
+ assert.match(markup, /完成这个 Word Image/);
+});
+
+test('Word Image speech controller uses one en-US utterance, cancels old speech, and ignores stale callbacks', () => {
+ class FakeUtterance { constructor(text) { this.text = text; } }
+ const voices = [{ name: 'British', lang: 'en-GB' }, { name: 'US', lang: 'en-US' }];
+ const synthesis = { cancelled: 0, spoken: [], cancel() { this.cancelled += 1; }, getVoices() { return voices; }, speak(utterance) { this.spoken.push(utterance); } };
+ const states = [];
+ const controller = core.createWordImageSpeechController(synthesis, FakeUtterance, (speaking, mode) => states.push([speaking, mode]));
+ assert.equal(controller.isSupported(), true);
+ assert.equal(synthesis.spoken.length, 0);
+ assert.equal(controller.play('on', 'en-US', 1, 'word'), true);
+ const first = synthesis.spoken[0];
+ assert.equal(first.text, 'on');
+ assert.equal(first.lang, 'en-US');
+ assert.equal(first.voice, voices[1]);
+ assert.equal(controller.play('The cup is on the table.', 'en-US', 0.78, 'clear'), true);
+ const second = synthesis.spoken[1];
+ first.onend();
+ assert.deepEqual(states.at(-1), [true, 'clear']);
+ second.onend();
+ assert.deepEqual(states.at(-1), [false, 'clear']);
+ controller.stop();
+  assert.equal(synthesis.cancelled, 3);
+});
+
+test('Word Image sentence speech uses one full en-US utterance at the requested clear or natural rate', () => {
+ class FakeUtterance { constructor(text) { this.text = text; } }
+ const synthesis = { cancelled: 0, spoken: [], cancel() { this.cancelled += 1; }, getVoices() { return [{ name: 'US', lang: 'en-US' }]; }, speak(utterance) { this.spoken.push(utterance); } };
+ const controller = core.createWordImageSpeechController(synthesis, FakeUtterance, () => {});
+ assert.equal(controller.play('The cup is on the table.', 'en-US', 0.78), true);
+ assert.equal(synthesis.spoken[0].text, 'The cup is on the table.');
+ assert.equal(synthesis.spoken[0].lang, 'en-US');
+ assert.equal(synthesis.spoken[0].rate, 0.78);
+ assert.equal(controller.play('The cup is on the table.', 'en-US', 1), true);
+ assert.equal(synthesis.spoken[1].rate, 1);
+ assert.equal(synthesis.cancelled, 2);
+});
+
+test('Word Image speech controller degrades safely when browser speech APIs are absent', () => {
+ const controller = core.createWordImageSpeechController(null, null, () => {});
+ assert.equal(controller.isSupported(), false);
+ assert.equal(controller.play('on', 'en-US'), false);
+ controller.stop();
+});
+
+test('Word Image speech stops when the learner leaves its view but not while staying in it', () => {
+ assert.equal(core.shouldStopWordImageSpeech('word-image', 'library'), true);
+ assert.equal(core.shouldStopWordImageSpeech('word-image', 'lesson'), true);
+ assert.equal(core.shouldStopWordImageSpeech('word-image', 'word-image'), false);
+ assert.equal(core.shouldStopWordImageSpeech('world', 'library'), false);
+});
+
+test('Word Image styles keep the focused relation and actions readable at 375px', () => {
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /\.wordImageWorkspace\{[^}]*max-width/);
+ assert.match(styles, /\.wordImageSceneImage\{[^}]*aspect-ratio:16\/9/);
+ assert.match(styles, /\.wordImageFocus\{[^}]*overflow:hidden/);
+ assert.match(styles, /\.wordImageActions\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.wordImageActions .primaryAction\{[^}]*min-height:44px/);
+ assert.match(styles, /--phonics-vowel:/);
+ assert.match(styles, /--phonics-consonant:/);
+ assert.match(styles, /\.wordImageHandwriting\{[^}]*max-width/);
+  assert.match(styles, /\.phonicsCards\{[^}]*grid-template-columns/);
+ assert.match(styles, /\.wordImageSentenceFlow\{[^}]*text-align:left/);
+ assert.match(styles, /\.wordImageSentenceAudio\{[^}]*grid-template-columns/);
 });
