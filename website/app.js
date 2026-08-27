@@ -427,6 +427,10 @@ function cameraScenesFor(data) {
   && /^camera-[a-z0-9-]+$/.test(scene.id)&&!ids.has(scene.id)&&ids.add(scene.id)
   && ['focusChoices','actionChoices','relationChoices'].every(field=>Array.isArray(scene[field])&&scene[field].length>0&&scene[field].every(isCameraChoice)&&scene[field].filter(choice=>choice.recommended).length===1)
   && Array.isArray(scene.expansionSteps)&&scene.expansionSteps.length>0&&scene.expansionSteps.every(step=>isPlainObject(step)&&typeof step.id==='string'&&typeof step.title==='string'&&typeof step.question==='string'&&Array.isArray(step.choices)&&step.choices.length>0&&step.choices.every(isCameraChoice)&&step.choices.filter(choice=>choice.recommended).length===1)
+  && isPlainObject(scene.visual)&&['alt','caption','asset'].every(field=>typeof scene.visual[field]==='string'&&scene.visual[field].trim())
+  && isPlainObject(scene.visual.focusRegions)&&['boy','book','library','action','relation','background'].every(key=>{
+   const region=scene.visual.focusRegions[key]; return isPlainObject(region)&&['x','y','width','height'].every(field=>Number.isFinite(region[field])&&region[field]>=0);
+  })
   && isPlainObject(scene.feedback)&&typeof scene.feedback.alternateFocus==='string'&&isPlainObject(scene.nextLink)&&typeof scene.nextLink.text==='string')
   .sort((left,right)=>left.order-right.order);
 }
@@ -448,6 +452,32 @@ function cameraStepForAction(scene, stepIndex, choiceId) {
  const steps=cameraStepsFor(scene), index=Number(stepIndex), choice=cameraChoiceFor(scene,index,choiceId);
  return Number.isInteger(index)&&index>=0&&index<steps.length&&choice?.recommended ? Math.min(index+1,steps.length) : Math.max(0,Math.min(Number.isInteger(index)?index:0,Math.max(steps.length-1,0)));
 }
+function cameraVisualStateFor(scene, stepIndex, choiceId) {
+ const step=cameraStepsFor(scene)[Number(stepIndex)]?.id;
+ if(step==='focus') return ['focus-boy','focus-book','focus-library'].includes(choiceId)?choiceId:'whole';
+ if(step==='action') return 'action';
+ if(step==='relation') return 'relation';
+ if(step) return 'background';
+ return 'whole';
+}
+function cameraRegionMarkup(region, className, extra='') { return `<rect class="${className}" x="${region.x}" y="${region.y}" width="${region.width}" height="${region.height}" rx="3" ${extra}/>`; }
+function renderCameraFocusOverlay(scene, state) {
+ if(state==='whole') return '';
+ const regions=scene.visual.focusRegions, key=state.startsWith('focus-')?state.slice(6):state, region=regions[key]||regions.boy;
+ const maskId=`camera-focus-mask-${scene.id.replace(/[^a-z0-9-]/gi,'')}-${state}`;
+ const focusMask=key==='library'
+  ? '<path fill="#000" d="M0 0H100V17H48V13H16V52H0ZM76 17H100V52H76Z"/>'
+  : cameraRegionMarkup(region,'cameraVisualMaskHole','fill="#000"');
+ const focus=cameraRegionMarkup(region,`cameraVisualFocus cameraVisualFocus-${key}`);
+ const action=state==='action'?'<g class="cameraVisualActionCue"><path d="M31 35c4-4 8-4 11 0"/><path d="M39 31l4 4-5 2"/></g>':'';
+ const relation=state==='relation'?'<g class="cameraVisualRelationCue"><path d="M38 37C47 34 55 37 62 40"/><circle cx="38" cy="37" r="1.2"/><circle cx="62" cy="40" r="1.2"/></g>':'';
+ const background=state==='background'?cameraRegionMarkup(regions.background,'cameraVisualBackgroundCue'):'';
+ return `<svg class="cameraFocusOverlay" viewBox="0 0 100 56.25" preserveAspectRatio="none" aria-hidden="true"><defs><mask id="${maskId}"><rect width="100" height="56.25" fill="#fff"/>${focusMask}</mask></defs><rect class="cameraVisualDim" width="100" height="56.25" mask="url(#${maskId})"/>${focus}${action}${relation}${background}</svg>`;
+}
+function renderCameraSceneVisual(scene, stepIndex, choiceId) {
+ const state=cameraVisualStateFor(scene,stepIndex,choiceId);
+ return `<section class="cameraScene cameraSceneVisual is-${html(state)}" aria-label="${html(scene.visual.alt)}"><div class="cameraSceneImageFrame"><img class="cameraSceneImage" src="${html(scene.visual.asset)}" width="1672" height="941" alt="${html(scene.visual.alt)}"/>${renderCameraFocusOverlay(scene,state)}</div><p>${html(scene.visual.caption)}</p></section>`;
+}
 function renderCultureWorkspace(data, selectedId, progress) {
  const lessons=cultureLessonsFor(data);
  if(!lessons.length) return '<div class="emptyState"><div><b>Culture 课程暂不可用</b><p class="mini">请返回学习路线，稍后再试。</p></div></div>';
@@ -468,7 +498,7 @@ function renderCameraWorkspace(data, selectedId, stepIndex, choiceId, progress) 
  const actions=complete
   ? `<div class="cameraActions"><button type="button" class="backBtn" data-action="restart-camera-scene">重新练习</button></div><section class="cameraNextHint" role="status"><b>Camera 已完成</b><p>${html(scene.nextLink.text)}</p></section>`
   : `<div class="cameraActions">${index>0?'<button type="button" class="backBtn" data-action="previous-camera-step">← 上一步</button>':'<span></span>'}${choice?.recommended&&index<steps.length-1?'<button type="button" class="primaryAction" data-action="next-camera-step">下一步 →</button>':''}${choice?.recommended&&index===steps.length-1?'<button type="button" class="primaryAction" data-action="complete-camera-scene">完成本次 Camera 训练</button>':''}</div>`;
- return `<section class="cameraWorkspace" aria-label="Camera 镜头思维训练"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="cameraProgress"><span>Camera</span><b>步骤 ${index+1} / ${steps.length}</b></div><article class="cameraLesson"><p class="workspaceEyebrow">Camera · 单场景样板</p><h2>${html(scene.title)}</h2><section class="cameraScene"><h3>现实画面</h3><p>${html(scene.scene)}</p></section><section class="cameraQuestion"><p class="cameraStepTitle">${html(step.title)}</p><h3>${html(step.question)}</h3><div class="cameraChoices">${choiceMarkup}</div></section>${feedback}${build}${actions}</article>${returnTopButton()}</section>`;
+ return `<section class="cameraWorkspace" aria-label="Camera 镜头思维训练"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="cameraProgress"><span>Camera</span><b>步骤 ${index+1} / ${steps.length}</b></div><article class="cameraLesson"><p class="workspaceEyebrow">Camera · 单场景样板</p><h2>${html(scene.title)}</h2>${renderCameraSceneVisual(scene,index,choice?.id)}<section class="cameraScene cameraSceneText"><h3>现实画面</h3><p>${html(scene.scene)}</p></section><section class="cameraQuestion"><p class="cameraStepTitle">${html(step.title)}</p><h3>${html(step.question)}</h3><div class="cameraChoices">${choiceMarkup}</div></section>${feedback}${build}${actions}</article>${returnTopButton()}</section>`;
 }
 function isWorldChoice(choice) { return isPlainObject(choice)&&typeof choice.id==='string'&&choice.id.trim()&&typeof choice.label==='string'&&choice.label.trim()&&typeof choice.recommended==='boolean'&&typeof choice.feedback==='string'&&choice.feedback.trim(); }
 function worldScenesFor(data) {
@@ -542,7 +572,7 @@ function renderWordImageWorkspace(data, v2Data, selectedId, stepIndex, progress,
 function shouldStopWordImageSpeech(currentView, nextView) { return currentView==='word-image'&&nextView!=='word-image'; }
 function viewKind(view) { return ['today','roadmap','culture','camera','world','word-image','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { if(['culture','camera','world','word-image'].includes(view)) return 'roadmap'; return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,cameraProgressFor,completeCameraScene,worldProgressFor,completeWorldScene,wordImageProgressFor,completeWordImageLesson,preferredUSVoice,createWordImageSpeechController,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,cultureLessonsFor,cultureLessonFor,renderCultureWorkspace,cameraScenesFor,cameraSceneFor,cameraStepsFor,cameraChoiceFor,cameraStepForAction,renderCameraWorkspace,worldScenesFor,worldSceneFor,worldStepsFor,worldChoiceFor,worldStepForAction,renderWorldWorkspace,wordImageLessonsFor,wordImageLessonFor,renderWordImageWorkspace,shouldStopWordImageSpeech,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,cameraProgressFor,completeCameraScene,worldProgressFor,completeWorldScene,wordImageProgressFor,completeWordImageLesson,preferredUSVoice,createWordImageSpeechController,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,cultureLessonsFor,cultureLessonFor,renderCultureWorkspace,cameraScenesFor,cameraSceneFor,cameraStepsFor,cameraChoiceFor,cameraStepForAction,cameraVisualStateFor,renderCameraSceneVisual,renderCameraWorkspace,worldScenesFor,worldSceneFor,worldStepsFor,worldChoiceFor,worldStepForAction,renderWorldWorkspace,wordImageLessonsFor,wordImageLessonFor,renderWordImageWorkspace,shouldStopWordImageSpeech,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{

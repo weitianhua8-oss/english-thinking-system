@@ -68,6 +68,19 @@ const payload = {
     {
       id:'camera-library-01', order:1, title:'镜头思维：从画面到一句英语',
       scene:'图书馆里，一个男孩正在桌边做作业。书桌、书和其他读者都在画面里。',
+      visual:{
+        alt:'图书馆里，一个男孩坐在桌边做作业，桌上有书，周围有书架和其他读者。',
+        caption:'先整体看一眼：人物、书、桌子和图书馆环境都在同一幅现实画面里。',
+        asset:'assets/camera-library-study-scene.png',
+        focusRegions:{
+          boy:{ x:14, y:15, width:35, height:31 },
+          book:{ x:21, y:34, width:51, height:17 },
+          library:{ x:3, y:4, width:94, height:48 },
+          action:{ x:17, y:18, width:34, height:28 },
+          relation:{ x:14, y:15, width:58, height:36 },
+          background:{ x:3, y:4, width:94, height:48 },
+        },
+      },
       focusQuestion:'先拍谁？本次镜头要围绕谁来组织？',
       focusChoices:[
         { id:'focus-boy', label:'男孩', recommended:true, feedback:'先把男孩放到镜头中心。接下来，我们只看他正在发生什么。' },

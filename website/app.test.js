@@ -1140,12 +1140,50 @@ test('Camera workspace shows one step, explains alternate focus, and keeps Sente
  assert.doesNotMatch(final, /data-view="sentence"/);
 });
 
+test('Camera visual guide uses one local scene illustration and changes its overlay across the four steps', () => {
+ assert.equal(typeof core.renderCameraSceneVisual, 'function');
+ const scene = core.cameraSceneFor(curriculum, 'camera-library-01');
+ assert.ok(scene.visual);
+ assert.equal(scene.visual.alt, '图书馆里，一个男孩坐在桌边做作业，桌上有书，周围有书架和其他读者。');
+ assert.equal(scene.visual.asset, 'assets/camera-library-study-scene.png');
+ assert.deepEqual(Object.keys(scene.visual.focusRegions).sort(), ['action', 'background', 'book', 'boy', 'library', 'relation']);
+ assert.equal(fs.existsSync(path.join(__dirname, scene.visual.asset)), true);
+ const whole = core.renderCameraWorkspace(curriculum, scene.id, 0, null, core.emptyProgress());
+ const boy = core.renderCameraWorkspace(curriculum, scene.id, 0, 'focus-boy', core.emptyProgress());
+ const book = core.renderCameraWorkspace(curriculum, scene.id, 0, 'focus-book', core.emptyProgress());
+ const library = core.renderCameraWorkspace(curriculum, scene.id, 0, 'focus-library', core.emptyProgress());
+ const action = core.renderCameraWorkspace(curriculum, scene.id, 1, 'action-homework', core.emptyProgress());
+ const relation = core.renderCameraWorkspace(curriculum, scene.id, 2, 'relation-homework', core.emptyProgress());
+ const background = core.renderCameraWorkspace(curriculum, scene.id, 3, 'expansion-library', core.emptyProgress());
+ assert.match(whole, /cameraSceneVisual is-whole/);
+ assert.match(whole, /class="cameraSceneImage" src="assets\/camera-library-study-scene\.png"/);
+ assert.doesNotMatch(whole, /cameraVisualDim/);
+ assert.doesNotMatch(whole, /cameraFocusOverlay/);
+ assert.match(boy, /cameraSceneVisual is-focus-boy/);
+ assert.match(book, /cameraSceneVisual is-focus-book/);
+ assert.match(library, /cameraSceneVisual is-focus-library/);
+ assert.match(boy, /cameraVisualDim/);
+ assert.match(boy, /cameraFocusOverlay/);
+ assert.match(book, /cameraVisualFocus-book/);
+ assert.match(library, /cameraVisualFocus-library/);
+ assert.match(action, /cameraSceneVisual is-action/);
+ assert.match(action, /cameraVisualActionCue/);
+ assert.match(relation, /cameraSceneVisual is-relation/);
+ assert.match(relation, /cameraVisualRelationCue/);
+ assert.match(background, /cameraSceneVisual is-background/);
+ assert.match(background, /cameraVisualBackgroundCue/);
+});
+
 test('Camera styles keep the four-step choice flow readable at 375px', () => {
  const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
  assert.match(styles, /\.cameraWorkspace\{[^}]*max-width/);
  assert.match(styles, /\.cameraChoice\{[^}]*min-height:44px/);
  assert.match(styles, /\.cameraChoices\{[^}]*grid-template-columns:1fr/);
  assert.match(styles, /\.cameraActions\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.cameraSceneVisual\{[^}]*aspect-ratio:16\/9/);
+ assert.match(styles, /\.cameraSceneImage\{[^}]*width:100%/);
+ assert.match(styles, /\.cameraFocusOverlay\{[^}]*position:absolute/);
+ assert.match(styles, /@media\(max-width:480px\)\{[^}]*\.cameraSceneVisual\{[^}]*border-radius/);
 });
 
 test('World curriculum contains one six-step observation sample with complete fields', () => {
