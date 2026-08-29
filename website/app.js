@@ -374,6 +374,31 @@ function renderNetworkContent(v2Data, graphApi, state) {
  const back=current.path.length?'<p><button type="button" class="backBtn" data-action="network-back">← 返回上一步</button></p>':'';
  return `<section class="learningWorkspace networkMapWorkspace"><header class="networkMapHero"><p class="workspaceEyebrow">英语思维 · 知识网络</p><h2>从系统出发，沿关系继续探索</h2><p>当前坐标：${html(v2SystemTitleFor(v2Data,current.systemId))} · ${html(current.node.word)} → ${html(current.node.coreMeaning)}</p></header><div class="networkLayout" data-network-step="${html(step)}"><section class="panel networkMapPanel networkSystems"><div class="networkPanelTitle"><span>01</span><div><p>认知系统</p><h3>选择你要理解的系统</h3></div></div><div class="tags">${systems}</div></section><section class="panel networkMapPanel networkNodes"><p class="networkMobileNav"><button type="button" class="backBtn" data-action="network-mobile-systems">← 选择系统</button></p><div class="networkPanelTitle"><span>02</span><div><p>${html(v2SystemTitleFor(v2Data,current.systemId))}</p><h3>当前词与真实关系</h3></div></div>${mindMap}<section class="mindMapSystemNodes"><h4>系统里的其他知识</h4><div class="grid contentGrid">${nodes||'<p class="mini">该系统暂未提供词条。</p>'}</div></section></section><section class="panel networkMapPanel networkExplain"><p class="networkMobileNav"><button type="button" class="backBtn" data-action="network-mobile-nodes">← 选择词条</button></p>${back}${relationPanel}${mobileRelationList}</section></div>${returnTopButton()}</section>`;
 }
+function isMindMapNode(node) {
+ return isPlainObject(node)&&['id','label','type','relationType','note'].every(field=>typeof node[field]==='string'&&node[field].trim())&&(!Object.hasOwn(node,'children')||(Array.isArray(node.children)&&node.children.every(isMindMapNode)));
+}
+function mindMapFor(v2Data, mapId='go-thinking-map') {
+ const maps=Array.isArray(v2Data?.mindMaps)?v2Data.mindMaps:[];
+ const map=maps.find(item=>isPlainObject(item)&&item.id===mapId&&typeof item.title==='string'&&item.title.trim()&&isMindMapNode(item.root));
+ return map||null;
+}
+function mindMapNodeFor(root, nodeId) {
+ if(!isMindMapNode(root)||typeof nodeId!=='string') return null;
+ if(root.id===nodeId) return root;
+ for(const child of root.children||[]) { const found=mindMapNodeFor(child,nodeId); if(found) return found; }
+ return null;
+}
+function renderGoMindMap(v2Data, state) {
+ const map=mindMapFor(v2Data); if(!map) return '<div class="emptyState"><div><b>知识网络暂不可用</b><p class="mini">请先使用知识树按顺序学习。</p></div></div>';
+ const root=map.root, branch=root.children.find(item=>item.id===state?.mindMapBranch)||null;
+ const node=branch?.children.find(item=>item.id===state?.mindMapNode)||null;
+ const branchMarkup=root.children.map(item=>`<button type="button" class="goMindBranch goMind-${html(item.type)}" data-action="toggle-mind-map-branch" data-mind-map-branch="${html(item.id)}" aria-expanded="${item.id===branch?.id?'true':'false'}"><b>${html(item.label)}</b><span>${html(item.note)}</span></button>`).join('');
+ const nodeMarkup=branch?branch.children.map(item=>`<button type="button" class="goMindNode${item.id===node?.id?' selected':''}" data-action="select-mind-map-node" data-mind-map-node="${html(item.id)}" aria-pressed="${item.id===node?.id?'true':'false'}"><b>${html(item.label)}</b><span>${html(item.note)}</span></button>`).join(''):'<p class="goMindPlaceholder">先点开一个一级分支，再沿着它向右查看。</p>';
+ const leafMarkup=node?.children?.length?`<div class="goMindLeaves">${node.children.map(item=>`<button type="button" class="goMindLeaf" data-action="select-mind-map-node" data-mind-map-node="${html(item.id)}"><b>${html(item.label)}</b><span>${html(item.note)}</span></button>`).join('')}</div>`:'';
+ const selected=state?.mindMapNode&&branch?mindMapNodeFor(branch,state.mindMapNode):null;
+ const detail=selected?`<section class="goMindDetail" aria-live="polite"><p>当前节点</p><h3>${html(selected.label)}</h3><p>${html(selected.note)}</p>${leafMarkup}</section>`:`<section class="goMindDetail"><p>读图方式</p><h3>从左到右看关联</h3><p>GO 在左侧；一级分支说明它从哪里来、怎样生长、在哪里使用。点开分支后，继续向右看细节。</p></section>`;
+ return `<section class="goMindMapWorkspace" aria-label="GO 英语思维完整导图"><header class="goMindMapHero"><p class="workspaceEyebrow">知识网络｜看关联</p><h2>${html(map.title)}</h2><p>不是按顺序背词，而是看一个英语画面怎样连到场景、结构、对比和记忆钩子。</p></header><div class="goMindMapScroll" tabindex="0" aria-label="从左到右浏览 GO 思维导图"><div class="goMindMapCanvas"><section class="goMindRoot"><b>${html(root.label)}</b><span>${html(root.note)}</span></section><section class="goMindBranches" aria-label="GO 一级分支">${branchMarkup}</section><section class="goMindChildren" aria-label="当前展开分支">${nodeMarkup}</section></div></div>${detail}<p class="goMindExplorerLink"><button type="button" class="backBtn" data-action="show-network-explorer">查看已审校的 13 个关系样板</button></p>${returnTopButton()}</section>`;
+}
 function isCompleteV2Node(node) {
  return isPlainObject(node)
   && ['id','word','systemId','coreMeaning','coreImage'].every(field=>typeof node[field]==='string'&&node[field].trim())
@@ -409,7 +434,7 @@ function sceneGroupsFor(scenes) {
 }
 function safePlanDay(plan, selectedDay) { return Array.isArray(plan) ? plan.find(day=>day.day===Number(selectedDay))||null : null; }
 function learningRouteStages(data) {
- const allowedViews=new Set(['today','library','culture','camera','world','word-image','sentence']);
+ const allowedViews=new Set(['today','library','start','culture','camera','world','word-image','sentence']);
  if(!isPlainObject(data)||!Array.isArray(data.stages)) return [];
  const stages=data.stages.filter(stage=>isPlainObject(stage)&&typeof stage.id==='string'&&typeof stage.order==='number'&&typeof stage.code==='string'&&typeof stage.title==='string'&&typeof stage.subtitle==='string'&&typeof stage.summary==='string'&&['available','planned'].includes(stage.status)&&(stage.status==='available'?allowedViews.has(stage.view):stage.view===null));
  return [...stages].sort((left,right)=>left.order-right.order);
@@ -417,12 +442,19 @@ function learningRouteStages(data) {
 function renderLearningRoute(data) {
  const stages=learningRouteStages(data);
  if(!stages.length) return '<div class="emptyState"><div><b>学习路线暂不可用</b><p class="mini">请继续使用今日学习和词库入口。</p></div></div>';
- const stageMarkup=stages.map(stage=>`<article class="routeStage routeStage-${html(stage.status)}"><div class="routeStageIndex">${html(stage.code)}</div><div class="routeStageContent"><p class="routeStageEnglish">${html(stage.title)}</p><h3>${html(stage.subtitle)}</h3><p>${html(stage.summary)}</p>${stage.status==='available'?`<button type="button" class="routeOpen" data-action="view" data-view="${html(stage.view)}">${stage.id==='world'?'开始 World 观察':stage.id==='culture'?'开始 Culture 课程':stage.id==='camera'?'开始 Camera 训练':stage.id==='word-image'?'开始 Word Image':stage.id==='sentence'?'开始 Sentence':'查看已开放词条'} →</button>`:'<span class="routePlanned" aria-label="该模块准备中">准备中</span>'}</div></article>`).join('');
+ const stageMarkup=stages.map(stage=>`<article class="routeStage routeStage-${html(stage.status)}"><div class="routeStageIndex">${html(stage.code)}</div><div class="routeStageContent"><p class="routeStageEnglish">${html(stage.title)}</p><h3>${html(stage.subtitle)}</h3><p>${html(stage.summary)}</p>${stage.status==='available'?`<button type="button" class="routeOpen" data-action="view" data-view="${html(stage.view)}">${stage.id==='start'?'开始 Start':stage.id==='world'?'开始 World 观察':stage.id==='culture'?'开始 Culture 课程':stage.id==='camera'?'开始 Camera 训练':stage.id==='word-image'?'开始 Word Image':stage.id==='sentence'?'开始 Sentence':'查看已开放词条'} →</button>`:'<span class="routePlanned" aria-label="该模块准备中">准备中</span>'}</div></article>`).join('');
  const support=Array.isArray(data.supportLinks)?data.supportLinks.filter(link=>isPlainObject(link)&&typeof link.id==='string'&&typeof link.title==='string'&&typeof link.summary==='string'&&link.view==='network').map(link=>`<button type="button" class="routeSupport" data-action="view" data-view="network"><b>${html(link.title)}</b><span>${html(link.summary)}</span><em>打开 →</em></button>`).join(''):'';
  return `<section class="learningRoute" aria-label="V2 学习路线"><header class="routeHero"><p class="workspaceEyebrow">English Thinking System · V2</p><h2>从 Start 到自由表达</h2><p>先看英语怎样组织画面，再用词汇、句子和场景逐步建立表达。当前已开放的入口可以直接使用；其余模块会在内容完成后按顺序开放。</p></header><section class="routeJourney" aria-label="学习阶段">${stageMarkup}</section>${support?`<section class="routeSupportSection"><h3>现在可补充探索</h3>${support}</section>`:''}</section>`;
 }
+function renderStartWorkspace(data) {
+ const guide=data?.startGuide;
+ if(!isPlainObject(guide)||!['title','intro','action'].every(field=>typeof guide[field]==='string'&&guide[field].trim())||!Array.isArray(guide.path)||!Array.isArray(guide.stages)) return '<div class="emptyState"><div><b>Start 暂不可用</b><p class="mini">请从学习路线进入 Culture。</p></div></div>';
+ const path=guide.path.filter(item=>typeof item==='string'&&item.trim()).map(item=>`<span>${html(item)}</span>`).join('<b aria-hidden="true">→</b>');
+ const stages=guide.stages.filter(stage=>isPlainObject(stage)&&typeof stage.title==='string'&&typeof stage.text==='string').map(stage=>`<article><b>${html(stage.title)}</b><p>${html(stage.text)}</p></article>`).join('');
+ return `<section class="startWorkspace" aria-label="Start 英语思维路线"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><article class="startLesson"><p class="workspaceEyebrow">Start · 现实到表达</p><h2>${html(guide.title)}</h2><p class="startIntro">${html(guide.intro)}</p><section class="startPath" aria-label="英语生长路径">${path}</section><section class="startStages">${stages}</section><button type="button" class="primaryAction" data-action="view" data-view="culture">${html(guide.action)} →</button></article>${returnTopButton()}</section>`;
+}
 function cultureLessonsFor(data) {
- const fields=['id','title','question','scene','chineseExample','englishExample','explanation','takeaway','boundary','nextHint'];
+ const fields=['id','title','question','scene','chineseExample','englishExample','explanation','takeaway','englishLens','boundary','nextHint'];
  if(!isPlainObject(data)||!Array.isArray(data.cultureLessons)) return [];
  const lessons=data.cultureLessons.filter(lesson=>isPlainObject(lesson)&&Number.isInteger(lesson.order)&&fields.every(field=>typeof lesson[field]==='string'&&lesson[field].trim()));
  const ids=new Set();
@@ -496,26 +528,28 @@ function renderCultureWorkspace(data, selectedId, progress) {
  const lesson=lessons[index], completed=cultureProgressFor(progress).completed, isCompleted=completed.includes(lesson.id), allCompleted=lessons.every(item=>completed.includes(item.id));
  const lessonNav=lessons.map(item=>`<button type="button" class="tag cultureLessonNav${item.id===lesson.id?' active':''}" data-action="select-culture-lesson" data-culture-lesson="${html(item.id)}" aria-current="${item.id===lesson.id?'step':'false'}">${html(String(item.order))}</button>`).join('');
  const previous=lessons[index-1], next=lessons[index+1];
- return `<section class="cultureWorkspace" aria-label="Culture 课程"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="cultureProgress"><span>Culture</span><b>${index+1} / ${lessons.length}</b></div><nav class="cultureLessonNavs" aria-label="Culture 课程导航">${lessonNav}</nav><article class="cultureLesson"><p class="workspaceEyebrow">Culture · Lesson ${html(String(lesson.order))}</p><h2>${html(lesson.title)}</h2><section class="cultureBlock cultureQuestion"><h3>问题</h3><p>${html(lesson.question)}</p></section><section class="cultureBlock"><h3>现实画面</h3><p>${html(lesson.scene)}</p></section><section class="cultureExamples" aria-label="中文与英语的组织示例"><div><h3>中文怎么说</h3><p>${html(lesson.chineseExample)}</p></div><div><h3>英语怎么组织</h3><p>${html(lesson.englishExample)}</p></div></section><section class="cultureBlock"><h3>我真正要理解什么</h3><p>${html(lesson.explanation)}</p><p class="cultureTakeaway">${html(lesson.takeaway)}</p></section><section class="cultureBoundary"><h3>边界提醒</h3><p>${html(lesson.boundary)}</p></section><p class="cultureNextHint">${html(lesson.nextHint)}</p><div class="cultureActions">${previous?`<button type="button" class="backBtn" data-action="select-culture-lesson" data-culture-lesson="${html(previous.id)}">← 上一节</button>`:'<span></span>'}${isCompleted?'<span class="cultureCompleted" role="status">本节已完成</span>':`<button type="button" class="primaryAction" data-action="complete-culture-lesson">完成当前节</button>`}${next?`<button type="button" class="backBtn" data-action="select-culture-lesson" data-culture-lesson="${html(next.id)}">下一节 →</button>`:'<span></span>'}</div>${allCompleted?'<section class="cultureCameraHint" role="status"><b>Culture 已完成</b><p>下一站是 Camera：英语通常先把镜头对准哪里？Camera 当前准备中。</p></section>':''}</article>${returnTopButton()}</section>`;
+ return `<section class="cultureWorkspace" aria-label="Culture 课程"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="cultureProgress"><span>Culture</span><b>${index+1} / ${lessons.length}</b></div><nav class="cultureLessonNavs" aria-label="Culture 课程导航">${lessonNav}</nav><article class="cultureLesson"><p class="workspaceEyebrow">Culture · Lesson ${html(String(lesson.order))}</p><h2>${html(lesson.title)}</h2><section class="cultureBlock cultureQuestion"><h3>问题</h3><p>${html(lesson.question)}</p></section><section class="cultureBlock"><h3>现实画面</h3><p>${html(lesson.scene)}</p></section><section class="cultureExamples" aria-label="中文与英语的组织示例"><div><h3>中文怎么说</h3><p>${html(lesson.chineseExample)}</p></div><div><h3>英语怎么组织</h3><p>${html(lesson.englishExample)}</p></div></section><section class="cultureBlock"><h3>我真正要理解什么</h3><p>${html(lesson.explanation)}</p><p class="cultureTakeaway">${html(lesson.takeaway)}</p></section><section class="cultureEnglishLens"><h3>换一个英语镜头来看</h3><p>${html(lesson.englishLens)}</p></section><section class="cultureBoundary"><h3>边界提醒</h3><p>${html(lesson.boundary)}</p></section><p class="cultureNextHint">${html(lesson.nextHint)}</p><div class="cultureActions">${previous?`<button type="button" class="backBtn" data-action="select-culture-lesson" data-culture-lesson="${html(previous.id)}">← 上一节</button>`:'<span></span>'}${isCompleted?'<span class="cultureCompleted" role="status">本节已完成</span>':`<button type="button" class="primaryAction" data-action="complete-culture-lesson">完成当前节</button>`}${next?`<button type="button" class="backBtn" data-action="select-culture-lesson" data-culture-lesson="${html(next.id)}">下一节 →</button>`:'<span></span>'}</div>${allCompleted?'<section class="cultureCameraHint" role="status"><b>Culture 已完成</b><p>下一站是 Camera：英语通常先把镜头对准哪里？</p><button type="button" class="primaryAction" data-action="view" data-view="camera">下一站：Camera →</button></section>':''}</article>${returnTopButton()}</section>`;
 }
 function renderCameraWorkspace(data, selectedId, stepIndex, choiceId, progress) {
  const scene=cameraSceneFor(data,selectedId);
  if(!scene) return '<div class="emptyState"><div><b>Camera 训练暂不可用</b><p class="mini">请返回学习路线，稍后再试。</p></div></div>';
- const steps=cameraStepsFor(scene), index=Math.max(0,Math.min(Number(stepIndex)||0,steps.length-1)), step=steps[index], choice=cameraChoiceFor(scene,index,choiceId), complete=cameraProgressFor(progress).completed.includes(scene.id);
+ const steps=cameraStepsFor(scene), index=Math.max(0,Math.min(Number(stepIndex)||0,steps.length-1)), step=steps[index], choice=cameraChoiceFor(scene,index,choiceId), complete=cameraProgressFor(progress).completed.includes(scene.id), finalReady=complete&&index===steps.length-1&&choice?.recommended;
  const choiceMarkup=step.choices.map(item=>`<button type="button" class="cameraChoice${item.id===choice?.id?' selected':''}" data-action="select-camera-choice" data-camera-choice="${html(item.id)}" aria-pressed="${item.id===choice?.id?'true':'false'}">${html(item.label)}</button>`).join('');
  const feedback=choice?`<section class="cameraFeedback${choice.recommended?' recommended':' alternate'}" role="status"><h3>这一步让画面多了什么？</h3><p>${html(choice.feedback)}</p></section>`:'';
- const partials=['The boy.','The boy is doing…','The boy is doing homework.',scene.recommendedSentence];
- const build=choice?.recommended?`<section class="cameraBuild"><h3>画面正在长成英语</h3><p>${html(partials[index]||scene.recommendedSentence)}</p></section>`:'';
- const actions=complete
-  ? `<div class="cameraActions"><button type="button" class="backBtn" data-action="restart-camera-scene">重新练习</button></div><section class="cameraNextHint" role="status"><b>Camera 已完成</b><p>${html(scene.nextLink.text)}</p></section>`
-  : `<div class="cameraActions">${index>0?'<button type="button" class="backBtn" data-action="previous-camera-step">← 上一步</button>':'<span></span>'}${choice?.recommended&&index<steps.length-1?'<button type="button" class="primaryAction" data-action="next-camera-step">下一步 →</button>':''}${choice?.recommended&&index===steps.length-1?'<button type="button" class="primaryAction" data-action="complete-camera-scene">完成本次 Camera 训练</button>':''}</div>`;
+ const growth=scene.englishGrowth?.[step.id], build=choice?.recommended&&growth?`<section class="cameraBuild englishGrowth"><h3>画面正在长成英语</h3><p class="englishGrowthPrompt">${html(growth.prompt)}</p><p class="englishGrowthExpression">${html(growth.expression)}</p><span>${html(growth.hint)}</span></section>`:'';
+ const nextLabels=['下一步：看他在做什么 →','下一步：看他和什么发生关系 →','下一步：看看整个环境 →'];
+ const standardActions=`<div class="cameraActions">${index>0?'<button type="button" class="backBtn" data-action="previous-camera-step">← 上一步</button>':'<span></span>'}${choice?.recommended&&index<steps.length-1?`<button type="button" class="primaryAction" data-action="next-camera-step">${nextLabels[index]}</button>`:''}${choice?.recommended&&index===steps.length-1&&!complete?'<button type="button" class="primaryAction" data-action="complete-camera-scene">完成 Camera →</button>':''}</div>`;
+ const actions=finalReady
+  ? `<section class="cameraNextHint" role="status"><b>Camera 已完成</b><p>${html(scene.nextLink.text)}</p><div class="cameraActions"><button type="button" class="primaryAction" data-action="view" data-view="${html(scene.nextLink.view)}">进入 Sentence →</button><button type="button" class="cameraSecondaryAction" data-action="restart-camera-scene">重新选择焦点</button></div></section>`
+  : standardActions;
  return `<section class="cameraWorkspace" aria-label="Camera 镜头思维训练"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="cameraProgress"><span>Camera</span><b>步骤 ${index+1} / ${steps.length}</b></div><article class="cameraLesson"><p class="workspaceEyebrow">Camera · 单场景样板</p><h2>${html(scene.title)}</h2>${renderCameraSceneVisual(scene,index,choice?.id)}<section class="cameraScene cameraSceneText"><h3>现实画面</h3><p>${html(scene.scene)}</p></section><section class="cameraQuestion"><p class="cameraStepTitle">${html(step.title)}</p><h3>${html(step.question)}</h3><div class="cameraChoices">${choiceMarkup}</div></section>${feedback}${build}${actions}</article>${returnTopButton()}</section>`;
 }
 function isWorldChoice(choice) { return isPlainObject(choice)&&typeof choice.id==='string'&&choice.id.trim()&&typeof choice.label==='string'&&choice.label.trim()&&typeof choice.recommended==='boolean'&&typeof choice.feedback==='string'&&choice.feedback.trim(); }
+function isEnglishGrowth(growth) { return isPlainObject(growth)&&typeof growth.prompt==='string'&&growth.prompt.trim()&&Array.isArray(growth.expressions)&&growth.expressions.length>0&&growth.expressions.every(item=>typeof item==='string'&&item.trim())&&Array.isArray(growth.keywords)&&growth.keywords.length>0&&growth.keywords.every(item=>typeof item==='string'&&item.trim())&&typeof growth.hint==='string'&&growth.hint.trim(); }
 function worldScenesFor(data) {
  if(!isPlainObject(data)||!Array.isArray(data.worldScenes)) return [];
  const ids=new Set();
- return data.worldScenes.filter(scene=>isPlainObject(scene)&&Number.isInteger(scene.order)&&typeof scene.id==='string'&&/^world-[a-z0-9-]+$/.test(scene.id)&&!ids.has(scene.id)&&ids.add(scene.id)&&typeof scene.title==='string'&&scene.title.trim()&&isPlainObject(scene.scene)&&['accessibleText','caption'].every(field=>typeof scene.scene[field]==='string'&&scene.scene[field].trim())&&Array.isArray(scene.steps)&&scene.steps.length===6&&scene.steps.every(step=>isPlainObject(step)&&typeof step.id==='string'&&typeof step.concept==='string'&&typeof step.question==='string'&&Array.isArray(step.choices)&&step.choices.length>0&&step.choices.every(isWorldChoice)&&step.choices.filter(choice=>choice.recommended).length===1)&&typeof scene.completion==='string'&&scene.completion.trim()&&typeof scene.boundary==='string'&&scene.boundary.trim()&&isPlainObject(scene.nextLink)&&scene.nextLink.view==='word-image'&&typeof scene.nextLink.text==='string'&&scene.nextLink.text.trim()).sort((left,right)=>left.order-right.order);
+ return data.worldScenes.filter(scene=>isPlainObject(scene)&&Number.isInteger(scene.order)&&typeof scene.id==='string'&&/^world-[a-z0-9-]+$/.test(scene.id)&&!ids.has(scene.id)&&ids.add(scene.id)&&typeof scene.title==='string'&&scene.title.trim()&&isPlainObject(scene.scene)&&['accessibleText','caption'].every(field=>typeof scene.scene[field]==='string'&&scene.scene[field].trim())&&Array.isArray(scene.steps)&&scene.steps.length===6&&scene.steps.every(step=>isPlainObject(step)&&typeof step.id==='string'&&typeof step.concept==='string'&&typeof step.question==='string'&&isEnglishGrowth(step.englishGrowth)&&Array.isArray(step.choices)&&step.choices.length>0&&step.choices.every(isWorldChoice)&&step.choices.filter(choice=>choice.recommended).length===1)&&Array.isArray(scene.growthSummary)&&scene.growthSummary.length>0&&scene.growthSummary.every(item=>isPlainObject(item)&&typeof item.label==='string'&&Array.isArray(item.items)&&item.items.length>0)&&typeof scene.completion==='string'&&scene.completion.trim()&&typeof scene.boundary==='string'&&scene.boundary.trim()&&isPlainObject(scene.nextLink)&&scene.nextLink.view==='word-image'&&typeof scene.nextLink.text==='string'&&scene.nextLink.text.trim()).sort((left,right)=>left.order-right.order);
 }
 function worldSceneFor(data, sceneId) { return worldScenesFor(data).find(scene=>scene.id===sceneId)||null; }
 function worldStepsFor(scene) { return worldScenesFor({worldScenes:[scene]})[0]?.steps||[]; }
@@ -527,22 +561,29 @@ function worldStepForAction(scene, stepIndex, choiceId) {
 function renderWorldSceneVisual(scene) {
  return `<section class="worldScene" aria-label="场景画面：${html(scene.scene.accessibleText)}"><img class="worldSceneImage" src="assets/world-room-observation.png" width="1672" height="941" alt="${html(scene.scene.accessibleText)}" onerror="this.hidden=true;this.nextElementSibling.hidden=false;"><p class="worldSceneImageFallback" role="status" hidden>场景图片加载失败，请根据下方场景说明继续观察。</p><p class="worldSceneCaption">${html(scene.scene.caption)}</p></section>`;
 }
+function renderWorldEnglishGrowth(growth) {
+ const expressions=growth.expressions.map(item=>`<p class="englishGrowthExpression">${html(item)}</p>`).join('');
+ const keywords=growth.keywords.map(item=>`<span>${html(item)}</span>`).join('');
+ return `<section class="worldGrowth englishGrowth" aria-label="画面正在长成英语"><h3>画面正在长成英语</h3><p class="englishGrowthPrompt">${html(growth.prompt)}</p>${expressions}<div class="englishGrowthKeywords">${keywords}</div><p class="englishGrowthHint">${html(growth.hint)}</p></section>`;
+}
 function renderWorldWorkspace(data, selectedId, stepIndex, choiceId, progress) {
  const scene=worldSceneFor(data,selectedId);
  if(!scene) return '<div class="emptyState"><div><b>World 观察暂不可用</b><p class="mini">请返回学习路线，稍后再试。</p></div></div>';
  const steps=worldStepsFor(scene), index=Math.max(0,Math.min(Number(stepIndex)||0,steps.length-1)), step=steps[index], choice=worldChoiceFor(scene,index,choiceId), complete=worldProgressFor(progress).completed.includes(scene.id), finalReady=complete&&index===steps.length-1&&choice?.recommended;
  const choices=step.choices.map(item=>`<button type="button" class="worldChoice${item.id===choice?.id?' selected':''}" data-action="select-world-choice" data-world-choice="${html(item.id)}" aria-pressed="${item.id===choice?.id?'true':'false'}">${html(item.label)}</button>`).join('');
  const feedback=choice?`<section class="worldFeedback${choice.recommended?' recommended':' alternate'}" role="status"><h3>你刚才看见了什么？</h3><p>${html(choice.feedback)}</p></section>`:'';
+ const growth=choice?.recommended?renderWorldEnglishGrowth(step.englishGrowth):'';
  const standardActions=`<div class="worldActions">${index>0?'<button type="button" class="backBtn" data-action="previous-world-step">← 上一步</button>':'<span></span>'}${choice?.recommended&&index<steps.length-1?'<button type="button" class="primaryAction" data-action="next-world-step">下一步 →</button>':''}${choice?.recommended&&index===steps.length-1&&!complete?'<button type="button" class="primaryAction" data-action="complete-world-scene">完成本次 World 观察</button>':''}</div>`;
- const completion=finalReady?`<div class="worldActions"><button type="button" class="backBtn" data-action="restart-world-scene">重新观察</button></div><section class="worldSummary" role="status"><h3>你已经完成 World 观察</h3><p>${html(scene.completion)}</p><p class="worldBoundary">${html(scene.boundary)}</p><p>${html(scene.nextLink.text)}</p><button type="button" class="primaryAction" data-action="view" data-view="${html(scene.nextLink.view)}">进入 Word Image</button></section>`:standardActions;
- return `<section class="worldWorkspace" aria-label="World 现实画面观察"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="worldProgress"><span>World</span><b>步骤 ${index+1} / ${steps.length}</b></div><article class="worldLesson"><p class="workspaceEyebrow">World · 单场景观察</p><h2>${html(scene.title)}</h2>${renderWorldSceneVisual(scene)}<section class="worldQuestion"><h3>${html(step.question)}</h3><div class="worldChoices">${choices}</div></section>${feedback}${completion}</article>${returnTopButton()}</section>`;
+ const summary=scene.growthSummary.map(group=>`<article><b>${html(group.label)}</b><p>${group.items.map(html).join(' · ')}</p></article>`).join('');
+ const completion=finalReady?`<div class="worldActions"><button type="button" class="backBtn" data-action="restart-world-scene">重新观察</button></div><section class="worldSummary" role="status"><h3>你已经完成 World 观察</h3><p>${html(scene.completion)}</p><section class="worldGrowthSummary"><h3>刚才你是这样看现实的</h3>${summary}</section><p class="worldBoundary">${html(scene.boundary)}</p><p>${html(scene.nextLink.text)}</p><button type="button" class="primaryAction" data-action="view" data-view="${html(scene.nextLink.view)}">下一站：Word Image →</button></section>`:standardActions;
+ return `<section class="worldWorkspace" aria-label="World 现实画面观察"><button type="button" class="backBtn" data-action="view" data-view="roadmap">← 返回学习路线</button><div class="worldProgress"><span>World</span><b>步骤 ${index+1} / ${steps.length}</b></div><article class="worldLesson"><p class="workspaceEyebrow">World · 单场景观察</p><h2>${html(scene.title)}</h2>${renderWorldSceneVisual(scene)}<section class="worldQuestion"><h3>${html(step.question)}</h3><div class="worldChoices">${choices}</div></section>${feedback}${growth}${completion}</article>${returnTopButton()}</section>`;
 }
 function isWordImageSentenceFlow(flow) {
  const audio=flow?.audio, natural=flow?.natural, stress=flow?.stress;
  return isPlainObject(flow)&&typeof flow.text==='string'&&flow.text.trim()&&typeof flow.chineseConfirm==='string'&&flow.chineseConfirm.trim()&&typeof flow.clearIpaUS==='string'&&flow.clearIpaUS.trim()&&Array.isArray(flow.clearWords)&&flow.clearWords.length>0&&flow.clearWords.every(word=>isPlainObject(word)&&typeof word.text==='string'&&word.text.trim()&&typeof word.ipaUS==='string'&&word.ipaUS.trim())&&isPlainObject(natural)&&typeof natural.ipaUS==='string'&&natural.ipaUS.trim()&&typeof natural.markerExplanation==='string'&&natural.markerExplanation.trim()&&Array.isArray(natural.links)&&natural.links.length>0&&natural.links.every(link=>isPlainObject(link)&&typeof link.markedText==='string'&&link.markedText.includes('‿')&&typeof link.explanation==='string'&&link.explanation.trim())&&typeof natural.weakFormExplanation==='string'&&natural.weakFormExplanation.trim()&&isPlainObject(stress)&&typeof stress.markedText==='string'&&stress.markedText.trim()&&typeof stress.explanation==='string'&&stress.explanation.trim()&&isPlainObject(flow.phrase)&&typeof flow.phrase.text==='string'&&flow.phrase.text.trim()&&typeof flow.intonation==='string'&&flow.intonation.trim()&&isPlainObject(audio)&&['clear','natural'].every(mode=>isPlainObject(audio[mode])&&audio[mode].text===flow.text&&audio[mode].lang==='en-US'&&typeof audio[mode].rate==='number'&&audio[mode].rate>0&&audio[mode].rate<=2&&typeof audio[mode].label==='string'&&audio[mode].label.trim());
 }
 function wordImageLessonsFor(data) {
- const textFields=['id','title','wordId','sourceSceneId','spelling','displayForm','ipaUS','speechText','speechLang','core','example','chineseConfirm','boundary','completion'];
+ const textFields=['id','title','wordId','sourceSceneId','spelling','displayForm','ipaUS','speechText','speechLang','core','example','chineseConfirm','boundary','completion','bridge'];
  if(!isPlainObject(data)||!Array.isArray(data.wordImageLessons)) return [];
  const ids=new Set();
  return data.wordImageLessons.filter(lesson=>isPlainObject(lesson)&&Number.isInteger(lesson.order)&&textFields.every(field=>typeof lesson[field]==='string'&&lesson[field].trim())&&/^word-image-[a-z0-9-]+$/.test(lesson.id)&&!ids.has(lesson.id)&&ids.add(lesson.id)&&isPlainObject(lesson.scene)&&isPlainObject(lesson.focus)&&['accessibleText','caption'].every(field=>typeof lesson.scene[field]==='string'&&lesson.scene[field].trim()&&typeof lesson.focus[field]==='string'&&lesson.focus[field].trim())&&Array.isArray(lesson.steps)&&lesson.steps.length===3&&lesson.steps.every(step=>isPlainObject(step)&&typeof step.id==='string'&&step.id.trim()&&typeof step.title==='string'&&step.title.trim()&&typeof step.action==='string'&&step.action.trim())&&Array.isArray(lesson.phonicsGroups)&&lesson.phonicsGroups.length>0&&lesson.phonicsGroups.every(group=>isPlainObject(group)&&typeof group.letters==='string'&&group.letters.trim()&&typeof group.sound==='string'&&group.sound.trim()&&['vowel','consonant'].includes(group.colorToken))&&lesson.phonicsGroups.map(group=>group.letters).join('')===lesson.displayForm&&lesson.spelling===lesson.displayForm&&lesson.speechText===lesson.displayForm&&lesson.speechLang==='en-US'&&isWordImageSentenceFlow(lesson.sentenceFlow)&&worldSceneFor(data,lesson.sourceSceneId)&&!lesson.steps.some((step,index,steps)=>steps.findIndex(item=>item.id===step.id)!==index)).sort((left,right)=>left.order-right.order);
@@ -553,7 +594,7 @@ function sentenceLessonsFor(data) {
  const fields=['id','title','sentence','completion'];
  if(!isPlainObject(data)||!Array.isArray(data.sentenceLessons)) return [];
  const ids=new Set();
- return data.sentenceLessons.filter(lesson=>isPlainObject(lesson)&&Number.isInteger(lesson.order)&&fields.every(field=>typeof lesson[field]==='string'&&lesson[field].trim())&&/^sentence-[a-z0-9-]+$/.test(lesson.id)&&!ids.has(lesson.id)&&ids.add(lesson.id)&&isPlainObject(lesson.source)&&typeof lesson.source.worldSceneId==='string'&&typeof lesson.source.wordImageLessonId==='string'&&worldSceneFor(data,lesson.source.worldSceneId)&&wordImageLessonFor(data,lesson.source.wordImageLessonId)?.sentenceFlow?.text===lesson.sentence&&Array.isArray(lesson.steps)&&lesson.steps.length===9&&lesson.steps.every(step=>isPlainObject(step)&&['id','title','prompt','explanation','action'].every(field=>typeof step[field]==='string'&&step[field].trim()))&&new Set(lesson.steps.map(step=>step.id)).size===lesson.steps.length&&lesson.steps.find(step=>step.id==='focus')?.choices?.every(isSentenceChoice)&&lesson.steps.find(step=>step.id==='focus')?.choices?.filter(choice=>choice.recommended).length===1).sort((left,right)=>left.order-right.order);
+ return data.sentenceLessons.filter(lesson=>isPlainObject(lesson)&&Number.isInteger(lesson.order)&&fields.every(field=>typeof lesson[field]==='string'&&lesson[field].trim())&&/^sentence-[a-z0-9-]+$/.test(lesson.id)&&!ids.has(lesson.id)&&ids.add(lesson.id)&&isPlainObject(lesson.source)&&typeof lesson.source.worldSceneId==='string'&&typeof lesson.source.wordImageLessonId==='string'&&worldSceneFor(data,lesson.source.worldSceneId)&&wordImageLessonFor(data,lesson.source.wordImageLessonId)?.sentenceFlow?.text===lesson.sentence&&Array.isArray(lesson.steps)&&lesson.steps.length===9&&lesson.steps.every(step=>isPlainObject(step)&&['id','title','prompt','explanation','action'].every(field=>typeof step[field]==='string'&&step[field].trim())&&isPlainObject(step.englishGrowth)&&['prompt','expression'].every(field=>typeof step.englishGrowth[field]==='string'&&step.englishGrowth[field].trim()))&&new Set(lesson.steps.map(step=>step.id)).size===lesson.steps.length&&lesson.steps.find(step=>step.id==='focus')?.choices?.every(isSentenceChoice)&&lesson.steps.find(step=>step.id==='focus')?.choices?.filter(choice=>choice.recommended).length===1).sort((left,right)=>left.order-right.order);
 }
 function sentenceLessonFor(data, lessonId) { return sentenceLessonsFor(data).find(lesson=>lesson.id===lessonId)||null; }
 function sentenceStepsFor(lesson) { return Array.isArray(lesson?.steps)?lesson.steps:[]; }
@@ -585,7 +626,7 @@ function renderWordImageWorkspace(data, v2Data, selectedId, stepIndex, progress,
  const index=Math.max(0,Math.min(Number(stepIndex)||0,lesson.steps.length-1)), step=lesson.steps[index], complete=wordImageProgressFor(progress).completed.includes(lesson.id), speech=isPlainObject(speechState)?speechState:{}, speechSupported=speech.supported===true, speakingMode=typeof speech.speaking==='string'?speech.speaking:(speech.speaking===true?'word':null);
  const previous=index>0?'<button type="button" class="backBtn" data-action="previous-word-image-step">← 上一步</button>':'';
  let content='';
- if(index===0) content=`${renderWordImageScene(lesson.scene,false)}<p class="wordImageLead">${html(lesson.scene.caption)}</p>`;
+ if(index===0) content=`<p class="wordImageLead">${html(lesson.bridge)}</p>${renderWordImageScene(lesson.scene,false)}<p class="wordImageLead">${html(lesson.scene.caption)}</p>`;
  else if(index===1) content=`${renderWordImageScene(lesson.focus,true)}<p class="wordImageLead">${html(lesson.focus.caption)}</p>`;
  else {
   const lines='<span class="handwritingLine" aria-hidden="true"></span>'.repeat(4);
@@ -602,6 +643,9 @@ function renderWordImageWorkspace(data, v2Data, selectedId, stepIndex, progress,
 function renderSentenceScene(scene) {
  return `<section class="sentenceScene" aria-label="${html(scene.accessibleText)}"><img class="sentenceSceneImage" src="assets/world-room-observation.png" width="1672" height="941" alt="${html(scene.accessibleText)}" onerror="this.hidden=true;this.nextElementSibling.hidden=false;"><p class="sentenceImageFallback" role="status" hidden>场景图片加载失败，请根据下方提示继续组织句子。</p><p>${html(scene.caption)}</p></section>`;
 }
+function renderSentenceGrowth(growth) {
+ return `<section class="sentenceGrowth englishGrowth" aria-label="画面正在长成英语"><h3>画面正在长成英语</h3><p class="englishGrowthPrompt">${html(growth.prompt)}</p><p class="englishGrowthExpression">${html(growth.expression)}</p></section>`;
+}
 function renderSentenceWorkspace(data, selectedId, stepIndex, focusId, progress, speechState) {
  const lesson=sentenceLessonFor(data,selectedId), source=lesson?worldSceneFor(data,lesson.source.worldSceneId):null, flow=lesson?sentenceFlowFor(data,lesson):null;
  if(!lesson||!source||!flow) return '<div class="emptyState"><div><b>Sentence 暂不可用</b><p class="mini">请返回学习路线，稍后再试。</p></div></div>';
@@ -609,12 +653,11 @@ function renderSentenceWorkspace(data, selectedId, stepIndex, focusId, progress,
  const choices=step.id==='focus'?`<div class="sentenceChoices">${step.choices.map(choice=>`<button type="button" class="sentenceChoice${choice.id===focus?.id?' selected':''}" data-action="select-sentence-focus" data-sentence-focus="${html(choice.id)}" aria-pressed="${choice.id===focus?.id?'true':'false'}">${html(choice.label)}</button>`).join('')}</div>`:'';
  const feedback=step.id==='focus'&&focus?`<section class="sentenceFeedback ${focus.recommended?'recommended':'alternate'}" role="status"><p>${html(focus.feedback)}</p></section>`:'';
  let content='';
- if(['scene','focus'].includes(step.id)) content=renderSentenceScene(source.scene);
- else if(step.id==='relation') content=`${renderSentenceScene(source.scene)}<p class="sentenceRelation">${html(step.explanation)}</p>`;
- else if(step.id==='flow') content=renderWordImageSentenceFlow(flow,speechSupported,speakingMode);
+ if(['scene','focus'].includes(step.id)) content=`${renderSentenceScene(source.scene)}${renderSentenceGrowth(step.englishGrowth)}`;
+ else if(step.id==='relation') content=`${renderSentenceScene(source.scene)}<p class="sentenceRelation">${html(step.explanation)}</p>${renderSentenceGrowth(step.englishGrowth)}`;
+ else if(step.id==='flow') content=`${renderSentenceGrowth(step.englishGrowth)}${renderWordImageSentenceFlow(flow,speechSupported,speakingMode)}`;
  else {
-  const display=step.id==='lock-focus'||step.id==='gap-focus'?'The cup ...':step.id==='connection'||step.id==='gap-relation'?'The cup is ...':lesson.sentence;
-  content=`<section class="sentenceBuild" aria-label="当前英语结构"><p>${html(display)}</p><span>${html(step.explanation)}</span></section>${step.id==='path'?'<section class="sentencePath" aria-label="句子认知路径">画面 → 焦点 → 信息缺口 → 补信息 → 完整表达</section>':''}`;
+  content=`<section class="sentenceBuild englishGrowth" aria-label="当前英语结构"><h3>画面正在长成英语</h3><p class="englishGrowthPrompt">${html(step.englishGrowth.prompt)}</p><p class="englishGrowthExpression">${html(step.englishGrowth.expression)}</p><span>${html(step.explanation)}</span></section>${step.id==='path'?'<section class="sentencePath" aria-label="句子认知路径">现实画面 → 表达焦点 → 信息缺口 → 从现实补信息 → 完整表达</section>':''}`;
  }
  const canAdvance=step.id!=='focus'||focus?.recommended;
  const actions=complete&&index===steps.length-1
@@ -624,9 +667,25 @@ function renderSentenceWorkspace(data, selectedId, stepIndex, focusId, progress,
 }
 function shouldStopWordImageSpeech(currentView, nextView) { return currentView==='word-image'&&nextView!=='word-image'; }
 function shouldStopSentenceSpeech(currentView, nextView) { return ['word-image','sentence'].includes(currentView)&&currentView!==nextView; }
-function viewKind(view) { return ['today','roadmap','culture','camera','world','word-image','sentence','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
-function activeNavView(view) { if(['culture','camera','world','word-image','sentence'].includes(view)) return 'roadmap'; return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,cameraProgressFor,completeCameraScene,worldProgressFor,completeWorldScene,wordImageProgressFor,completeWordImageLesson,sentenceProgressFor,completeSentenceLesson,preferredUSVoice,createWordImageSpeechController,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,cultureLessonsFor,cultureLessonFor,renderCultureWorkspace,cameraScenesFor,cameraSceneFor,cameraStepsFor,cameraChoiceFor,cameraStepForAction,cameraVisualStateFor,renderCameraSceneVisual,renderCameraWorkspace,worldScenesFor,worldSceneFor,worldStepsFor,worldChoiceFor,worldStepForAction,renderWorldWorkspace,wordImageLessonsFor,wordImageLessonFor,renderWordImageWorkspace,isSentenceChoice,sentenceLessonsFor,sentenceLessonFor,sentenceStepsFor,sentenceStepForAction,sentenceFlowFor,renderSentenceWorkspace,shouldStopWordImageSpeech,shouldStopSentenceSpeech,viewKind,activeNavView};
+function routeStageComplete(data, stageId, progress) {
+ if(stageId==='culture') return cultureLessonsFor(data).every(lesson=>cultureProgressFor(progress).completed.includes(lesson.id));
+ if(stageId==='camera') return cameraScenesFor(data).every(scene=>cameraProgressFor(progress).completed.includes(scene.id));
+ if(stageId==='world') return worldScenesFor(data).every(scene=>worldProgressFor(progress).completed.includes(scene.id));
+ if(stageId==='word-image') return wordImageLessonsFor(data).every(lesson=>wordImageProgressFor(progress).completed.includes(lesson.id));
+ if(stageId==='sentence') return sentenceLessonsFor(data).every(lesson=>sentenceProgressFor(progress).completed.includes(lesson.id));
+ return false;
+}
+function routeResumeFor(data, progress) {
+ const available=learningRouteStages(data).filter(stage=>stage.status==='available');
+ const hasRouteRecord=['culture','camera','world','wordImage','sentence'].some(key=>Array.isArray(progress?.v2?.[key]?.completed)&&progress.v2[key].completed.length>0);
+ const next=available.find(stage=>stage.id==='start'?!hasRouteRecord:!routeStageComplete(data,stage.id,progress))||available.at(-1)||null;
+ if(!next) return {view:'roadmap',title:'学习路线',subtitle:'查看完整路线',action:'查看完整路线 →'};
+ const fresh=next.id==='start';
+ return {view:next.view,title:next.title,subtitle:next.subtitle,action:fresh?'开始第一课 →':`继续 ${next.title} →`};
+}
+function viewKind(view) { return ['today','roadmap','start','culture','camera','world','word-image','sentence','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
+function activeNavView(view) { if(['start','culture','camera','world','word-image','sentence'].includes(view)) return 'roadmap'; return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
+if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,cameraProgressFor,completeCameraScene,worldProgressFor,completeWorldScene,wordImageProgressFor,completeWordImageLesson,sentenceProgressFor,completeSentenceLesson,preferredUSVoice,createWordImageSpeechController,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,isMindMapNode,mindMapFor,mindMapNodeFor,renderGoMindMap,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,renderStartWorkspace,cultureLessonsFor,cultureLessonFor,renderCultureWorkspace,cameraScenesFor,cameraSceneFor,cameraStepsFor,cameraChoiceFor,cameraStepForAction,cameraVisualStateFor,renderCameraSceneVisual,renderCameraWorkspace,worldScenesFor,worldSceneFor,worldStepsFor,worldChoiceFor,worldStepForAction,renderWorldWorkspace,wordImageLessonsFor,wordImageLessonFor,renderWordImageWorkspace,isSentenceChoice,sentenceLessonsFor,sentenceLessonFor,sentenceStepsFor,sentenceStepForAction,sentenceFlowFor,renderSentenceWorkspace,shouldStopWordImageSpeech,shouldStopSentenceSpeech,routeStageComplete,routeResumeFor,viewKind,activeNavView};
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
@@ -648,7 +707,7 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  const initialWorldScene=worldScenesFor(Curriculum)[0]?.id||null;
  const initialWordImageLesson=wordImageLessonsFor(Curriculum)[0]?.id||null;
  const initialSentenceLesson=sentenceLessonsFor(Curriculum)[0]?.id||null;
- let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,lessonLayer:'quick',cultureLesson:initialCultureLesson,cameraScene:initialCameraScene,cameraStep:0,cameraChoice:null,worldScene:initialWorldScene,worldStep:0,worldChoice:null,wordImageLesson:initialWordImageLesson,wordImageStep:0,wordImageSpeaking:null,sentenceLesson:initialSentenceLesson,sentenceStep:0,sentenceFocus:null,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,networkRelation:null,networkStep:'systems',storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
+ let state={view:'today',day:nextStudyDay(D.plan,initialProgress),word:null,lessonLayer:'quick',cultureLesson:initialCultureLesson,cameraScene:initialCameraScene,cameraStep:0,cameraChoice:null,worldScene:initialWorldScene,worldStep:0,worldChoice:null,wordImageLesson:initialWordImageLesson,wordImageStep:0,wordImageSpeaking:null,sentenceLesson:initialSentenceLesson,sentenceStep:0,sentenceFocus:null,filters:{query:'',category:'all',mastery:'all'},revealed:{},progress:initialProgress,networkMode:'map',mindMapBranch:null,mindMapNode:null,networkSystem:initialNetwork.systemId||'space-relations',networkNode:initialNetwork.node?.id||'to',explorePath:initialNetwork.path,networkRelation:null,networkStep:'systems',storageNotice:[storageNotice,v2Notice].filter(Boolean).join(' ')};
  let wordImageSpeechController=null;
  let activeWordImageSpeechMode=null;
  let pendingWordImageSpeechMode=null;
@@ -692,6 +751,10 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  function renderRoadmap() {
   title.textContent='学习路线'; sub.textContent='从理解英语如何组织画面，到逐步形成自己的表达。';
   app.innerHTML=renderLearningRoute(Curriculum);
+ }
+ function renderStart() {
+  title.textContent='Start'; sub.textContent='先知道：英语会从现实画面一步一步长出来。';
+  app.innerHTML=renderStartWorkspace(Curriculum);
  }
  function renderCulture() {
   const lesson=cultureLessonFor(Curriculum,state.cultureLesson)||cultureLessonsFor(Curriculum)[0]||null;
@@ -807,32 +870,45 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
   listElement.innerHTML=`<div class="table"><div class="row head"><div>ID</div><div>单词</div><div>等级</div><div>阶段</div><div>系统</div></div>${list.map(item=>`<div class="row"><div>${safe(String(item.id).padStart(3,'0'))}</div><div>${wordButton(item.word,'w')}</div><div>${safe(item.grade)}</div><div>${safe(item.level.split('｜')[0])}</div><div>${safe(item.category)}</div></div>`).join('')}</div><p class="mini">符合条件 ${list.length} / ${D.vocabulary.length} 个词。</p>`;
  }
  function renderTree() {
-  title.textContent='知识树'; sub.textContent='按 5 大知识系统查看 50 个词，以及已学词数量。';
+  title.textContent='知识树｜按顺序学'; sub.textContent='从核心画面到例句，按学习顺序把一个知识点学透。';
   const categories=groupCategories(D.vocabulary);
-  app.innerHTML=`<div class="treeGrid">${categories.map(({category,words})=>{const learned=words.filter(item=>(state.progress.words[item.word]?.mastery||0)>=1).length;return `<div class="treeNode"><h3>${safe(category)}</h3><p class="mini">已学 ${learned}/${words.length} 词</p><div class="tags">${words.map(item=>wordButton(item.word)).join('')}</div></div>`;}).join('')}</div>`;
+  app.innerHTML=`<section class="treeIntro"><p class="workspaceEyebrow">知识树｜按顺序学</p><h2>看懂一个知识点怎样一步步长出来</h2><p>这里按 V1 的知识系统进入词条；打开一个词后，依次看核心画面、底层逻辑和例句。想看一个词和其他知识的横向连接，请使用知识网络。</p></section><div class="treeGrid">${categories.map(({category,words})=>{const learned=words.filter(item=>(state.progress.words[item.word]?.mastery||0)>=1).length;return `<div class="treeNode"><h3>${safe(category)}</h3><p class="mini">已学 ${learned}/${words.length} 词 · 按顺序进入词条</p><div class="tags">${words.map(item=>wordButton(item.word)).join('')}</div></div>`;}).join('')}</div>`;
  }
  function renderCompare() {
   title.textContent='易混对比'; sub.textContent='用核心画面区分，而不是死记中文翻译。';
   app.innerHTML=`<div class="compareGrid">${(D.contrasts||[]).map(item=>`<div class="compare"><h3>${safe(item.title)}</h3><p>${safe(item.summary)}</p><div class="tags">${(item.words||[]).map(word=>vocabularyByWord.has(word)?wordButton(word):`<span class="tag">${safe(word)}</span>`).join('')}</div></div>`).join('')}</div>`;
  }
  function renderNetwork() {
-  title.textContent='知识网络'; sub.textContent='从系统关系查看词义连接。';
+  if(state.networkMode!=='explorer') { title.textContent='知识网络｜看关联'; sub.textContent='从左到右看一个英语画面如何连到场景、结构、对比和记忆。'; app.innerHTML=renderGoMindMap(V2,state); return; }
+  title.textContent='知识网络｜关系样板'; sub.textContent='查看已审校的 13 个 V2 关系样板。';
   const current=networkStateFor(V2,state);
   if(current.node) Object.assign(state,{networkSystem:current.systemId,networkNode:current.node.id,explorePath:current.path});
-  app.innerHTML=renderNetworkContent(V2,V2Network,state);
+  app.innerHTML=`<p><button type="button" class="backBtn" data-action="show-go-mind-map">← 返回 GO 思维导图</button></p>${renderNetworkContent(V2,V2Network,state)}`;
  }
  function renderProgress() {
   const today=localDate(new Date()), counts=masteryCounts(state.progress), due=dueWords(state.progress,today).length, days=streak(state.progress.studyDates,today);
   title.textContent='学习进度'; sub.textContent='掌握度、复习负担与连续学习一目了然。';
   app.innerHTML=`<div class="stats progressGrid"><div class="stat"><b>${counts[1]}</b><span>掌握度 1</span></div><div class="stat"><b>${counts[2]}</b><span>掌握度 2</span></div><div class="stat"><b>${counts[3]}</b><span>掌握度 3</span></div><div class="stat"><b>${counts[4]}</b><span>掌握度 4</span></div></div><div class="panel"><b>待复习 ${due} 个 · 连续学习 ${days} 天</b><div class="dayPicker">${D.plan.map(day=>{const completed=dayCompletion(day,state.progress);return `<button type="button" class="tag dayButton" data-action="select-day" data-day="${day.day}">Day ${day.day} · ${completed.completed}/${completed.total}</button>`;}).join('')}</div></div><div class="panel"><b>重置本机学习档案</b><p class="mini">此操作只会删除此浏览器保存的学习进度，无法恢复。</p><button type="button" class="backBtn" data-action="reset-progress">重置本机档案</button></div>`;
  }
- function syncNav() { const current=activeNavView(state.view); document.querySelectorAll('.nav').forEach(button=>{const active=button.dataset.view===current; button.classList.toggle('active',active); if(active) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current');}); }
+ function updateRouteResume() {
+  const button=document.getElementById('routeResume'); if(!button) return;
+  const resume=routeResumeFor(Curriculum,state.progress);
+  button.dataset.view=resume.view; button.setAttribute('aria-label',resume.action.replace(' →',''));
+  button.innerHTML=`<b>${safe(resume.action)}</b><small>${safe(resume.title)} · ${safe(resume.subtitle)}</small>`;
+ }
+ function syncNav() {
+  updateRouteResume(); const routeViews=['start','culture','camera','world','word-image','sentence'];
+  document.querySelectorAll('.nav').forEach(button=>{
+   const active=button.id==='routeResume'?routeViews.includes(state.view):button.dataset.view===activeNavView(state.view)&&(!routeViews.includes(state.view)||state.view==='roadmap');
+   button.classList.toggle('active',active); if(active) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current');
+  });
+ }
  function renderStorageNotice() { if(!state.storageNotice) return; const notice=document.createElement('p'); notice.className='notice'; notice.setAttribute('role','status'); notice.textContent=state.storageNotice; app.prepend(notice); state.storageNotice=''; }
- function render() { state.view=viewKind(state.view); syncNav(); ({today:renderToday,roadmap:renderRoadmap,culture:renderCulture,camera:renderCamera,world:renderWorld,'word-image':renderWordImage,sentence:renderSentence,review:renderReview,library:renderLibrary,tree:renderTree,compare:renderCompare,progress:renderProgress,network:renderNetwork,lesson:renderLesson}[state.view])(); renderStorageNotice(); }
- document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{if(shouldStopSentenceSpeech(state.view,button.dataset.view)) stopWordImageSpeech(); state.view=button.dataset.view; if(state.view==='network') state.networkStep=networkStepForAction(state.networkStep,'nav-network'); render();}));
+ function render() { state.view=viewKind(state.view); syncNav(); ({today:renderToday,roadmap:renderRoadmap,start:renderStart,culture:renderCulture,camera:renderCamera,world:renderWorld,'word-image':renderWordImage,sentence:renderSentence,review:renderReview,library:renderLibrary,tree:renderTree,compare:renderCompare,progress:renderProgress,network:renderNetwork,lesson:renderLesson}[state.view])(); renderStorageNotice(); }
+ document.querySelectorAll('.nav').forEach(button=>button.addEventListener('click',()=>{if(shouldStopSentenceSpeech(state.view,button.dataset.view)) stopWordImageSpeech(); state.view=button.dataset.view; if(state.view==='network') { state.networkMode='map'; state.networkStep=networkStepForAction(state.networkStep,'nav-network'); } render();}));
  app.addEventListener('click',event=>{
   const target=event.target.closest('[data-action]'); if(!target||!app.contains(target)) return;
-  const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation,relationKey,cultureLesson,cameraChoice,worldChoice,sentenceFocus}=target.dataset;
+  const {action,word,view,day,feedback,nodeId,systemId,preservePath,networkRelation,relationKey,cultureLesson,cameraChoice,worldChoice,sentenceFocus,mindMapBranch,mindMapNode}=target.dataset;
   if(action==='return-top') { if(typeof window.scrollTo==='function') window.scrollTo({top:0,behavior:'smooth'}); return; }
   if(action==='open-word') openWord(word);
   else if(action==='select-culture-lesson') { if(cultureLessonFor(Curriculum,cultureLesson)) { state.cultureLesson=cultureLesson; state.view='culture'; render(); } }
@@ -859,8 +935,12 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
   else if(action==='previous-sentence-step') { stopWordImageSpeech(); state.sentenceStep=Math.max(0,state.sentenceStep-1); state.view='sentence'; render(); }
   else if(action==='complete-sentence') completeCurrentSentenceLesson();
   else if(action==='restart-sentence') { stopWordImageSpeech(); state.sentenceStep=0; state.sentenceFocus=null; state.view='sentence'; render(); }
+  else if(action==='toggle-mind-map-branch') { const map=mindMapFor(V2); const branch=map?.root.children.find(item=>item.id===mindMapBranch); if(branch) { state.mindMapBranch=state.mindMapBranch===branch.id?null:branch.id; state.mindMapNode=null; state.networkMode='map'; state.view='network'; render(); } }
+  else if(action==='select-mind-map-node') { const map=mindMapFor(V2), branch=map?.root.children.find(item=>item.id===state.mindMapBranch), node=branch?mindMapNodeFor(branch,mindMapNode):null; if(node) { state.mindMapNode=node.id; state.networkMode='map'; state.view='network'; render(); } }
+  else if(action==='show-network-explorer') { state.networkMode='explorer'; state.view='network'; render(); }
+  else if(action==='show-go-mind-map') { state.networkMode='map'; state.view='network'; render(); }
   else if(['lesson-layer-quick','lesson-layer-deep','lesson-layer-network'].includes(action)) { state.lessonLayer=lessonLayerForAction(state.lessonLayer,action); state.view='lesson'; render(); }
-  else if(action==='view') { if(shouldStopSentenceSpeech(state.view,view)) stopWordImageSpeech(); if(view==='network') { if(nodeId) Object.assign(state,selectNetworkDirect(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,nodeId?'lesson-network':'nav-network'); } state.view=view; render(); }
+  else if(action==='view') { if(shouldStopSentenceSpeech(state.view,view)) stopWordImageSpeech(); if(view==='network') { state.networkMode=nodeId?'explorer':'map'; if(nodeId) Object.assign(state,selectNetworkDirect(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,nodeId?'lesson-network':'nav-network'); } state.view=view; render(); }
   else if(action==='select-network-relation') { const relation=selectedNetworkRelation(V2,V2Network,networkNodeFor(V2,state.networkNode),relationKey); state.networkRelation=relationSelectionKey(relation); state.networkStep=networkStepForAction(state.networkStep,'select-network-relation'); state.view='network'; render(); }
   else if(action==='select-network-node') { Object.assign(state,selectNetworkNode(state,V2,nodeId)); state.networkStep=networkStepForAction(state.networkStep,networkRelation==='true'?'select-network-relation':'select-network-node'); state.view='network'; render(); }
   else if(action==='select-network-system') { Object.assign(state,selectNetworkSystem(state,V2,systemId,preservePath==='true')); state.networkStep=networkStepForAction(state.networkStep,networkRelation==='true'?'select-network-relation':'select-network-system'); state.view='network'; render(); }

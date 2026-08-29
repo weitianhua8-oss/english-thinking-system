@@ -2,7 +2,7 @@
 const root = typeof window !== 'undefined' ? window : globalThis;
 const payload = {
   stages: [
-    { id:'start', order:0, code:'00', title:'Start', subtitle:'英语思维是什么', summary:'先知道这条路线会带你从画面走到表达。', status:'planned', view:null },
+    { id:'start', order:0, code:'00', title:'Start', subtitle:'英语思维是什么', summary:'先知道这条路线会带你从现实画面走到英语表达。', status:'available', view:'start' },
     { id:'culture', order:1, code:'01', title:'Culture', subtitle:'中英语言差异从哪里来', summary:'理解信息组织的不同倾向，不把语言分成高低。', status:'available', view:'culture' },
     { id:'camera', order:2, code:'02', title:'Camera', subtitle:'英语镜头感', summary:'从焦点出发，看动作、对象、关系和背景。', status:'available', view:'camera' },
     { id:'world', order:3, code:'03', title:'World', subtitle:'看见现实画面的组成部分', summary:'先从一个真实画面里看见谁、物品、动作、状态、关系和背景。', status:'available', view:'world' },
@@ -12,6 +12,19 @@ const payload = {
     { id:'scene-training', order:7, code:'07', title:'Scene Training', subtitle:'场景到英语', summary:'把真实场景逐步变成英语画面和表达。', status:'planned', view:null },
     { id:'output', order:8, code:'08', title:'Output', subtitle:'自由表达', summary:'看图、日常场景和连续故事的表达训练。', status:'planned', view:null },
   ],
+  startGuide:{
+    title:'先知道：这条路线怎样学英语',
+    intro:'这里不从“背中文意思，再套语法”开始。我们会先回到现实，再让英语一步一步长出来。',
+    path:['现实','看见','聚焦','拆开','理解英语画面','补信息','长成完整英语表达'],
+    stages:[
+      { title:'Culture', text:'先知道为什么中英文组织同一现实的方式不完全一样。' },
+      { title:'Camera', text:'决定这次镜头先拍谁。' },
+      { title:'World', text:'看清现实里有哪些角色、物品、动作、关系和地方。' },
+      { title:'Word Image', text:'理解一个英语词或英语块到底在画什么。' },
+      { title:'Sentence', text:'把已经看见的信息逐层补完整，长成一句英语。' },
+    ],
+    action:'开始：先理解为什么这样学',
+  },
   cultureLessons: [
     {
       id:'culture-01', order:1, title:'语言不是给世界贴不同标签',
@@ -20,6 +33,7 @@ const payload = {
       chineseExample:'孩子在开门。', englishExample:'A child is opening the door.',
       explanation:'两句话都在指向同一个画面，但语言会选择不同的信息组织方式。学习英语时，先回到画面，再看英语怎样把画面里的信息摆出来。',
       takeaway:'不是把中文词逐个换成英文词，而是先看同一个现实画面。',
+      englishLens:'先回到现实：再看英语怎样把人物、动作和对象放进表达。',
       boundary:'这是常见组织倾向，不代表任何一种语言只是给世界贴标签，也不代表哪一种更高级。',
       nextHint:'下一节：看看中文在语境明确时，哪些信息经常可以不重复说。',
     },
@@ -30,6 +44,7 @@ const payload = {
       chineseExample:'A：吃饭了吗？ B：吃了。', englishExample:'A: Have you eaten? B: Yes, I have.',
       explanation:'当人物、时间和动作对象已在上下文里明确时，中文经常可以把一部分信息留在语境中。英语也会省略已知信息，只是常在不同位置保留关系提示。',
       takeaway:'先问：听的人已经知道什么？哪些信息需要重新说清楚？',
+      englishLens:'接下来会练习：哪些画面信息需要被主动说清楚。',
       boundary:'“经常可以”不是绝对规则；依赖语境不等于中文没有语法，也不等于中文不讲逻辑。',
       nextHint:'下一节：把镜头里的主角先摆清楚。',
     },
@@ -40,6 +55,7 @@ const payload = {
       chineseExample:'我吃。她跑。那只狗在睡觉。', englishExample:'I eat. She runs. The dog is sleeping.',
       explanation:'英语表达中经常先把“谁/什么”放到主体位置，再说明它处于什么动作、状态或关系。先找主角，比先找中文词更有帮助。',
       takeaway:'开口前先找：镜头里谁是我要说的主角？',
+      englishLens:'接下来先不造句，先像拿起一台 Camera 一样决定：这次先拍谁？',
       boundary:'这是英语表达中的常见倾向，不是绝对规则；不是每个英语句子都只能按同一种顺序，也不是完整语法课。',
       nextHint:'下一节：用同一个简单画面，看看两种组织方法怎样都能指向现实。',
     },
@@ -50,6 +66,7 @@ const payload = {
       chineseExample:'桌上有一本书。', englishExample:'There is a book on the table.',
       explanation:'中文和英语都在指向同一个现实画面，但会选择不同的组织顺序。这里不需要先背术语；先看英语怎样把“有一本书”和“在桌上”安排出来。',
       takeaway:'逐词对应不是唯一入口；画面、对象和关系才是共同起点。',
+      englishLens:'英语学习的共同起点不是词序，而是同一个现实画面。',
       boundary:'这只是一个简单示例，不代表中文或英语所有句子都按固定公式组织，更不要求只背 There be。',
       nextHint:'最后一节：把“倾向”收回来，不把它变成语言优劣判断。',
     },
@@ -60,8 +77,9 @@ const payload = {
       chineseExample:'中文可以非常精确，也有严格语法和逻辑。', englishExample:'English can also omit information when the context is clear.',
       explanation:'我们学习的是常见组织倾向：面对同一画面，英语常会要求我们更主动地找主体、关系和要补出的信息。它不是给两种语言贴永久标签。',
       takeaway:'学英语不是替换词表，而是重新观察画面、确定关系，再组织表达。',
+      englishLens:'接下来，我们不急着造句；先学会决定：这次镜头先拍谁？',
       boundary:'中文和英语都可以精确、模糊、省略或依赖语境；不能用民族性格、文明类型或语言优劣解释语言形式。',
-      nextHint:'Culture 已完成。下一站是 Camera：英语通常先把镜头对准哪里？Camera 当前准备中。',
+      nextHint:'Culture 已完成。下一站是 Camera：英语通常先把镜头对准哪里？',
     },
   ],
   cameraScenes: [
@@ -110,8 +128,14 @@ const payload = {
         },
       ],
       recommendedSentence:'The boy is doing homework in the library.',
+      englishGrowth:{
+        focus:{ prompt:'Who are we focusing on?', expression:'The boy.', hint:'英语现在还没有长成完整句；我们只是先抓住了“谁”。' },
+        action:{ prompt:'What is he doing?', expression:'He is doing homework.', hint:'镜头继续补进正在发生的动作。' },
+        relation:{ prompt:'What is he working with?', expression:'homework', hint:'镜头开始把焦点和眼前的事情连起来。' },
+        'expansion-library':{ prompt:'Where is he?', expression:'In the library.', hint:'最后补回环境，但这里不讲完整句子结构。' },
+      },
       feedback:{ alternateFocus:'这也是一个可以观察的角度；本次样板先跟随男孩，练习当前这条表达路径。', completion:'你已经按一次镜头路径，把画面逐步组织成一句英语。' },
-      nextLink:{ stage:'sentence', text:'下一站是 Sentence：从最短核心句开始，一次补上一项画面信息。Sentence 当前准备中。' },
+      nextLink:{ stage:'sentence', view:'sentence', text:'下一站是 Sentence：从已选定焦点开始，一次补上一项画面信息。' },
     },
   ],
   worldScenes: [
@@ -123,7 +147,7 @@ const payload = {
       },
       steps:[
         {
-          id:'people', concept:'谁 / 动物', question:'谁在画面里？',
+          id:'people', concept:'谁 / 动物', question:'谁在画面里？', englishGrowth:{ prompt:'Who is in the picture?', expressions:['A girl and a white cat.'], keywords:['girl','white cat'], hint:'你刚刚找到了画面里的角色。' },
           choices:[
             { id:'people-girl-cat', label:'女孩和白猫', recommended:true, feedback:'你刚才找到的是“谁 / 动物”：画面里出现的角色。' },
             { id:'people-girl', label:'女孩', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找画面里的谁。' },
@@ -131,7 +155,7 @@ const payload = {
           ],
         },
         {
-          id:'things', concept:'物品', question:'画面里有什么？',
+          id:'things', concept:'物品', question:'画面里有什么？', englishGrowth:{ prompt:'What can you see?', expressions:['A book.','A red cup.','A table.'], keywords:['book','red cup','table'], hint:'现实里的东西开始获得英语标签。' },
           choices:[
             { id:'things-book-cup-table', label:'书、红色杯子和桌子', recommended:true, feedback:'你刚才找到的是“物品”：画面里可以指认的东西。' },
             { id:'things-book', label:'一本书', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找画面里的物品。' },
@@ -139,7 +163,7 @@ const payload = {
           ],
         },
         {
-          id:'action', concept:'动作', question:'正在发生什么？',
+          id:'action', concept:'动作', question:'正在发生什么？', englishGrowth:{ prompt:'What is happening?', expressions:['The girl is reading.'], keywords:['girl','reading'], hint:'现在你看到的不只是东西，而是正在发生的事情。' },
           choices:[
             { id:'action-girl-reading', label:'女孩正在读书', recommended:true, feedback:'你刚才找到的是“动作”：画面中正在发生的事。' },
             { id:'action-cat', label:'白猫待在桌下', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先找“正在发生的事”。' },
@@ -147,7 +171,7 @@ const payload = {
           ],
         },
         {
-          id:'state', concept:'状态', question:'它们现在是什么样？',
+          id:'state', concept:'状态', question:'它们现在是什么样？', englishGrowth:{ prompt:'What are they like?', expressions:['A quiet white cat.','A red cup.'], keywords:['quiet','red'], hint:'状态让画面从“有什么”变成“现在是什么样”。' },
           choices:[
             { id:'state-cat-cup', label:'白猫很安静，杯子是红色的', recommended:true, feedback:'你刚才找到的是“状态”：画面现在呈现的样子。' },
             { id:'state-reading', label:'女孩正在读书', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看现在呈现的样子。' },
@@ -155,7 +179,7 @@ const payload = {
           ],
         },
         {
-          id:'relation', concept:'关系', question:'它们彼此有什么联系？',
+          id:'relation', concept:'关系', question:'它们彼此有什么联系？', englishGrowth:{ prompt:'Where are they?', expressions:['A book is in her hands.','The red cup is on the table.'], keywords:['in her hands','on the table'], hint:'这里只展示可观察关系，不解释语法规则。' },
           choices:[
             { id:'relation-book-cup', label:'书在女孩手里，杯子在桌上', recommended:true, feedback:'你刚才找到的是“关系”：画面里的元素怎样连在一起。' },
             { id:'relation-reading', label:'女孩正在读书', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看元素之间怎样连在一起。' },
@@ -163,7 +187,7 @@ const payload = {
           ],
         },
         {
-          id:'place', concept:'背景', question:'这一切发生在哪里？',
+          id:'place', concept:'背景', question:'这一切发生在哪里？', englishGrowth:{ prompt:'Where is this?', expressions:['In a room.'], keywords:['room'], hint:'背景把前面看到的信息放回同一幅现实画面。' },
           choices:[
             { id:'place-room', label:'在房间里', recommended:true, feedback:'你刚才找到的是“背景”：这一整个画面发生的空间。' },
             { id:'place-table', label:'在桌边', recommended:false, feedback:'这也是画面中可以观察到的信息；这一页先看整个画面发生的地方。' },
@@ -173,6 +197,10 @@ const payload = {
       ],
       completion:'你已经发现：一个现实画面里，不只有“东西”，还有谁、物品、动作、状态、关系和背景。英语单词会从这些真实画面中长出来。',
       boundary:'这六步是六个观察入口，不是绝对、互斥的分类盒子。同一个元素可以同时提供多种信息：例如“猫在桌下”既体现猫和桌子的关系，也提供位置信息。不需要进行语言学分类。',
+      growthSummary:[
+        { label:'Who', items:['girl','cat'] }, { label:'Things', items:['book','cup','table'] },
+        { label:'Actions', items:['reading'] }, { label:'Relations / Place', items:['on the table','under the table'] },
+      ],
       nextLink:{ stage:'word-image', view:'word-image', text:'下一站是 Word Image：先把一个现实关系，连到它的英语核心画面。' },
     },
   ],
@@ -187,6 +215,7 @@ const payload = {
         accessibleText:'画面聚焦红色杯子和木桌表面：杯子完整地放在桌上，杯底接触桌面。',
         caption:'杯子没有悬在空中。它接触着桌子的表面。',
       },
+      bridge:'刚才在 World 里，你看到了 cup 和 table 之间存在一个关系。现在我们只拿出这个关系来看：ON。',
       steps:[
         { id:'return-to-scene', title:'先回到刚才的房间', action:'我找到了' },
         { id:'focus-contact', title:'现在只看杯子和桌面', action:'看看英语怎样抓住这个关系' },
@@ -239,19 +268,19 @@ const payload = {
       source:{ worldSceneId:'world-room-01', wordImageLessonId:'word-image-on-01' },
       sentence:'The cup is on the table.',
       steps:[
-        { id:'scene', title:'先看完整现实画面', prompt:'房间里有许多信息。这次我们只准备说其中一个关系。', explanation:'句子从现实画面开始，不从中文逐词翻译开始。', action:'开始决定焦点' },
-        { id:'focus', title:'这句话先拍谁？', prompt:'这次你想让听的人先注意画面里的哪一个？', explanation:'女孩、白猫和杯子都可以成为另一句话的焦点；本次先跟随红色杯子。', action:'锁定这次焦点', choices:[
+        { id:'scene', title:'先看完整现实画面', prompt:'房间里有许多信息。这次我们只准备说其中一个关系。', explanation:'句子从现实画面开始，不从中文逐词翻译开始。', englishGrowth:{ prompt:'先看现实，英语还没有急着出现。', expression:'A real picture.' }, action:'开始决定焦点' },
+        { id:'focus', title:'这句话先拍谁？', prompt:'这次你想让听的人先注意画面里的哪一个？', explanation:'女孩、白猫和杯子都可以成为另一句话的焦点；本次先跟随红色杯子。', englishGrowth:{ prompt:'我们先要说谁？', expression:'The cup.' }, action:'锁定这次焦点', choices:[
           { id:'focus-cup', label:'红色杯子', recommended:true, feedback:'这次先把红色杯子放到表达焦点。接下来，要让听的人准确找到它。' },
           { id:'focus-girl', label:'正在读书的女孩', recommended:false, feedback:'这也是合理的表达焦点，可以长成另一句话；本次样板先跟随红色杯子。' },
           { id:'focus-cat', label:'桌下的白猫', recommended:false, feedback:'这也是合理的表达焦点，可以长成另一句话；本次样板先跟随红色杯子。' },
         ] },
-        { id:'lock-focus', title:'先锁定 The cup', prompt:'现在，听的人和你一起把注意力放在这一个杯子上。', explanation:'这里的 The cup 是当前共同看见的焦点，不展开冠词规则。', action:'看看信息够不够' },
-        { id:'gap-focus', title:'只说 The cup ...', prompt:'如果现在停下来，听的人知道杯子怎么了吗？', explanation:'还不知道。焦点已经出现，但听的人仍缺少它现在的关键信息。', action:'继续补信息' },
-        { id:'gap-relation', title:'建立连接 The cup is ...', prompt:'如果现在停下来，听的人知道杯子处于什么画面了吗？', explanation:'在这一句话里，is 帮我们把当前焦点 The cup 接到它现在的状态/关系画面。还不知道：连接已经搭起，但真正的关系画面还没有补完整。P6 不进一步解释 be 的完整语法。', action:'回到画面补关系' },
-        { id:'relation', title:'从画面补出 on the table', prompt:'看看杯子和桌面：杯底接触并由桌面承载。', explanation:'on the table 在这里是一个整体关系画面，不做逐词中文替换。', action:'形成完整表达' },
-        { id:'complete', title:'形成完整句', prompt:'焦点、缺少的信息和关系现在都补齐了。', explanation:'The cup is on the table. 不是套句型，而是把当前画面说完整。', action:'回看这条路径' },
-        { id:'path', title:'回看整条认知路径', prompt:'画面 → 焦点 → 信息缺口 → 补信息 → 完整表达。', explanation:'先说谁、再说什么，是这条路径给初学者的简单口诀；底层是 Focus → Information → Connection → Sentence。', action:'听同一句话' },
-        { id:'flow', title:'同一句话的声音层', prompt:'写出来的结构和自然说出来的声音，是同一句英语的两个层面。', explanation:'下面复用 Word Image 已审校的自然语流、连读、弱读、重音和播放样板。', action:'完成这个 Sentence' },
+        { id:'lock-focus', title:'先锁定 The cup', prompt:'现在，听的人和你一起把注意力放在这一个杯子上。', explanation:'这里的 The cup 是当前共同看见的焦点，不展开冠词规则。', englishGrowth:{ prompt:'我们先要说谁？', expression:'The cup.' }, action:'看看信息够不够' },
+        { id:'gap-focus', title:'只说 The cup ...', prompt:'如果现在停下来，听的人知道杯子怎么了吗？', explanation:'还不知道。焦点已经出现，但听的人仍缺少它现在的关键信息。', englishGrowth:{ prompt:'信息还没说完。', expression:'The cup ...' }, action:'继续补信息' },
+        { id:'gap-relation', title:'建立连接 The cup is ...', prompt:'如果现在停下来，听的人知道杯子处于什么画面了吗？', explanation:'在这一句话里，is 帮我们把当前焦点 The cup 接到它现在的状态/关系画面。还不知道：连接已经搭起，但真正的关系画面还没有补完整。P6 不进一步解释 be 的完整语法。', englishGrowth:{ prompt:'关系画面仍没有补完整。', expression:'The cup is ...' }, action:'回到画面补关系' },
+        { id:'relation', title:'从画面补出 on the table', prompt:'看看杯子和桌面：杯底接触并由桌面承载。', explanation:'on the table 在这里是一个整体关系画面，不做逐词中文替换。', englishGrowth:{ prompt:'从现实补回一个整体关系。', expression:'on the table' }, action:'形成完整表达' },
+        { id:'complete', title:'形成完整句', prompt:'焦点、缺少的信息和关系现在都补齐了。', explanation:'The cup is on the table. 不是套句型，而是把当前画面说完整。', englishGrowth:{ prompt:'现在，画面长成一句完整英语。', expression:'The cup is on the table.' }, action:'回看这条路径' },
+        { id:'path', title:'回看整条认知路径', prompt:'画面 → 焦点 → 信息缺口 → 补信息 → 完整表达。', explanation:'先说谁、再说什么，是这条路径给初学者的简单口诀；底层是 Focus → Information → Connection → Sentence。', englishGrowth:{ prompt:'Focus → Information → Connection → Sentence', expression:'The cup is on the table.' }, action:'听同一句话' },
+        { id:'flow', title:'同一句话的声音层', prompt:'写出来的结构和自然说出来的声音，是同一句英语的两个层面。', explanation:'下面复用 Word Image 已审校的自然语流、连读、弱读、重音和播放样板。', englishGrowth:{ prompt:'写出来的结构，进入真正说出来的声音。', expression:'The cup is on the table.' }, action:'完成这个 Sentence' },
       ],
       completion:'你已经发现：一句英语会围绕当前焦点，把听者还缺的信息逐步补完整。',
     },

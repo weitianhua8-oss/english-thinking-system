@@ -24,4 +24,4 @@ Culture 只回答“为什么中文脑中的一句话，不能总是逐字翻译
 
 - 不新增 Camera、Sentence、Grammar、Scene Training 或 Output 内容。
 - 不把 Culture 完成状态写入单词词库、V1 复习队列或 170 天学习计划。
-- Camera 仅作为下一站提示，当前保持“准备中”。
+- Culture 只解释“为什么后面要这样学”；完成后以可点击的 Camera 入口交接，不在本模块提前训练焦点、关系或句子结构。

@@ -164,6 +164,31 @@ const payload = {
       ],
     },
   ],
+  mindMaps: [
+    {
+      id: 'go-thinking-map',
+      title: 'GO（英语思维完整导图）',
+      root: {
+        id: 'go', label: 'GO', type: 'root', relationType: 'origin', note: '从当前位置离开，朝另一个点前进；所有延伸都保留“离开这里，往那里走”的方向感。',
+        children: [
+          { id: 'go-origin', label: '01 一句话抓住本源', type: 'origin', relationType: 'origin', note: 'GO 的本源不是中文“去”的替换，而是从当前点离开，朝另一个点前进。', children: [{ id: 'go-origin-move', label: '离开这里 → 朝那里前进', type: 'detail', relationType: 'origin', note: '先保留移动路径，再理解具体场景。' }] },
+          { id: 'go-image', label: '02 核心画面', type: 'image', relationType: 'image', note: '一个人从脚下的起点出发，沿箭头向远处目标移动。', children: [{ id: 'go-image-arrow', label: '起点 · 箭头 · 目标', type: 'detail', relationType: 'image', note: '缺少方向或目标时，GO 的画面通常还没有补完整。' }] },
+          { id: 'go-etymology', label: '03 词根词源拆解', type: 'origin', relationType: 'etymology', note: '来自古英语 gān（走、去）；当前学习只把它当作“移动”的历史提醒。', children: [{ id: 'go-etymology-walk', label: 'gān：走 / 去', type: 'detail', relationType: 'etymology', note: '词源只辅助记忆，不代替当前真实画面。' }] },
+          { id: 'go-growth', label: '04 意义生长树', type: 'growth', relationType: 'growth', note: '从物理移动出发，GO 可以把“前进”带到时间、状态和抽象进展。', children: [
+            { id: 'go-growth-physical', label: '物理空间移动', type: 'growth', relationType: 'growth', note: '从这里走到那里。', children: [{ id: 'go-school', label: 'go to school', type: 'example', relationType: 'example', note: '朝学校这个目标前进。' }, { id: 'go-home', label: 'go home', type: 'example', relationType: 'example', note: '朝“家”这个归处前进，home 前通常不加 to。' }] },
+            { id: 'go-growth-state', label: '时间 / 状态变化', type: 'growth', relationType: 'growth', note: '事情沿着某个方向继续发展。', children: [{ id: 'go-quiet', label: 'go quiet', type: 'example', relationType: 'example', note: '进入安静的状态。' }, { id: 'go-bad', label: 'go bad', type: 'example', relationType: 'example', note: '朝变坏、坏掉的状态发展。' }] },
+            { id: 'go-growth-abstract', label: '抽象运作 / 进展', type: 'growth', relationType: 'growth', note: '计划、谈话或机器沿着进程向前走。', children: [{ id: 'go-well', label: 'go well', type: 'example', relationType: 'example', note: '事情进展顺利。' }, { id: 'go-wrong', label: 'go wrong', type: 'example', relationType: 'example', note: '事情沿着不对的方向发展。' }] },
+          ] },
+          { id: 'go-scenes', label: '05 核心使用场景', type: 'scene', relationType: 'scene', note: '先判断有没有“离开当前点、向外推进”的画面。', children: [{ id: 'go-scene-place', label: '去一个地点', type: 'scene', relationType: 'scene', note: 'go to the library' }, { id: 'go-scene-event', label: '去参加活动', type: 'scene', relationType: 'scene', note: 'go to a meeting' }] },
+          { id: 'go-patterns', label: '06 高频结构 / 固定搭配', type: 'pattern', relationType: 'pattern', note: '结构是在不同场景中反复使用的英语块，不是逐词中文替换。', children: [{ id: 'go-pattern-to', label: 'go to + 地点', type: 'pattern', relationType: 'pattern', note: '把移动箭头接到一个目标地点。' }, { id: 'go-pattern-ing', label: 'go + -ing', type: 'pattern', relationType: 'pattern', note: 'go shopping / go swimming：去做某项活动。' }] },
+          { id: 'go-contrast', label: '07 易混词对比', type: 'contrast', relationType: 'contrast', note: '比较时先问：移动是离开说话者，还是朝说话者靠近？', children: [{ id: 'go-come', label: 'GO ↔ COME', type: 'contrast', relationType: 'contrast', note: 'GO 从这里离开；COME 朝说话者或共同焦点靠近。' }, { id: 'go-leave', label: 'GO ↔ LEAVE', type: 'contrast', relationType: 'contrast', note: 'LEAVE 强调离开起点；GO 更强调往目标方向前进。' }] },
+          { id: 'go-trap', label: '08 英语思维避坑', type: 'trap', relationType: 'trap', note: '不要把所有中文“去”都直接换成 GO；先确认英语是否在画移动、变化或进展。', children: [{ id: 'go-trap-stay', label: '不是“去”字就用 GO', type: 'trap', relationType: 'trap', note: '先回到现实路径和说话焦点。' }] },
+          { id: 'go-examples', label: '09 代表例句', type: 'example', relationType: 'example', note: '例句只用来回看方向画面。', children: [{ id: 'go-example-school', label: 'I go to school every day.', type: 'example', relationType: 'example', note: '每天朝学校这个地点前进。' }, { id: 'go-example-well', label: 'The plan is going well.', type: 'example', relationType: 'example', note: '计划正在顺利向前发展。' }] },
+          { id: 'go-hook', label: '10 记忆钩子', type: 'hook', relationType: 'hook', note: 'GO = 脚下离开 here，箭头指向 there。', children: [{ id: 'go-hook-arrow', label: 'HERE → THERE', type: 'hook', relationType: 'hook', note: '每次犹豫时，先在脑中画出这支箭头。' }] },
+        ],
+      },
+    },
+  ],
 };
 
 root.ENGLISH850_V2_DATA = payload;
