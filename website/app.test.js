@@ -1219,6 +1219,27 @@ test('Camera keeps directional next actions available when a completed learner r
  assert.doesNotMatch(final, /重新练习/);
 });
 
+test('Camera gives each completed recommended step a directional next action and demotes focus reset', () => {
+ const scene = core.cameraSceneFor(curriculum, 'camera-library-01');
+ const step1 = core.renderCameraWorkspace(curriculum, scene.id, 0, 'focus-boy', core.emptyProgress());
+ const step2 = core.renderCameraWorkspace(curriculum, scene.id, 1, 'action-homework', core.emptyProgress());
+ const step3 = core.renderCameraWorkspace(curriculum, scene.id, 2, 'relation-homework', core.emptyProgress());
+ const step4 = core.renderCameraWorkspace(curriculum, scene.id, 3, 'expansion-library', core.emptyProgress());
+ const completed = core.renderCameraWorkspace(curriculum, scene.id, 3, 'expansion-library', core.completeCameraScene(core.emptyProgress(), scene.id));
+ const replayStep1 = core.renderCameraWorkspace(curriculum, scene.id, 0, 'focus-boy', core.completeCameraScene(core.emptyProgress(), scene.id));
+ assert.match(step1, /data-action="next-camera-step"[^>]*>下一步：看他在做什么 →/);
+ assert.match(step2, /data-action="next-camera-step"[^>]*>下一步：看他和什么发生关系 →/);
+ assert.match(step3, /data-action="next-camera-step"[^>]*>下一步：看看整个环境 →/);
+ assert.match(step4, /data-action="complete-camera-scene"/);
+ assert.match(completed, /class="cameraSecondaryAction" data-action="restart-camera-scene">重新选择焦点/);
+ assert.match(replayStep1, /data-action="next-camera-step"[^>]*>下一步：看他在做什么 →/);
+ assert.doesNotMatch(replayStep1, /Camera 已完成/);
+ assert.doesNotMatch(completed, /重新练习/);
+ assert.equal(core.cameraStepForAction(scene, 0, 'focus-boy'), 1);
+ assert.equal(core.cameraStepForAction(scene, 1, 'action-homework'), 2);
+ assert.equal(core.cameraStepForAction(scene, 2, 'relation-homework'), 3);
+});
+
 test('Camera visual guide uses one local scene illustration and changes its overlay across the four steps', () => {
  assert.equal(typeof core.renderCameraSceneVisual, 'function');
  const scene = core.cameraSceneFor(curriculum, 'camera-library-01');
@@ -1259,6 +1280,7 @@ test('Camera styles keep the four-step choice flow readable at 375px', () => {
  assert.match(styles, /\.cameraChoice\{[^}]*min-height:44px/);
  assert.match(styles, /\.cameraChoices\{[^}]*grid-template-columns:1fr/);
  assert.match(styles, /\.cameraActions\{[^}]*grid-template-columns:1fr/);
+ assert.match(styles, /\.cameraSecondaryAction\{[^}]*background:transparent/);
  assert.match(styles, /\.cameraSceneVisual\{[^}]*aspect-ratio:16\/9/);
  assert.match(styles, /\.cameraSceneImage\{[^}]*width:100%/);
  assert.match(styles, /\.cameraFocusOverlay\{[^}]*position:absolute/);
