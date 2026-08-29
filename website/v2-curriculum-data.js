@@ -135,7 +135,7 @@ const payload = {
         'expansion-library':{ prompt:'Where is he?', expression:'In the library.', hint:'最后补回环境，但这里不讲完整句子结构。' },
       },
       feedback:{ alternateFocus:'这也是一个可以观察的角度；本次样板先跟随男孩，练习当前这条表达路径。', completion:'你已经按一次镜头路径，把画面逐步组织成一句英语。' },
-      nextLink:{ stage:'sentence', view:'sentence', text:'下一站是 Sentence：从已选定焦点开始，一次补上一项画面信息。' },
+      nextLink:{ stage:'world', view:'world', text:'下一站是 World：看清画面里有哪些现实角色。' },
     },
   ],
   worldScenes: [
@@ -276,7 +276,7 @@ const payload = {
         ] },
         { id:'lock-focus', title:'先锁定 The cup', prompt:'现在，听的人和你一起把注意力放在这一个杯子上。', explanation:'这里的 The cup 是当前共同看见的焦点，不展开冠词规则。', englishGrowth:{ prompt:'我们先要说谁？', expression:'The cup.' }, action:'看看信息够不够' },
         { id:'gap-focus', title:'只说 The cup ...', prompt:'如果现在停下来，听的人知道杯子怎么了吗？', explanation:'还不知道。焦点已经出现，但听的人仍缺少它现在的关键信息。', englishGrowth:{ prompt:'信息还没说完。', expression:'The cup ...' }, action:'继续补信息' },
-        { id:'gap-relation', title:'建立连接 The cup is ...', prompt:'如果现在停下来，听的人知道杯子处于什么画面了吗？', explanation:'在这一句话里，is 帮我们把当前焦点 The cup 接到它现在的状态/关系画面。还不知道：连接已经搭起，但真正的关系画面还没有补完整。P6 不进一步解释 be 的完整语法。', englishGrowth:{ prompt:'关系画面仍没有补完整。', expression:'The cup is ...' }, action:'回到画面补关系' },
+        { id:'gap-relation', title:'建立连接 The cup is ...', prompt:'如果现在停下来，听的人知道杯子处于什么画面了吗？', explanation:'在这一句话里，is 帮我们把当前焦点 The cup 接到它现在的状态/关系画面。还不知道：连接已经搭起，但真正的关系画面还没有补完整。Sentence 阶段不进一步解释 be 的完整语法。', englishGrowth:{ prompt:'关系画面仍没有补完整。', expression:'The cup is ...' }, action:'回到画面补关系' },
         { id:'relation', title:'从画面补出 on the table', prompt:'看看杯子和桌面：杯底接触并由桌面承载。', explanation:'on the table 在这里是一个整体关系画面，不做逐词中文替换。', englishGrowth:{ prompt:'从现实补回一个整体关系。', expression:'on the table' }, action:'形成完整表达' },
         { id:'complete', title:'形成完整句', prompt:'焦点、缺少的信息和关系现在都补齐了。', explanation:'The cup is on the table. 不是套句型，而是把当前画面说完整。', englishGrowth:{ prompt:'现在，画面长成一句完整英语。', expression:'The cup is on the table.' }, action:'回看这条路径' },
         { id:'path', title:'回看整条认知路径', prompt:'画面 → 焦点 → 信息缺口 → 补信息 → 完整表达。', explanation:'先说谁、再说什么，是这条路径给初学者的简单口诀；底层是 Focus → Information → Connection → Sentence。', englishGrowth:{ prompt:'Focus → Information → Connection → Sentence', expression:'The cup is on the table.' }, action:'听同一句话' },

@@ -1149,7 +1149,7 @@ test('Culture workspace renders one lesson at a time and enters the available Ca
  assert.match(markup, /5 \/ 5/);
  assert.match(incomplete, /完成当前节/);
  assert.match(markup, /换一个英语镜头来看/);
- assert.match(markup, /下一站：Camera/);
+ assert.match(markup, /下一站：进入 Camera →/);
  assert.match(markup, /data-action="view" data-view="camera"/);
  assert.match(markup, /data-action="view" data-view="roadmap"/);
  assert.doesNotMatch(markup, /Camera 当前准备中/);
@@ -1192,7 +1192,7 @@ test('Camera advances only along its recommended path without changing Culture o
  assert.deepEqual(core.cameraProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"camera":{"completed":["camera-library-01",42,"camera-library-01"]}}}')), { completed: ['camera-library-01'] });
 });
 
-test('Camera workspace grows a focus English block and leads into available Sentence', () => {
+test('Camera workspace grows a focus English block and leads into World', () => {
  const scene = core.cameraSceneFor(curriculum, 'camera-library-01');
  const alternate = core.renderCameraWorkspace(curriculum, scene.id, 0, 'focus-book', core.emptyProgress());
  const focused = core.renderCameraWorkspace(curriculum, scene.id, 0, 'focus-boy', core.emptyProgress());
@@ -1205,8 +1205,9 @@ test('Camera workspace grows a focus English block and leads into available Sent
  assert.match(ready, /完成 Camera →/);
  assert.match(focused, /Who are we focusing on\?/);
  assert.match(focused, /The boy\./);
- assert.match(final, /data-action="view" data-view="sentence"/);
- assert.doesNotMatch(final, /Sentence 当前准备中/);
+ assert.match(final, /下一站：进入 World →/);
+ assert.match(final, /data-action="view" data-view="world"/);
+ assert.doesNotMatch(final, /data-view="sentence"/);
 });
 
 test('Camera keeps directional next actions available when a completed learner reselects the focus', () => {
@@ -1343,7 +1344,7 @@ test('World workspace renders one observation step, accessible scene content, sa
  assert.match(ready, /完成本次 World 观察/);
  assert.match(final, /你已经发现：一个现实画面里，不只有“东西”/);
  assert.match(final, /下一站是 Word Image/);
- assert.match(final, /data-action="view" data-view="word-image"/);
+ assert.match(final, /data-action="view" data-view="word-image">下一站：进入 Word Image →/);
 });
 
 test('World turns each observation into a bounded English observation block and summary', () => {
@@ -1443,7 +1444,7 @@ test('Word Image completion remains isolated from V1, Culture, Camera, and World
  assert.deepEqual(core.wordImageProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"wordImage":"broken"}}')), { completed: [] });
 });
 
-test('Word Image renders three low-density screens and only opens the existing ON lesson or library', () => {
+test('Word Image renders three low-density screens and leads into Sentence', () => {
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
  const first = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 0, core.emptyProgress());
  const second = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 1, core.emptyProgress());
@@ -1466,7 +1467,9 @@ test('Word Image renders three low-density screens and only opens the existing O
  assert.match(final, /你已经把一种现实关系，直接连到了英语词 ON。/);
  assert.match(final, /data-action="open-word" data-word="on"/);
  assert.match(final, /data-action="view" data-view="library"/);
- assert.doesNotMatch(final, /data-view="sentence"/);
+ assert.match(final, /下一站：进入 Sentence →/);
+ assert.match(final, /data-action="view" data-view="sentence"/);
+ assert.match(final, /重新看画面/);
 });
 
 test('Word Image third screen renders a lowercase handwriting guide, phonics groups, US IPA, and an accessible speech control', () => {
@@ -1640,6 +1643,16 @@ test('Sentence workspace keeps information gaps visible and ends in the reviewed
  assert.match(flow, /写出来的结构，进入真正说出来的声音/);
  assert.match(flow, /\[ðə ˈkʌp‿ɪz‿ɑn ðə ˈteɪbəl\]/);
  assert.doesNotMatch(flow, /主语|谓语|宾语|介词短语/);
+});
+
+test('Sentence completion returns to the route without inventing a Grammar entry', () => {
+ const lesson = core.sentenceLessonFor(curriculum, 'sentence-cup-on-table-01');
+ const completed = core.completeSentenceLesson(core.emptyProgress(), lesson.id);
+ const markup = core.renderSentenceWorkspace(curriculum, lesson.id, 8, 'focus-cup', completed, { supported: false, speaking: false });
+ assert.match(markup, /data-action="view" data-view="roadmap">返回学习路线/);
+ assert.match(markup, /data-action="view" data-view="network">查看知识网络/);
+ assert.match(markup, /data-action="restart-sentence">重新练习这句话/);
+ assert.doesNotMatch(markup, /data-view="grammar"/);
 });
 
 test('Sentence advances only after its recommended focus and stops shared speech after leaving Sentence', () => {

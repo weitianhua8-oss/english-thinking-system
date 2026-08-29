@@ -29,4 +29,4 @@
 - Camera 已练习选择镜头焦点并组织一条表达路径；World 不造句、不重复四步镜头训练。
 - 每步在中文观察反馈后给出对应英语观察块；它们是角色、物品、动作、状态和关系的可观察标签，不是语法讲解或完整造句训练。
 - 完成后用 Who / Things / Actions / Relations / Place 回看现实，再进入现有 Word Image 样板。
-- Sentence 已作为独立下一阶段开放；Grammar、Scene Training 和 Output 均未提前实现。
+- Word Image 完成后才进入独立的 Sentence 阶段；Grammar、Scene Training 和 Output 均未提前实现。

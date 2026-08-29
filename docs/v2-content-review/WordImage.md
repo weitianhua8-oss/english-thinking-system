@@ -71,7 +71,7 @@
 ## 与既有模块的接口
 
 - World 提供可观察的现实场景，Word Image 只从其中选取“杯子在桌上”的关系。
-- Word Image 完成后，“继续理解 ON”打开既有 ON 词条的 Quick 起点；不复制其 Quick、Deep、Network 内容。
+- Word Image 完成后，主操作“下一站：进入 Sentence”进入独立的 Sentence 阶段；“继续理解 ON”打开既有 ON 词条的 Quick 起点；不复制其 Quick、Deep、Network 内容。
 - 侧边栏“50 词库”继续保持原有 `library` 路由，不承担 Word Image 的三屏引导。
 - 开头只用一句 World → ON 过渡说明为什么从整幅画面拿出 cup 与 table 的关系；不重复 World 的观察分类。
-- Sentence 已作为独立阶段开放；Grammar、Scene Training 和 Output 不在本样板实现。
+- “重新看画面”只重开本样板；Sentence 已作为独立阶段开放；Grammar、Scene Training 和 Output 不在本样板实现。
