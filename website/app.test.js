@@ -1506,7 +1506,7 @@ test('Word Image third screen renders a lowercase handwriting guide, phonics gro
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
  const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  assert.match(markup, /class="wordImageHandwriting" aria-label="on"/);
- assert.match(markup, /class="handwritingLine"/);
+ assert.match(markup, /class="handwritingLine handwritingLine-top"/);
  assert.match(markup, /class="phonicsLetter phonics-vowel" aria-hidden="true">o/);
  assert.match(markup, /class="phonicsLetter phonics-consonant" aria-hidden="true">n/);
  assert.match(markup, /自然拼读音组/);
@@ -1515,6 +1515,28 @@ test('Word Image third screen renders a lowercase handwriting guide, phonics gro
  assert.ok(markup.includes('<span>美式</span><strong>/ɑn/</strong>'));
  assert.match(markup, /data-action="play-word-image-speech" aria-label="播放 on 的美式发音"/);
   assert.doesNotMatch(markup, /音节/);
+});
+
+test('Word Image ON gives the calendar sticky-note core visual priority with four-line writing guides', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ assert.deepEqual(lesson.coreVisual, {
+  asset: 'assets/word-image-on-calendar-note.png',
+  alt: '一张橘橙色便利贴平整地贴在蓝色月历表的表面上，清楚表现接触关系。',
+  caption: '便利贴接触并贴在月历表的表面上。',
+ });
+ const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ assert.match(markup, /class="wordImageCoreVisual"/);
+ assert.match(markup, /src="assets\/word-image-on-calendar-note\.png"/);
+ assert.match(markup, /class="handwritingLine handwritingLine-top"/);
+ assert.match(markup, /class="handwritingLine handwritingLine-mid"/);
+ assert.match(markup, /class="handwritingLine handwritingLine-base"/);
+ assert.match(markup, /class="handwritingLine handwritingLine-lower"/);
+ assert.ok(markup.indexOf('class="wordImageConceptTitle"') < markup.indexOf('class="wordImageCoreVisual"'));
+ assert.ok(markup.indexOf('class="wordImageCoreVisual"') < markup.indexOf('class="wordImageHandwriting"'));
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /\.wordImageWorkspace\{[^}]*--word-image-blue:#2563eb/);
+ assert.match(styles, /\.wordImageWorkspace \.phonics-vowel\{[^}]*color:var\(--word-image-blue\)/);
+ assert.match(styles, /\.wordImageWorkspace \.phonics-consonant\{[^}]*color:var\(--word-image-orange\)/);
 });
 
 test('Word Image third screen renders a five-layer sentence flow sample with two explicit audio speeds', () => {
