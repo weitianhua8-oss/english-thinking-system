@@ -1118,7 +1118,7 @@ test('Culture curriculum contains exactly five short lessons with safe teaching 
  assert.equal(lessons.length, 5);
  assert.deepEqual(lessons.map(lesson => lesson.id), ['culture-01','culture-02','culture-03','culture-04','culture-05']);
  assert.deepEqual(lessons.map(lesson => lesson.title), [
-  '语言不是给世界贴不同标签',
+  '先看现实，再看英语怎么说',
   '中文：很多信息可以留在语境里',
   '英语：先把画面里的角色摆清楚',
   '同一个画面，两种组织方法',
@@ -1142,6 +1142,34 @@ test('Culture completion stays in v2.culture and never enters the V1 review queu
  assert.deepEqual(core.cultureProgressFor(core.parseStoredProgress('{"words":{},"studyDates":[],"v2":{"culture":{"completed":["culture-01",42,"culture-01"]}}}')), { completed: ['culture-01'] });
 });
 
+test('Culture Lesson 1 reveals its two English expressions only after scene observation', () => {
+ const rainInitial = core.renderCultureWorkspace(curriculum, 'culture-01', core.emptyProgress(), 0, null);
+ const rainObserved = core.renderCultureWorkspace(curriculum, 'culture-01', core.emptyProgress(), 0, 'rain-observed');
+ const ballInitial = core.renderCultureWorkspace(curriculum, 'culture-01', core.emptyProgress(), 1, null);
+ const ballObserved = core.renderCultureWorkspace(curriculum, 'culture-01', core.emptyProgress(), 1, 'red-ball');
+ assert.match(rainInitial, /assets\/culture-rain-event\.png/);
+ assert.match(rainInitial, /先看现实，再看英语怎么说/);
+ assert.match(rainInitial, /先看画面：发生了什么？/);
+ assert.doesNotMatch(rainInitial, /It’s raining\./);
+ assert.match(rainObserved, /下雨了。/);
+ assert.match(rainObserved, /It’s raining\./);
+ assert.match(rainObserved, /别急着把 it 硬找成画面里的某个东西。/);
+ assert.doesNotMatch(rainObserved, /英语会用一个完整的表达/);
+ assert.match(ballInitial, /assets\/culture-red-ball-context\.png/);
+ assert.match(ballInitial, /小朋友在看什么？/);
+ assert.match(ballInitial, /cultureBallCue/);
+ assert.doesNotMatch(ballInitial, /Did you see it\?/);
+ assert.doesNotMatch(ballInitial, /cultureAttentionArrow/);
+ assert.match(ballObserved, /cultureAttentionArrow/);
+ assert.match(ballObserved, /看见了吗？/);
+ assert.match(ballObserved, /Did you see it\?/);
+ assert.match(ballObserved, /英语会用 it 指回这个大家都知道的红球。/);
+ assert.match(ballObserved, /不要急着逐字翻译。先看现实，再看英语怎样表达这个现实。/);
+ assert.match(ballObserved, /这是常见表达倾向，不是绝对规则。/);
+ assert.doesNotMatch(ballObserved, /孩子在开门|A child is opening the door|我真正要理解什么|换一个英语镜头来看/);
+ assert.match(ballObserved, /data-action="complete-culture-and-next">下一课：看语境 →/);
+});
+
 test('Culture workspace renders one lesson at a time and enters the available Camera stage', () => {
  const incomplete = core.renderCultureWorkspace(curriculum, 'culture-05', core.emptyProgress());
  const progress = ['culture-01','culture-02','culture-03','culture-04','culture-05'].reduce((current, lessonId) => core.completeCultureLesson(current, lessonId), core.emptyProgress());
@@ -1162,6 +1190,8 @@ test('Culture styles keep one primary lesson readable on a 375px screen', () => 
  assert.match(styles, /\.cultureExamples\{[^}]*grid-template-columns:repeat\(2/);
  assert.match(styles, /\.cultureExamples\{[^}]*grid-template-columns:1fr/);
  assert.match(styles, /\.cultureActions\{[^}]*grid-template-columns/);
+ assert.match(styles, /\.cultureObservationImage\{[^}]*object-fit:contain/);
+ assert.match(styles, /\.cultureObservationChoice\{[^}]*min-height:44px/);
 });
 
 test('Camera curriculum contains one four-step library scene with a recommended observation path', () => {
