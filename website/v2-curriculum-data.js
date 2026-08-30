@@ -231,9 +231,12 @@ const payload = {
         caption:'杯子没有悬在空中。它接触着桌子的表面。',
       },
       coreVisual:{
-        asset:'assets/word-image-on-calendar-note.png',
-        alt:'一张橘橙色便利贴平整地贴在蓝色月历表的表面上，清楚表现接触关系。',
-        caption:'便利贴接触并贴在月历表的表面上。',
+        asset:'assets/word-image-on-calendar-note-pro.png',
+        alt:'橘橙色便利贴平整贴住蓝色月历表的表面，边缘接触清楚可见。',
+      },
+      exampleVisual:{
+        asset:'assets/word-image-on-cup-table.png',
+        alt:'蓝色杯子稳定接触木桌表面，清楚表现 The cup is on the table. 的 on 关系。',
       },
       bridge:'刚才在 World 里，你看到了 cup 和 table 之间存在一个关系。现在我们只拿出这个关系来看：ON。',
       steps:[

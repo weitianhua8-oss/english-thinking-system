@@ -1489,8 +1489,7 @@ test('Word Image renders three low-density screens and leads into Sentence', () 
  assert.match(second, /wordImageFocus/);
  assert.match(second, /杯子没有悬在空中。它接触着桌子的表面。/);
  assert.doesNotMatch(second, />ON</);
- assert.match(final, /英语先抓住这个核心画面/);
- assert.match(final, />ON</);
+ assert.match(final, /<h2>ON<\/h2>/);
  assert.match(final, /一个东西接触在另一个表面上/);
  assert.match(final, /The cup is on the table\./);
  assert.match(final, /ON 不是简单等于一个中文“在”/);
@@ -1520,18 +1519,16 @@ test('Word Image third screen renders a lowercase handwriting guide, phonics gro
 test('Word Image ON gives the calendar sticky-note core visual priority with four-line writing guides', () => {
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
  assert.deepEqual(lesson.coreVisual, {
-  asset: 'assets/word-image-on-calendar-note.png',
-  alt: '一张橘橙色便利贴平整地贴在蓝色月历表的表面上，清楚表现接触关系。',
-  caption: '便利贴接触并贴在月历表的表面上。',
+  asset: 'assets/word-image-on-calendar-note-pro.png',
+  alt: '橘橙色便利贴平整贴住蓝色月历表的表面，边缘接触清楚可见。',
  });
  const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  assert.match(markup, /class="wordImageCoreVisual"/);
- assert.match(markup, /src="assets\/word-image-on-calendar-note\.png"/);
+ assert.match(markup, /src="assets\/word-image-on-calendar-note-pro\.png"/);
  assert.match(markup, /class="handwritingLine handwritingLine-top"/);
  assert.match(markup, /class="handwritingLine handwritingLine-mid"/);
  assert.match(markup, /class="handwritingLine handwritingLine-base"/);
  assert.match(markup, /class="handwritingLine handwritingLine-lower"/);
- assert.ok(markup.indexOf('class="wordImageConceptTitle"') < markup.indexOf('class="wordImageCoreVisual"'));
  assert.ok(markup.indexOf('class="wordImageCoreVisual"') < markup.indexOf('class="wordImageHandwriting"'));
  const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
  assert.match(styles, /\.wordImageWorkspace\{[^}]*--word-image-blue:#2563eb/);
@@ -1539,14 +1536,39 @@ test('Word Image ON gives the calendar sticky-note core visual priority with fou
  assert.match(styles, /\.wordImageWorkspace \.phonics-consonant\{[^}]*color:var\(--word-image-orange\)/);
 });
 
+test('Word Image ON follows the 3D knowledge-card hierarchy with two visible contact scenes', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ assert.deepEqual(lesson.coreVisual, {
+  asset: 'assets/word-image-on-calendar-note-pro.png',
+  alt: '橘橙色便利贴平整贴住蓝色月历表的表面，边缘接触清楚可见。',
+ });
+ assert.deepEqual(lesson.exampleVisual, {
+  asset: 'assets/word-image-on-cup-table.png',
+  alt: '蓝色杯子稳定接触木桌表面，清楚表现 The cup is on the table. 的 on 关系。',
+ });
+ const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ assert.match(markup, /<h2>ON<\/h2>/);
+ assert.match(markup, /src="assets\/word-image-on-calendar-note-pro\.png"/);
+ assert.match(markup, /src="assets\/word-image-on-cup-table\.png"/);
+ assert.match(markup, /class="wordImageSentenceVisual"/);
+ assert.match(markup, /class="wordImageRelationWord">on<\/mark>/);
+ assert.match(markup, /<details class="wordImageFlowDetails">/);
+ assert.ok(markup.indexOf('wordImageCoreVisual') < markup.indexOf('wordImageCoreText'));
+ assert.ok(markup.indexOf('wordImageCoreText') < markup.indexOf('wordImageHandwriting'));
+ assert.ok(markup.indexOf('wordImageHandwriting') < markup.indexOf('wordImageSentenceFlow'));
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /\.wordImageCoreVisual\{[^}]*width:min\(100%,620px\)/);
+ assert.match(styles, /\.wordImageSentenceVisualImage\{[^}]*aspect-ratio:16\/9/);
+ assert.match(styles, /\.wordImageFlowDetails\{[^}]*border/);
+});
+
 test('Word Image third screen renders a five-layer sentence flow sample with two explicit audio speeds', () => {
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
  const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  assert.match(markup, /The cup is on the table\./);
- assert.match(markup, /中文画面确认/);
- assert.match(markup, /杯子在桌子上。/);
  assert.match(markup, /清晰美式音标/);
- assert.match(markup, /The<\/b> <span>\/ðə\/<\/span>/);
+ assert.match(markup, /▶ 听完整句/);
+ assert.match(markup, /▶ 听自然语流/);
  assert.match(markup, /自然语流/);
  assert.match(markup, /\[ðə ˈkʌp‿ɪz‿ɑn ðə ˈteɪbəl\]/);
  assert.match(markup, /cup‿is/);
@@ -1557,9 +1579,29 @@ test('Word Image third screen renders a five-layer sentence flow sample with two
  assert.match(markup, /<b>粗体<\/b>：当前信息重音/);
  assert.match(markup, /<b>\/ \/<\/b>：清晰音标/);
  assert.match(markup, /<b>\[ \]<\/b>：自然语流中的实际发音/);
- assert.match(markup, /data-action="play-word-image-sentence-clear"[^>]*清晰慢速/);
- assert.match(markup, /data-action="play-word-image-sentence-natural"[^>]*自然语速/);
+ assert.match(markup, /data-action="play-word-image-sentence-clear"[^>]*>▶ 听完整句/);
+ assert.match(markup, /data-action="play-word-image-sentence-natural"[^>]*>▶ 听自然语流/);
  assert.match(markup, /设备语音仅用于当前样板预览/);
+});
+
+test('Word Image sentence audio separates full sentence, full IPA, word pairs, and natural flow controls', () => {
+ const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
+ const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ const english = markup.indexOf('<h4>英文原句</h4>');
+ const fullIpa = markup.indexOf('<h4>清晰美式音标</h4>');
+ const wordPairs = markup.indexOf('<h4>单词与音标对应</h4>');
+ const natural = markup.indexOf('<h4>自然语流</h4>');
+ assert.ok(english < fullIpa && fullIpa < wordPairs && wordPairs < natural);
+ assert.ok(markup.indexOf('▶ 听完整句') > english && markup.indexOf('▶ 听完整句') < fullIpa);
+ assert.ok(markup.indexOf('▶ 听自然语流') > natural);
+ assert.match(markup, /<p class="wordImageSentenceIpa">\/ðə kʌp ɪz ɑn ðə ˈteɪbəl\/<\/p>/);
+ assert.match(markup, /<span class="wordImageClearWord"><b>The<\/b><span>\/ðə\/<\/span><\/span>/);
+ assert.match(markup, /<span class="wordImageClearWord"><b>table<\/b><span>\/ˈteɪbəl\/<\/span><\/span>/);
+ assert.doesNotMatch(markup, /The<\/b> <span>\/ðə\/<\/span>/);
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /\.wordImageClearWord\{[^}]*display:grid/);
+ assert.match(styles, /\.wordImageClearWord\{[^}]*white-space:nowrap/);
+ assert.match(styles, /\.wordImageSentenceListen \.wordImageSpeechButton\{[^}]*width:auto/);
 });
 
 test('Word Image safely disables speech when the browser does not support speechSynthesis', () => {
