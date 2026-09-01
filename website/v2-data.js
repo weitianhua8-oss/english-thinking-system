@@ -78,6 +78,50 @@ const payload = {
       coreImage: '主语被一条等号连接到一个状态标签。',
       quick: { origin: '用于建立“是什么、在哪里、怎样”的状态连接。', example: 'They are ready.', memoryHook: 'BE = 现在处于这个状态。' },
       deep: { logic: 'BE 本身不画动作，而是把主体与当前身份、特征或位置连接起来。', scenes: [{ title: '状态连接', body: 'be happy、be a teacher 和 be at home 分别把主体连接到特征、身份与位置，不表示一个动作过程。', example: 'They are ready.' }], structures: '主语 + be + 状态/身份/地点。', chineseTrap: '不要把 BE 只背成“是”；很多时候它表达“处于”。', studyTip: '找出 BE 两边：谁，处于什么状态或位置。' },
+      interactive: {
+        kind: 'be-three-modules',
+        modules: [
+          {
+            id: 'module1', title: 'BE①｜状态连接器',
+            visual: '主语 / 谁？ → BE 桥 → 身份 / 位置 / 状态',
+            takeaway: 'BE 像一座桥，不是动作发动机。',
+            branches: [
+              { id: 'identity', label: '身份', question: '我/她是谁？', subject: 'I', form: 'am', complement: 'a student', sentence: 'I am a student.', translation: '我是一名学生。', explanation: 'BE 把 I 连接到身份 a student。', alt: 'I 通过 am 连接到 a student', audioKey: 'be-module1-identity' },
+              { id: 'location', label: '位置', question: '猫/他们在哪里？', subject: 'The cat', form: 'is', complement: 'on the sofa', sentence: 'The cat is on the sofa.', translation: '猫在沙发上。', explanation: 'BE 把 The cat 连接到位置 on the sofa。', alt: 'The cat 通过 is 连接到 on the sofa', audioKey: 'be-module1-location' },
+              { id: 'state', label: '状态 / 特征', question: '你/他怎么样？', subject: 'You', form: 'are', complement: 'happy', sentence: 'You are happy.', translation: '你很开心。', explanation: 'BE 把 You 连接到状态 happy。', alt: 'You 通过 are 连接到 happy', audioKey: 'be-module1-state' },
+            ],
+          },
+          {
+            id: 'module2', title: 'BE②｜主语换衣服，时间换形态',
+            subjectGroups: [
+              { id: 'first', label: 'I', subjects: ['I'], present: 'am', past: 'was' },
+              { id: 'third', label: 'he / she / it', subjects: ['he','she','it'], present: 'is', past: 'was' },
+              { id: 'plural', label: 'you / we / they', subjects: ['you','we','they'], present: 'are', past: 'were' },
+            ],
+            matching: [
+              { subject: 'I', form: 'am', explanation: 'I 要和 am 配对。' },
+              { subject: 'he', form: 'is', explanation: 'he 要和 is 配对。' },
+              { subject: 'they', form: 'are', explanation: 'they 要和 are 配对。' },
+            ],
+            timeShift: { today: 'I am happy.', yesterday: 'I was happy.', explanation: 'BE 的核心意思没有变；它为了适配时间换了外形。', audioKey: 'be-module2-time-shift' },
+          },
+          {
+            id: 'module3', title: 'BE③｜结构扩展与避坑',
+            cards: [
+              { id: 'locator', title: 'BE 是坐标定位器', options: ['身份','位置','状态','时间'], examples: ['I am a student.','I am at home.','I am happy.','I was tired yesterday.'], explanation: 'BE 把人、物或情况定位到身份、位置、状态或时间里的情况。' },
+              { id: 'doing', title: 'be + doing', before: 'He reads.', after: 'He is reading.', explanation: 'BE + V-ing 表示主体正处于动作展开的过程中。' },
+              { id: 'done', title: 'be + done', examples: ['The cake was made by my mother.','The window is broken.'], explanation: 'be + done 可以表示受到动作的关系，或动作留下的结果状态。' },
+              { id: 'pitfalls', title: '快速判断与避坑', examples: ['I go to school.','I am going to school.','He is tall.','My phone is on the table.'], explanation: '先判断句子是在说动作，还是在说身份、位置、状态或过程。' },
+            ],
+            judgement: [
+              { sentence: 'I am go.', correct: false, retry: '先看 go 是普通动作，还是正在展开的过程。', explanation: '普通动作说 I go；正在去的过程说 I am going。不能说 I am go。' },
+              { sentence: 'He tall.', correct: false, retry: '先看 he 和 tall 中间少了什么连接。', explanation: 'tall 是特征，需要 BE 把 he 连接到 tall：He is tall。' },
+              { sentence: 'She a teacher.', correct: false, retry: '先看 she 和 a teacher 中间少了什么连接。', explanation: '身份需要 BE 连接：She is a teacher。' },
+            ],
+          },
+        ],
+        completion: { summary: 'BE 会随主语和时间换形态，但它始终在把主体连接到身份、位置、状态或过程。' },
+      },
       relations: [
         { type: 'system', target: 'state-action', label: '所属：状态与动作', explanation: 'BE 是状态与动作系统中的基础状态连接词。' },
         { type: 'growth', target: 'ing', label: 'BE + -ING', explanation: 'BE 与 -ING 组合，把主体放进正在展开的动作过程。' },

@@ -556,6 +556,159 @@ test('renderV2LessonWorkspace keeps semantic content in one selected layer', () 
   assert.match(markup, /核心画面/);
 });
 
+test('BE interactive data accepts three complete modules and rejects incomplete data', () => {
+ const be = require('./v2-data.js').nodes.find(node => node.id === 'be');
+ assert.deepEqual(core.beInteractiveFor(be)?.modules.map(module => module.id), ['module1','module2','module3']);
+ assert.equal(core.beInteractiveFor({ ...be, interactive: { ...be.interactive, modules:[be.interactive.modules[0],null,be.interactive.modules[2]] } }), null);
+});
+
+test('BE interactive data rejects a module three card without its rendered list data', () => {
+ const data = require('./v2-data.js');
+ const be = data.nodes.find(node => node.id === 'be');
+ const modules = be.interactive.modules.map(module => module.id !== 'module3' ? module : {
+  ...module,
+  cards:module.cards.map(card => card.id !== 'locator' ? card : { ...card, options:null }),
+ });
+ const malformed = { ...be, interactive:{ ...be.interactive, modules } };
+ assert.equal(core.beInteractiveFor(malformed), null);
+ const markup = core.renderV2LessonWorkspace(data, require('./v2-network.js'), malformed, 'deep', core.emptyProgress());
+ assert.match(markup, /该模块准备中/);
+ assert.doesNotMatch(markup, /BE①｜状态连接器/);
+});
+
+test('BE module progress is isolated from V1 review and other V2 modules', () => {
+ const legacy = { words:{ be:{ mastery:3, history:[], reviewCount:0 } }, studyDates:['2026-08-31'], v2:{ culture:{ completed:['culture-01'] }, be:{ completed:['broken','module1','module1'], lastPosition:{ module:'module9' } } } };
+ const restored = core.parseStoredProgress(JSON.stringify(legacy));
+ assert.deepEqual(core.beProgressFor(restored), { completed:['module1'], visitedBranches:[], module2:{ matchDone:false, timeShiftDone:false }, lastPosition:null });
+ const next = core.completeBeModule(legacy, 'module2');
+ assert.deepEqual(next.words, legacy.words);
+ assert.deepEqual(next.studyDates, legacy.studyDates);
+ assert.deepEqual(next.v2.culture, legacy.v2.culture);
+ assert.deepEqual(next.v2.be.completed, ['module1','module2']);
+ assert.deepEqual(core.completeBeModule(next, 'module9'), next);
+});
+
+test('BE module interactions record their position before any completion', () => {
+ const legacy = { words:{ be:{ mastery:3, history:[], reviewCount:0 } }, studyDates:['2026-08-31'], v2:{ culture:{ completed:['culture-01'] } } };
+ const module2 = core.recordBeModuleTwoPosition(legacy);
+ assert.deepEqual(module2.v2.be.lastPosition, { module:'module2' });
+ assert.deepEqual(module2.v2.be.module2, { matchDone:false, timeShiftDone:false });
+ assert.deepEqual(module2.words, legacy.words);
+ const module3 = core.recordBeModuleThreePosition(legacy);
+ assert.deepEqual(module3.v2.be.lastPosition, { module:'module3' });
+ assert.deepEqual(module3.v2.culture, legacy.v2.culture);
+});
+
+test('BE resume state restores the saved deep-learning module and branch', () => {
+ const progress = { words:{}, studyDates:[], v2:{ be:{ lastPosition:{ module:'module1', branch:'location' } } } };
+ assert.deepEqual(core.beResumeStateFor(progress), { lessonLayer:'deep', beBranch:'location', beResumeModule:'module1' });
+ assert.deepEqual(core.beResumeStateFor({ words:{}, studyDates:[], v2:{ be:{ lastPosition:{ module:'module3' } } } }), { lessonLayer:'deep', beBranch:'identity', beResumeModule:'module3' });
+ assert.equal(core.beResumeStateFor(core.emptyProgress()), null);
+});
+
+test('BE module one renders one accessible branch bridge at a time', () => {
+ const data = require('./v2-data.js');
+ const be = data.nodes.find(node => node.id === 'be');
+ const markup = core.renderV2LessonWorkspace(data, require('./v2-network.js'), be, 'deep', core.emptyProgress(), { beBranch:'identity' });
+ assert.match(markup, /BE①｜状态连接器/);
+ assert.match(markup, /aria-label="BE 连接图解：I 通过 am 连接到 a student"/);
+ assert.match(markup, /data-action="select-be-branch" data-be-branch="identity" aria-pressed="true"/);
+ assert.doesNotMatch(markup, /data-action="select-be-branch" data-be-branch="location" aria-pressed="true"/);
+});
+
+test('BE module one records every branch before completing without changing V1 review', () => {
+ const legacy = { words:{ be:{ mastery:3, history:[], reviewCount:0 } }, studyDates:['2026-08-31'], v2:{ culture:{ completed:['culture-01'] } } };
+ const identity = core.recordBeModuleOneBranch(legacy, 'identity');
+ const location = core.recordBeModuleOneBranch(identity, 'location');
+ const done = core.recordBeModuleOneBranch(location, 'state');
+ assert.deepEqual(location.v2.be.completed, []);
+ assert.deepEqual(done.v2.be.completed, ['module1']);
+ assert.deepEqual(done.v2.be.lastPosition, { module:'module1', branch:'state' });
+ assert.deepEqual(done.words, legacy.words);
+ assert.deepEqual(done.v2.culture, legacy.v2.culture);
+});
+
+test('BE module two resolves forms and hides the answer after a wrong match', () => {
+ const be = require('./v2-data.js').nodes.find(node => node.id === 'be');
+ const interactive = core.beInteractiveFor(be);
+ assert.equal(core.beFormFor(interactive, 'I', 'present'), 'am');
+ assert.equal(core.beFormFor(interactive, 'he', 'present'), 'is');
+ assert.equal(core.beFormFor(interactive, 'they', 'present'), 'are');
+ assert.equal(core.beFormFor(interactive, 'I', 'past'), 'was');
+ assert.equal(core.beFormFor(interactive, 'they', 'past'), 'were');
+ assert.equal(core.beFormFor(interactive, 'cat', 'present'), null);
+ const wrong = core.beMatchResultFor(interactive, 'I', 'is');
+ assert.equal(wrong.correct, false);
+ assert.match(wrong.feedback, /再试/);
+ assert.doesNotMatch(wrong.feedback, /am/);
+});
+
+test('BE module two only completes after one correct match and a time shift', () => {
+ const legacy = { words:{ be:{ mastery:3, history:[], reviewCount:0 } }, studyDates:['2026-08-31'], v2:{ culture:{ completed:['culture-01'] } } };
+ const shifted = core.recordBeModuleTwoTimeShift(legacy);
+ const done = core.recordBeModuleTwoMatch(shifted);
+ assert.deepEqual(shifted.v2.be.completed, []);
+ assert.deepEqual(done.v2.be.completed, ['module2']);
+ assert.deepEqual(done.v2.be.module2, { matchDone:true, timeShiftDone:true });
+ assert.deepEqual(done.words, legacy.words);
+ assert.deepEqual(done.v2.culture, legacy.v2.culture);
+});
+
+test('BE module two renders subject forms and time controls', () => {
+ const data = require('./v2-data.js');
+ const be = data.nodes.find(node => node.id === 'be');
+ const markup = core.renderV2LessonWorkspace(data, require('./v2-network.js'), be, 'deep', core.emptyProgress(), { beSubject:'they', beTense:'past', beMatchFormSelection:'are' });
+ assert.match(markup, /BE②｜主语换衣服，时间换形态/);
+ assert.match(markup, /they → were/);
+ assert.match(markup, /data-action="select-be-tense" data-be-tense="past" aria-pressed="true"/);
+ assert.match(markup, /data-action="select-be-match-form" data-be-match-form="are" aria-pressed="true"/);
+});
+
+test('BE module three renders its four teaching cards and switches the structure lens', () => {
+ const data = require('./v2-data.js');
+ const be = data.nodes.find(node => node.id === 'be');
+ const markup = core.renderV2LessonWorkspace(data, require('./v2-network.js'), be, 'deep', core.emptyProgress(), { beExtension:'done', beJudgementAnswer:'needs-change' });
+ ['BE 是坐标定位器','be + doing','be + done','快速判断与避坑'].forEach(title => assert.match(markup, new RegExp(title.replace(/[+]/g,'\\+'))));
+ assert.match(markup, /The cake was made by my mother\./);
+ assert.match(markup, /data-action="select-be-extension" data-be-extension="done" aria-pressed="true"/);
+ assert.match(markup, /data-action="select-be-judgement" data-be-judgement="needs-change" aria-pressed="true"/);
+ const at = data.nodes.find(node => node.id === 'at');
+ assert.doesNotMatch(core.renderV2LessonWorkspace(data, require('./v2-network.js'), at, 'deep'), /BE③｜结构扩展与避坑/);
+});
+
+test('BE module three delays the full explanation until a retry and keeps completion isolated', () => {
+ const interactive = core.beInteractiveFor(require('./v2-data.js').nodes.find(node => node.id === 'be'));
+ const firstWrong = core.beJudgementFeedbackFor(interactive, 0, true, 0);
+ const retryWrong = core.beJudgementFeedbackFor(interactive, 0, true, 1);
+ assert.equal(firstWrong.correct, false);
+ assert.match(firstWrong.feedback, /普通动作|正在展开/);
+ assert.doesNotMatch(firstWrong.feedback, /I go；正在去/);
+ assert.match(retryWrong.feedback, /I go；正在去/);
+ const legacy = { words:{ be:{ mastery:3, history:[], reviewCount:0 } }, studyDates:['2026-08-31'], v2:{ culture:{ completed:['culture-01'] } } };
+ const positioned = core.recordBeModuleThreePosition(legacy);
+ assert.deepEqual(positioned.v2.be.lastPosition, { module:'module3' });
+ const done = core.completeBeModuleThree(legacy);
+ assert.deepEqual(done.v2.be.completed, ['module3']);
+ assert.deepEqual(done.v2.be.lastPosition, { module:'module3' });
+ assert.deepEqual(done.words, legacy.words);
+ assert.deepEqual(done.v2.culture, legacy.v2.culture);
+});
+
+test('BE three-module styles keep touch controls, focus, and a narrow single-column layout', () => {
+ const styles = fs.readFileSync(path.join(__dirname, 'styles.css'), 'utf8');
+ assert.match(styles, /button:focus-visible/);
+ assert.match(styles, /\.beBranchChoice\{min-height:44px/);
+ assert.match(styles, /\.beMatchChoice\{min-height:44px/);
+ assert.match(styles, /@media\(max-width:520px\)\{\.beModule\{padding:16px\}.*\.beBridgeDiagram\{grid-template-columns:minmax\(0,1fr\)/);
+ assert.match(styles, /@media\(max-width:520px\)\{\.beStructureGrid\{grid-template-columns:minmax\(0,1fr\)\}/);
+});
+
+test('BE browser workspace forwards selected form and judgement state to its renderer', () => {
+ const source = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
+ assert.match(source, /beMatchFormSelection:state\.beMatchFormSelection/);
+ assert.match(source, /beJudgementAnswer:state\.beJudgementAnswer/);
+});
+
 test('V2 workspace tabs stay three equal touch targets on narrow screens', () => {
   const styles = fs.readFileSync(require.resolve('./styles.css'), 'utf8');
   assert.match(styles, /@media\(max-width:900px\)[\s\S]*?\.workspaceTabs\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\);gap:8px;padding:12px 24px;overflow:visible\}/);
