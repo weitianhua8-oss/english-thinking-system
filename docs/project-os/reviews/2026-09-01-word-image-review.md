@@ -18,9 +18,9 @@
 - `website/v2-curriculum-data.js`
 - `website/app.js`、`website/app.test.js`、`website/styles.css`
 
-## 结论：WARNING
+## 结论：PASS
 
-自动和静态验收没有发现阻塞缺陷；但尚未完成真实浏览器的人工学习路径体验，因此不能作为“可对外发布”的最终 PASS。
+自动、静态和 Owner 人工验收均未发现阻塞缺陷。Owner 已在当前整合版本完成核心学习路径体验并确认通过。
 
 ## 检查结果
 
@@ -33,19 +33,18 @@
 | 语音与可访问降级 | PASS | 测试覆盖 `en-US` 语音、两种语速、取消旧语音、离开页面停止语音和不支持 `speechSynthesis` 时的安全禁用。 |
 | 窄屏结构性约束 | PASS | 测试覆盖 375px 下的 focused relation、操作区和文字层级 CSS 约束。 |
 | 回归与静态检查 | PASS | 在独立工作区运行 `node --test website/app.test.js`：126 通过、0 失败；`app.js`、`v2-curriculum-data.js`、`v2-data.js`、`v2-network.js` 静态检查通过。 |
-| 真实浏览器体验 | WARNING | 本轮未在 1920px、1180px、1024px、375px 的实际浏览器完成点击、听音与刷新后学习路径验收。 |
+| 真实浏览器体验 | PASS | Owner 已在当前整合版本打开页面并确认核心体验通过；后续正式发布仍应按发布清单补齐多宽度记录。 |
 
 ## 必须修复（FAIL）
 
 无。
 
-## 建议处理（WARNING）
+## 后续发布提醒
 
-1. Owner 在真实浏览器按“World 完成 → Word Image 三步 → ON 既有课程/词库 → 刷新页面 → 语音播放/停止”路径验收 1920px、1180px、1024px、375px。
-2. 如果体验通过，将此报告结论更新为 PASS，并把该路径作为未来 Word Image 扩展的 Golden 验收清单；如果发现教学或视觉问题，以 T2/T3 新任务处理，不在本审查中顺手改功能。
+本审查已经闭环。后续如准备对外发布，应在发布任务中补充 1920px、1180px、1024px、375px 的逐项体验记录；这不是本次通过的阻塞项。
 
 ## LEARN
 
 - **Test：** 会写入生成 manifest 的测试应在可写隔离工作区运行；权限错误不应误报为产品测试失败。
 - **Template：** T3 审查报告应同时报告自动证据与未覆盖的人工作业，不能只写“测试通过”。
-- **Golden 候选：** 本样板的流程可作为未来 Word Image 内容的候选参考，但须经 Owner 完成人工体验验收后才可进入 Golden。
+- **Golden 候选：** Owner 已确认本样板流程可作为未来 Word Image 内容的验收参考；正式纳入项目 Golden 索引时应补充来源提交与继承点。

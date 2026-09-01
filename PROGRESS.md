@@ -1,21 +1,21 @@
 # English Thinking System｜PROGRESS
 
 **更新时间：** 2026-09-01
-**当前代码基线：** `feature/v2-word-image`，`60f6d8c`
+**当前代码基线：** `integration/v2-core-learning-path`，`a6db286`
 **Project OS 文档分支：** `docs/project-os-v1`，基于提交 `736bc40`
 **状态：** In progress
 
 ## 当前结论
 
-V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。Project OS v1.0 已建立治理层，当前进入英语思维850的实际文档接入阶段。
+V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。Project OS v1.0 已建立治理层与实际项目文档，并已完成 Word Image 的首次验收。
 
 ## 本轮任务
 
 | 任务 | 等级 | 状态 | 证据 / 关联文件 | Owner 下一步 |
 | --- | --- | --- | --- | --- |
-| 建立 Project OS v1.0 规范与 Starter Template | T3 | 已完成，待审查/合流 | `docs/project-os/`、`templates/project-starter/`、提交 `736bc40` | 确认内容后合入目标分支 |
-| 英语思维850 Project OS 实际文档接入 | T3 | 已完成，待审查/合流 | `PROJECT.md`、`PRD.md`、`ARCHITECTURE.md`、`RULES.md`、`DECISIONS.md`、本文件 | 审查来源映射与当前状态 |
-| Word Image 样板独立验收 | T3 | 审查完成，等待 Owner 人工验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | 在真实浏览器走完核心路径并决定是否接受 WARNING |
+| 建立 Project OS v1.0 规范与 Starter Template | T3 | 已完成，待合流 | `docs/project-os/`、`templates/project-starter/`、提交 `736bc40` | 将文档分支整合到当前 V2 基线 |
+| 英语思维850 Project OS 实际文档接入 | T3 | 已完成，待合流 | `PROJECT.md`、`PRD.md`、`ARCHITECTURE.md`、`RULES.md`、`DECISIONS.md`、本文件 | 将文档分支整合到当前 V2 基线 |
+| Word Image 样板独立验收 | T3 | 已通过 Owner 验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | 作为未来 Word Image 样板的验收参考 |
 
 ## 已完成
 
@@ -44,4 +44,5 @@ V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定�
 | Decision | 采用旁路接入，不覆盖既有总控与成熟资产 | `DECISIONS.md` ADR-004 | Owner 于 2026-09-01 确认 |
 | Template | 新项目统一使用六份核心项目文档 | `templates/project-starter/` | 提交 `736bc40` |
 | Test | 生成型测试需在可写隔离工作树运行，不能把环境权限错误误判为产品回归 | 本文件、未来测试规范 | 2026-09-01 基线执行 |
-| Review | T3 审查须同时记录自动通过证据和未覆盖的人工体验范围 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | Word Image 首次实战验证 |
+| Review | T3 审查须同时记录自动通过证据、未覆盖范围和 Owner 最终验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | Word Image 首次实战验证 |
+| Golden | Owner 确认的 Word Image（ON）学习路径可作为扩展验收参考；正式收录时补来源与继承点 | 未来 Golden 索引 | Owner 于 2026-09-01 验收通过 |

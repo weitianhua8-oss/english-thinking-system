@@ -1,7 +1,7 @@
 # English Thinking System｜ARCHITECTURE
 
 **最后审计：** 2026-09-01
-**适用版本/分支：** `feature/v2-word-image`，基线提交 `60f6d8c`
+**适用版本/分支：** `integration/v2-core-learning-path`，基线提交 `a6db286`
 
 ## 系统概览
 
