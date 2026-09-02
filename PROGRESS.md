@@ -7,7 +7,7 @@
 
 ## 当前结论
 
-V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。Project OS v1.0 已建立治理层与实际项目文档；Word Image 与 Sentence 的首个样板均已完成 Owner 验收与独立审查。
+V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。Project OS v1.0 已建立治理层与实际项目文档；Culture → Camera → World 连续链、Word Image 与 Sentence 的首个样板均已完成 Owner 验收与独立审查。
 
 ## 本轮任务
 
@@ -18,6 +18,7 @@ V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定�
 | Word Image（ON）样板独立验收 | T3 | 已通过 Owner 验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | 作为未来 Word Image 样板的验收参考 |
 | Word Image 认知减负调整 | T3 | 已通过 Owner 验收与独立审查 | `docs/project-os/reviews/2026-09-01-word-image-cognitive-load-refinement-review.md` | 单独提交，后续发布补齐多宽度记录 |
 | Sentence（The cup is on the table.）样板验收 | T3 | 已通过 Owner 验收与独立审查 | `docs/project-os/reviews/2026-09-02-sentence-review.md` | 作为从画面到完整句的扩展验收参考 |
+| Culture → Camera → World 连续学习链 | T3 | 已通过 Owner 验收与独立审查 | `docs/project-os/reviews/2026-09-02-culture-camera-world-chain-review.md` | 作为通向 Word Image 的基础路径验收参考 |
 
 ## 已完成
 
@@ -52,3 +53,5 @@ V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定�
 | Golden | Owner 确认的 Word Image（ON）学习路径可作为扩展验收参考；正式收录时补来源与继承点 | 未来 Golden 索引 | Owner 于 2026-09-01 验收通过 |
 | Golden | Sentence 先展示信息缺口，再由现实关系补足表达；完整句与自然语流属于同一学习链 | `docs/project-os/reviews/2026-09-02-sentence-review.md` | Owner 于 2026-09-02 验收通过 |
 | Test | Sentence 回归至少覆盖焦点门禁、信息缺口、进度隔离、真实出口与 Word Image 语流复用 | `website/app.test.js` | Sentence 样板验收 |
+| Golden | 连续学习链中每段只增加一个认知动作，并以明确、真实的下一站衔接下一段 | `docs/project-os/reviews/2026-09-02-culture-camera-world-chain-review.md` | Owner 于 2026-09-02 验收通过 |
+| Test | 跨模块链路须覆盖推荐路径门禁、进度隔离、路线恢复和最终出口 | `website/app.test.js` | Culture → Camera → World 验收 |
