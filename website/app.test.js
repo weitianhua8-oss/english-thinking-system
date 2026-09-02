@@ -1661,10 +1661,10 @@ test('Word Image third screen renders a lowercase handwriting guide, phonics gro
  assert.match(markup, /class="handwritingLine handwritingLine-top"/);
  assert.match(markup, /class="phonicsLetter phonics-vowel" aria-hidden="true">o/);
  assert.match(markup, /class="phonicsLetter phonics-consonant" aria-hidden="true">n/);
- assert.match(markup, /自然拼读音组/);
+ assert.match(markup, /字母与声音/);
  assert.ok(markup.includes('<strong>o</strong><span>/ɑ/</span>'));
  assert.ok(markup.includes('<strong>n</strong><span>/n/</span>'));
- assert.ok(markup.includes('<span>美式</span><strong>/ɑn/</strong>'));
+ assert.match(markup, /class="wordImageWordSound"[^>]*>.*<strong>\/ɑn\/<\/strong>.*data-action="play-word-image-speech"/s);
  assert.match(markup, /data-action="play-word-image-speech" aria-label="播放 on 的美式发音"/);
   assert.doesNotMatch(markup, /音节/);
 });
@@ -1719,7 +1719,7 @@ test('Word Image third screen renders a five-layer sentence flow sample with two
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
  const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  assert.match(markup, /The cup is on the table\./);
- assert.match(markup, /清晰美式音标/);
+ assert.doesNotMatch(markup, /<h4>清晰美式音标<\/h4>/);
  assert.match(markup, /▶ 听完整句/);
  assert.match(markup, /▶ 听自然语流/);
  assert.match(markup, /自然语流/);
@@ -1741,13 +1741,12 @@ test('Word Image sentence audio separates full sentence, full IPA, word pairs, a
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
  const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  const english = markup.indexOf('<h4>英文原句</h4>');
- const fullIpa = markup.indexOf('<h4>清晰美式音标</h4>');
  const wordPairs = markup.indexOf('<h4>单词与音标对应</h4>');
  const natural = markup.indexOf('<h4>自然语流</h4>');
- assert.ok(english < fullIpa && fullIpa < wordPairs && wordPairs < natural);
- assert.ok(markup.indexOf('▶ 听完整句') > english && markup.indexOf('▶ 听完整句') < fullIpa);
+ assert.ok(english < wordPairs && wordPairs < natural);
+ assert.ok(markup.indexOf('▶ 听完整句') > english && markup.indexOf('▶ 听完整句') < wordPairs);
  assert.ok(markup.indexOf('▶ 听自然语流') > natural);
- assert.match(markup, /<p class="wordImageSentenceIpa">\/ðə kʌp ɪz ɑn ðə ˈteɪbəl\/<\/p>/);
+ assert.doesNotMatch(markup, /\/ðə kʌp ɪz ɑn ðə ˈteɪbəl\//);
  assert.match(markup, /<span class="wordImageClearWord"><b>The<\/b><span>\/ðə\/<\/span><\/span>/);
  assert.match(markup, /<span class="wordImageClearWord"><b>table<\/b><span>\/ˈteɪbəl\/<\/span><\/span>/);
  assert.doesNotMatch(markup, /The<\/b> <span>\/ðə\/<\/span>/);
@@ -1755,6 +1754,7 @@ test('Word Image sentence audio separates full sentence, full IPA, word pairs, a
  assert.match(styles, /\.wordImageClearWord\{[^}]*display:grid/);
  assert.match(styles, /\.wordImageClearWord\{[^}]*white-space:nowrap/);
  assert.match(styles, /\.wordImageSentenceListen \.wordImageSpeechButton\{[^}]*width:auto/);
+ assert.match(styles, /\.wordImageClearWords\{[^}]*justify-content:flex-start/);
 });
 
 test('Word Image safely disables speech when the browser does not support speechSynthesis', () => {

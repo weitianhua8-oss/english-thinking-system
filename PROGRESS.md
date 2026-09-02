@@ -1,8 +1,8 @@
 # English Thinking System｜PROGRESS
 
 **更新时间：** 2026-09-01
-**当前代码基线：** `integration/v2-core-learning-path`，`a6db286`
-**Project OS 文档分支：** `docs/project-os-v1`，基于提交 `736bc40`
+**当前代码基线：** `integration/v2-core-learning-path`
+**Project OS 文档状态：** 已合流到当前整合分支
 **状态：** In progress
 
 ## 当前结论
@@ -13,9 +13,10 @@ V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定�
 
 | 任务 | 等级 | 状态 | 证据 / 关联文件 | Owner 下一步 |
 | --- | --- | --- | --- | --- |
-| 建立 Project OS v1.0 规范与 Starter Template | T3 | 已完成，待合流 | `docs/project-os/`、`templates/project-starter/`、提交 `736bc40` | 将文档分支整合到当前 V2 基线 |
-| 英语思维850 Project OS 实际文档接入 | T3 | 已完成，待合流 | `PROJECT.md`、`PRD.md`、`ARCHITECTURE.md`、`RULES.md`、`DECISIONS.md`、本文件 | 将文档分支整合到当前 V2 基线 |
-| Word Image 样板独立验收 | T3 | 已通过 Owner 验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | 作为未来 Word Image 样板的验收参考 |
+| 建立 Project OS v1.0 规范与 Starter Template | T3 | 已完成并合流 | `docs/project-os/`、`templates/project-starter/` | 在后续 T3+ 任务中持续执行 |
+| 英语思维850 Project OS 实际文档接入 | T3 | 已完成并合流 | `PROJECT.md`、`PRD.md`、`ARCHITECTURE.md`、`RULES.md`、`DECISIONS.md`、本文件 | 以六份项目文档维护长期记忆 |
+| Word Image（ON）样板独立验收 | T3 | 已通过 Owner 验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | 作为未来 Word Image 样板的验收参考 |
+| Word Image 认知减负调整 | T3 | 已通过 Owner 验收与独立审查 | `docs/project-os/reviews/2026-09-01-word-image-cognitive-load-refinement-review.md` | 单独提交，后续发布补齐多宽度记录 |
 
 ## 已完成
 
@@ -45,4 +46,6 @@ V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定�
 | Template | 新项目统一使用六份核心项目文档 | `templates/project-starter/` | 提交 `736bc40` |
 | Test | 生成型测试需在可写隔离工作树运行，不能把环境权限错误误判为产品回归 | 本文件、未来测试规范 | 2026-09-01 基线执行 |
 | Review | T3 审查须同时记录自动通过证据、未覆盖范围和 Owner 最终验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | Word Image 首次实战验证 |
+| Test | 信息层级调整需同时覆盖“重复层已删除”与“关键层仍按顺序存在” | `website/app.test.js` | Word Image 认知减负调整 |
+| Golden | Word Image 的整词音标与整词发音入口相邻；句子层保留逐词对应与自然语流 | `docs/project-os/reviews/2026-09-01-word-image-cognitive-load-refinement-review.md` | Owner 于 2026-09-01 验收通过 |
 | Golden | Owner 确认的 Word Image（ON）学习路径可作为扩展验收参考；正式收录时补来源与继承点 | 未来 Golden 索引 | Owner 于 2026-09-01 验收通过 |
