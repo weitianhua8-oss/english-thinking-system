@@ -6,7 +6,7 @@
 
 > 真实世界 / 核心画面 → 英语底层逻辑 → 含义自然生长 → 场景应用 → 知识连接 → 主动输出
 
-项目总控规则以 [PROJECT_MASTER.md](PROJECT_MASTER.md) 为准，阶段优先级见 [ROADMAP.md](ROADMAP.md)。GitHub 是项目的唯一可信版本源。
+项目最高治理入口为 [PROJECT_OS.md](PROJECT_OS.md)，教学架构以 [docs/TEACHING_OS_V2.md](docs/TEACHING_OS_V2.md) 为准，阶段优先级见 [ROADMAP.md](ROADMAP.md)。[PROJECT_MASTER.md](PROJECT_MASTER.md) 仅提供项目总览与资产索引。GitHub 是项目的版本记录真源。
 
 ## 当前真实状态
 

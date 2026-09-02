@@ -188,7 +188,11 @@ git diff --check
 
 ### 规范真源
 
-- 项目最高规则：`PROJECT_MASTER.md`
+> 本节保留 P0 合流时的资产清单。当前治理层级以 [`PROJECT_OS.md`](../PROJECT_OS.md) 和 [`TEACHING_OS_V2.md`](TEACHING_OS_V2.md) 为准。
+
+- 项目最高治理规则：`PROJECT_OS.md`
+- 教学架构：`docs/TEACHING_OS_V2.md`
+- 项目总览与资产索引：`PROJECT_MASTER.md`
 - 执行优先级：`ROADMAP.md`
 - 英语思维内容规则：`skills/english-thinking/SKILL.md`
 - 3D 图卡规则：`skills/3d-knowledge-card/SKILL.md`
