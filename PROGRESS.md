@@ -1,13 +1,13 @@
 # English Thinking System｜PROGRESS
 
-**更新时间：** 2026-09-01
+**更新时间：** 2026-09-02
 **当前代码基线：** `integration/v2-core-learning-path`
 **Project OS 文档状态：** 已合流到当前整合分支
 **状态：** In progress
 
 ## 当前结论
 
-V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。Project OS v1.0 已建立治理层与实际项目文档，并已完成 Word Image 的首次验收。
+V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。Project OS v1.0 已建立治理层与实际项目文档；Word Image 与 Sentence 的首个样板均已完成 Owner 验收与独立审查。
 
 ## 本轮任务
 
@@ -17,18 +17,19 @@ V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定�
 | 英语思维850 Project OS 实际文档接入 | T3 | 已完成并合流 | `PROJECT.md`、`PRD.md`、`ARCHITECTURE.md`、`RULES.md`、`DECISIONS.md`、本文件 | 以六份项目文档维护长期记忆 |
 | Word Image（ON）样板独立验收 | T3 | 已通过 Owner 验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | 作为未来 Word Image 样板的验收参考 |
 | Word Image 认知减负调整 | T3 | 已通过 Owner 验收与独立审查 | `docs/project-os/reviews/2026-09-01-word-image-cognitive-load-refinement-review.md` | 单独提交，后续发布补齐多宽度记录 |
+| Sentence（The cup is on the table.）样板验收 | T3 | 已通过 Owner 验收与独立审查 | `docs/project-os/reviews/2026-09-02-sentence-review.md` | 作为从画面到完整句的扩展验收参考 |
 
 ## 已完成
 
 - 850 个精确母词、170 天 × 5 词学习计划已入库；不等于 850 份深度课程。
 - Level 1 的 50 个骨架词深度课程、10 天学习子路径和离线学习闭环已完成。
-- V2 已有三层学习、13 个知识网络样板节点，以及 Culture、Camera、World、Word Image 等有限样板能力；范围以各分支/提交为准。
+- V2 已有三层学习、13 个知识网络样板节点，以及 Culture、Camera、World、Word Image、Sentence 等有限样板能力；范围以各分支/提交为准。
 - Project OS v1.0 的总规范、分级、Prompt、Builder/Reviewer、Golden、Skill、Git 规则、Starter Template 和接入计划已建立。
 
 ## 进行中与阻塞
 
-- **进行中：** 当前代码主线为 `feature/v2-word-image`；多个 V2 功能仍处于独立工作树，应按分支记录合流，不以单一根目录推断全部完成度。
-- **阻塞：** 当前运行环境对 `/Volumes/WorkDisk` 无写权限。`node --test website/app.test.js` 中“重建图卡 manifest”这一测试会写入 `website/assets/cards/manifest.json`，在本环境报权限错误；其余 125 项通过。该现象需在可写的隔离工作树重新验证，不能据此修改产品逻辑。
+- **进行中：** 当前整合分支已完成 Word Image 与 Sentence 两个样板的验收闭环；下一阶段应选择一个明确的后续模块或发布范围，而不是把样板误扩大为完整 850 词课程。
+- **验证限制：** 当前没有端到端浏览器自动化；涉及学习体验的任务仍需 Owner 实际页面验收和发布前多宽度记录。
 - **待决：** 旧图卡提示词/课程中的“诺诺”表述与当前图卡总规则冲突；需要专门 T2/T3 修正规格与生成产物，不在本次治理接入中处理。
 
 ## 风险与已知限制
@@ -49,3 +50,5 @@ V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定�
 | Test | 信息层级调整需同时覆盖“重复层已删除”与“关键层仍按顺序存在” | `website/app.test.js` | Word Image 认知减负调整 |
 | Golden | Word Image 的整词音标与整词发音入口相邻；句子层保留逐词对应与自然语流 | `docs/project-os/reviews/2026-09-01-word-image-cognitive-load-refinement-review.md` | Owner 于 2026-09-01 验收通过 |
 | Golden | Owner 确认的 Word Image（ON）学习路径可作为扩展验收参考；正式收录时补来源与继承点 | 未来 Golden 索引 | Owner 于 2026-09-01 验收通过 |
+| Golden | Sentence 先展示信息缺口，再由现实关系补足表达；完整句与自然语流属于同一学习链 | `docs/project-os/reviews/2026-09-02-sentence-review.md` | Owner 于 2026-09-02 验收通过 |
+| Test | Sentence 回归至少覆盖焦点门禁、信息缺口、进度隔离、真实出口与 Word Image 语流复用 | `website/app.test.js` | Sentence 样板验收 |
