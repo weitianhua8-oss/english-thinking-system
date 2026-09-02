@@ -3,6 +3,8 @@
 **最后审计：** 2026-09-01
 **适用版本/分支：** `integration/v2-core-learning-path`，基线提交 `a6db286`
 
+> **兼容摘要（2026-09-02）：** 当前教学对象职责以 [03_LEARNING_OBJECTS.md](docs/english-thinking-os/03_LEARNING_OBJECTS.md) 为准；本文件保留代码、数据与运行架构审计。
+
 ## 系统概览
 
 这是一个可离线打开的静态学习网站，入口为 `website/index.html`。页面以原生 JavaScript 管理单页状态与渲染；核心词库、课程、学习计划和 V2 样板内容存储在版本化文件中，学习进度保存在浏览器 `localStorage`。

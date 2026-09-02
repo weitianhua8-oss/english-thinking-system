@@ -5,6 +5,8 @@
 **Project OS 文档状态：** 已合流到当前整合分支
 **状态：** In progress
 
+> **兼容摘要（2026-09-02）：** 当前事实状态以 [08_CURRENT_STATE.md](docs/english-thinking-os/08_CURRENT_STATE.md) 为准，当前优先行动以 [11_NEXT_ACTIONS.md](docs/english-thinking-os/11_NEXT_ACTIONS.md) 为准。本文件保留此前任务、验收与 LEARN 记录；本次 Reset 完成后会更新此处的顶层状态。
+
 ## 当前结论
 
 V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。Project OS v1.0 已建立治理层与实际项目文档；Culture → Camera → World 连续链、Word Image 与 Sentence 的首个样板均已完成 Owner 验收与独立审查。

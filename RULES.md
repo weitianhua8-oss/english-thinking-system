@@ -3,6 +3,8 @@
 **用途：** 将现有项目总控、架构审计和已确认设计规范中长期有效的执行约束汇总为可检查规则。
 **优先级：** 与 `PROJECT_MASTER.md` 冲突时，以 `PROJECT_MASTER.md` 为准。
 
+> **兼容摘要（2026-09-02）：** 教学验收以 [06_QUALITY_GATES.md](docs/english-thinking-os/06_QUALITY_GATES.md) 为准，表现规则以 [07_DESIGN_SYSTEM.md](docs/english-thinking-os/07_DESIGN_SYSTEM.md) 为准。若与旧 Master 冲突，按 [英语专属 Project OS](docs/english-thinking-os/PROJECT_OS.md) 的优先级裁决。
+
 ## 必须做（DO）
 
 | ID | 规则 | 适用范围 | 验证方式 | 来源 |

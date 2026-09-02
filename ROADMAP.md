@@ -1,5 +1,7 @@
 # English Thinking System · Roadmap
 
+> **历史路线图（2026-09-02）：** 下列 P0–P6 保留为可追溯计划记录。当前实际状态请读 [08_CURRENT_STATE.md](docs/english-thinking-os/08_CURRENT_STATE.md)，当前优先行动请读 [11_NEXT_ACTIONS.md](docs/english-thinking-os/11_NEXT_ACTIONS.md)；不要再把本文件的 P0 当作 NOW。
+
 > 2026-08-14 调整：Codex 交接确认现有项目已经具备完整 850 母词库、S80/A200/B570 分级、170 天计划、Level 1 的 50 词完整教程，以及 V2 三层学习与 13 个知识网络样板。因此停止平行重建，改为“项目合流 → Level 1 黄金母版 → 网络扩展 → 3D 图卡 → V2 验收合并 → Level 2 小批量试产”。
 
 ## P0 — 项目合流与唯一真源（当前最高优先级）
@@ -207,6 +209,6 @@ Quick → Deep → Network → 关系解释 → 继续探索 → 返回 → 学�
 
 # 当前执行状态
 
-**NOW：P0 项目合流与唯一真源。**
+**历史 NOW：P0 项目合流与唯一真源。当前状态已迁至 [08_CURRENT_STATE.md](docs/english-thinking-os/08_CURRENT_STATE.md)。**
 
 P0 完成后自动进入 P1，不再重新讨论总体路线，除非发现会导致数据丢失、历史冲突或产品方向重大变化的问题。

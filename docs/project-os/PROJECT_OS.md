@@ -3,6 +3,8 @@
 > 适用范围：英语思维 850，以及以后采用本模板的新项目。
 > 版本：v1.0｜生效日期：2026-09-01
 
+> **试行边界（2026-09-02）：** 本文件提供跨项目流程，不是英语项目教学规则的复制源。英语思维 850 的教学、产品与状态冲突以 [英语专属 Project OS](../english-thinking-os/PROJECT_OS.md) 为准；本 OS 暂不升级为全局强制规范。
+
 ## 1. 目的与总原则
 
 AI Project OS 是把想法稳定转化为可验证产品的协作制度，不是提示词教程。
@@ -46,7 +48,7 @@ IDEA → DEFINE → SPEC → PLAN → BUILD → TEST → REVIEW → ACCEPT → C
 5. `PRD.md`、`ARCHITECTURE.md`、`PROGRESS.md`；
 6. 历史方案、聊天记录和旧提示词。
 
-英语思维 850 的接入期例外：`PROJECT_MASTER.md` 是现有最高产品规则；本 OS 不替代它。
+英语思维 850 的当前例外：教学和产品状态以 [英语专属 Project OS](../english-thinking-os/PROJECT_OS.md) 为准；`PROJECT_MASTER.md` 保留为历史产品证据，本 OS 不替代英语专属真源。
 
 ## 4. 标准项目文档包
 

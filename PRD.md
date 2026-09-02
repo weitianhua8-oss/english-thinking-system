@@ -4,6 +4,8 @@
 **状态：** In progress
 **最后更新：** 2026-09-01
 
+> **兼容摘要（2026-09-02）：** 当前教学母架构请读 [TEACHING_OS_V2.md](docs/english-thinking-os/TEACHING_OS_V2.md)，课程分层和范围请读 [04_CURRICULUM.md](docs/english-thinking-os/04_CURRICULUM.md)。本文件保留 V2 样板版本需求。
+
 ## 本版本目标
 
 在不重建 850 词库、不破坏 V1 Level 1 学习闭环的前提下，逐步验证一条从“观察真实世界”走向“英语词汇、句子、标记与场景表达”的学习路线。
