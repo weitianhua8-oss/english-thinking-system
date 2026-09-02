@@ -40,7 +40,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 15 | Target | Stage 2 · Target 与关系 | 指示词/人称课涉及对象指向，未见从 Focus 分离出的 Target 节点。 | [level1_lessons.json](../../data/level1_lessons.json) L3–L11 人称、`this/that/here/there`。 | planned | Target 识别、锁定和持续追踪活动及状态记录。 | 确认 Target 术语首次出现课。 |
 | 16 | Feature = Narrowing | Stage 2 · Target 与关系 | `have` 含特征示例，未找到以 Feature 缩小 Target 的节点资产。 | [level1_lessons.json](../../data/level1_lessons.json) L14 `have` 的 `blue eyes` 例句。 | planned | 多 Target 特征筛选、Scale Seed 前置测评。 | 决定大小/颜色的最小对比场景。 |
-| 17 | a = Introduce / the = Lock On | Stage 2 · Target 与关系 | 未找到冠词引入与锁定的直接课程资产。 | [Level 1 教程](../../content/Level1_50个骨架词完整教程.md) 可提供名词例句，仅作素材。 | planned | `a`/`the` Scene 对比、English Code 卡、学习记录。 | 规划与 Node 15 的前后依赖。 |
+| 17 | `a` = Introduce / `the` = Lock On | Stage 2 · Target 与关系 | 未找到冠词引入与锁定的直接课程资产。 | [Level 1 教程](../../content/Level1_50个骨架词完整教程.md) 可提供名词例句，仅作素材。 | planned | `a`/`the` Scene 对比、English Code 卡、学习记录。 | 规划与 Node 15 的前后依赖。 |
 | 18 | Owner | Stage 2 · Target 与关系 | `your`/`her` 等所属对比存在，未见 Owner 节点。 | [level1_lessons.json](../../data/level1_lessons.json) L1–L4 的代词对比。 | planned | Owner 与 Target 分层练习、Possession Code 证据。 | 选择 `my/your` 的最小场景。 |
 | 19 | Noun Chunk | Stage 2 · Target 与关系 | 未找到“共同承担一个 Camera Role”的 Chunk 资产。 | [Level 1 教程](../../content/Level1_50个骨架词完整教程.md) 名词短语例句可作输入。 | planned | Chunk 边界、内部 Target/Owner/Feature 图与复核记录。 | 定义首个 Noun Chunk 卡。 |
 | 20 | Reference Tracking | Stage 2 · Target 与关系 | `it` 有“继续指代”说明，未见跨 Scene 追踪的节点流程。 | [level1_lessons.json](../../data/level1_lessons.json) L5 `it`。 | planned | 引入→继续指代→消歧的活动与学习状态证据。 | 设计 `this ball → it` 追踪任务。 |
@@ -82,7 +82,8 @@
 
 | Insertion point | Control |
 | --- | --- |
-| Node 06后 | Polarity Seed and Whole Scene Query |
+| Node 06后 | Polarity Seed |
+| Node 06后 | Whole Scene Query |
 | Node 07–09后 | Missing Slot Query |
 | Node 09后 | Direct Mode |
 | Node 16后 | Scale Seed |
