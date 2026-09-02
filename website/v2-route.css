@@ -1,0 +1,25 @@
+/* V2 learning route: show the whole journey while opening only real destinations. */
+.learningRoute{max-width:980px;margin:0 auto}
+.routeHero{padding:32px 34px;border:1px solid rgba(102,101,190,.16);border-radius:24px;background:linear-gradient(135deg,rgba(240,238,255,.92),rgba(229,245,255,.9));box-shadow:0 16px 34px rgba(65,78,152,.1)}
+.routeHero h2{margin:6px 0 10px;color:#252657;font-size:30px}
+.routeHero p:last-child{max-width:680px;margin:0;color:#4c5481;line-height:1.75}
+.routeJourney{position:relative;display:grid;gap:12px;margin:22px 0}
+.routeJourney::before{position:absolute;top:29px;bottom:29px;left:30px;width:2px;background:linear-gradient(#7166ca,rgba(113,102,202,.12));content:""}
+.routeStage{position:relative;display:grid;grid-template-columns:62px minmax(0,1fr);gap:15px;align-items:start;padding:18px;border:1px solid rgba(108,115,184,.14);border-radius:18px;background:rgba(255,255,255,.78);box-shadow:0 8px 20px rgba(68,79,155,.06)}
+.routeStageIndex{position:relative;z-index:1;display:grid;width:44px;height:44px;place-items:center;border-radius:14px;background:#f3f5fb;color:#5c6882;font-size:12px;font-weight:800}
+.routeStage-available{border-color:rgba(83,105,205,.28);background:linear-gradient(135deg,#fff,#f4f7ff)}
+.routeStage-available .routeStageIndex{background:linear-gradient(135deg,#6755c6,#4285da);color:#fff;box-shadow:0 7px 15px rgba(76,80,183,.22)}
+.routeStageContent{min-width:0}
+.routeStageContent h3{margin:1px 0 5px;color:#2d3566;font-size:19px}
+.routeStageContent>p:not(.routeStageEnglish){margin:0;color:#59617d;line-height:1.62}
+.routeStageEnglish{margin:0;color:#675cc3;font-size:12px;font-weight:800;letter-spacing:.07em}
+.routeOpen{margin-top:12px;padding:0;border:0;background:transparent;color:#3f5fb2;font:inherit;font-weight:800;cursor:pointer}
+.routeOpen:hover{text-decoration:underline}
+.routePlanned{display:inline-block;margin-top:12px;padding:4px 9px;border:1px solid #d9ddea;border-radius:999px;background:#f5f6fa;color:#687187;font-size:12px;font-weight:750}
+.routeSupportSection{margin-top:24px}
+.routeSupportSection h3{margin:0 0 10px;color:#35406f;font-size:16px}
+.routeSupport{display:grid;width:100%;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:15px 17px;border:1px solid rgba(100,111,189,.18);border-radius:16px;background:#f7f8ff;color:#3d4879;text-align:left;cursor:pointer}
+.routeSupport span{min-width:0;color:#606985;line-height:1.5}
+.routeSupport em{color:#4b5caa;font-style:normal;font-weight:800}
+.routeSupport:hover{border-color:rgba(77,102,196,.42);background:#fff}
+@media(max-width:480px){.routeHero{padding:23px 20px}.routeHero h2{font-size:26px}.routeJourney::before{left:23px}.routeStage{grid-template-columns:48px minmax(0,1fr);gap:10px;padding:15px}.routeStageIndex{width:34px;height:34px;border-radius:11px;font-size:11px}.routeStageContent h3{font-size:17px}.routeSupport{grid-template-columns:minmax(0,1fr);gap:5px}.routeSupport em{display:none}}

@@ -5,28 +5,47 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>英语思维850</title>
 <link rel="stylesheet" href="styles.css"/>
+<link rel="stylesheet" href="v2-route.css"/>
 </head>
 <body>
 <div class="shell">
   <aside class="sidebar">
     <div class="brand"><div class="logo">E</div><div><b>英语思维850</b><small>从 0 建立英语世界</small></div></div>
     <nav class="navGroup" aria-label="主导航">
-      <button class="nav active" type="button" data-view="today" aria-label="今日学习" aria-current="page">今日学习</button>
-      <button class="nav" type="button" data-view="review" aria-label="今日复习">今日复习</button>
-      <button class="nav" type="button" data-view="library" aria-label="50词库">50词库</button>
-      <button class="nav" type="button" data-view="tree" aria-label="知识树">知识树</button>
-      <button class="nav" type="button" data-view="compare" aria-label="易混对比">易混对比</button>
-      <button class="nav" type="button" data-view="progress" aria-label="学习进度">学习进度</button>
+      <section class="navSection navRouteSection" aria-label="英语思维路线">
+        <p class="navGroupLabel">英语思维路线</p>
+        <button id="routeResume" class="nav routeResume" type="button" data-view="start" aria-label="从这里开始"><b>从这里开始</b><small>Start · 先看懂这套学习方法</small></button>
+        <button class="nav navQuiet" type="button" data-view="roadmap" aria-label="查看完整路线">查看完整路线</button>
+      </section>
+      <section class="navSection" aria-label="词汇学习">
+        <p class="navGroupLabel">词汇学习</p>
+        <button class="nav active" type="button" data-view="today" aria-label="今日学习" aria-current="page">今日学习</button>
+        <button class="nav" type="button" data-view="review" aria-label="今日复习">今日复习</button>
+        <button class="nav" type="button" data-view="library" aria-label="50词库">50词库</button>
+      </section>
+      <section class="navSection" aria-label="理解工具">
+        <p class="navGroupLabel">理解工具</p>
+        <button class="nav" type="button" data-view="compare" aria-label="易混对比">易混对比</button>
+        <button class="nav" type="button" data-view="tree" aria-label="知识树，按顺序学">知识树 <small>按顺序学</small></button>
+        <button class="nav" type="button" data-view="network" aria-label="知识网络，看关联">知识网络 <small>看关联</small></button>
+      </section>
+      <section class="navSection" aria-label="我的学习">
+        <p class="navGroupLabel">我的学习</p>
+        <button class="nav" type="button" data-view="progress" aria-label="学习进度">学习进度</button>
+      </section>
     </nav>
     <div class="sideNote">V1 · Level 1 · 50 个骨架词</div>
   </aside>
   <main>
-    <header><div><h1 id="pageTitle">今日学习</h1><p id="pageSub">每天 5 个词，用核心画面建立英语思维。</p></div><div class="avatar">诺诺</div></header>
+    <header><div><h1 id="pageTitle">今日学习</h1><p id="pageSub">每天 5 个词，用核心画面建立英语思维。</p></div><div class="avatar">进度</div></header>
     <section id="app"></section>
   </main>
 </div>
 <noscript>此学习页面需要启用 JavaScript 才能正常使用。</noscript>
 <script src="data.js"></script>
+<script src="v2-data.js"></script>
+<script src="v2-network.js"></script>
+<script src="v2-curriculum-data.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
