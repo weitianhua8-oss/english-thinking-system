@@ -30,6 +30,12 @@ For this audit, `TO-G1` through `TO-G7` identify the teaching-quality Gates defi
 
 Teaching, product, or true-source conflicts stop the affected audit item until an Owner decision exists.
 
+A `true-source conflict` is a conflict between claims about canonical authority, document precedence, or the authoritative rule for the same decision.
+
+An `Owner` is the project decision-maker authorized to accept a governance, teaching, or product-rule resolution.
+
+The affected audit item may resume only after the Owner decision is recorded in, or explicitly linked from, the relevant authoritative document according to scope: [`PROJECT_OS.md`](../../PROJECT_OS.md), [`docs/TEACHING_OS_V2.md`](../TEACHING_OS_V2.md), or [`docs/grammar-vision/GRAMMAR_VISION_MVP_COURSE_ARCHITECTURE_V1.0_FROZEN.md`](GRAMMAR_VISION_MVP_COURSE_ARCHITECTURE_V1.0_FROZEN.md). The conflict record must link to that record. A chat-only decision is insufficient.
+
 ## Source documents
 
 - [Project OS](../../PROJECT_OS.md)
