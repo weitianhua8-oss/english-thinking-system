@@ -112,7 +112,7 @@
 | L3 | Number / Articles / Possession / Pronoun Forms |
 | L4 | Relationship lexical coding |
 | L5 | Verb shape / BE / HAVE / Past coding |
-| L6 | to / -ing / participle coding |
+| L6 | `to` / `-ing` / participle coding |
 | L7 | Connectors / finite-clause coding |
 | L8 | Parsing signals / structural cues |
 
