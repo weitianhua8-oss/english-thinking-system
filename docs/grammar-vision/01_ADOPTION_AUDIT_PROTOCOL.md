@@ -8,9 +8,9 @@ This protocol governs the Grammar Vision adoption audit only. It makes no implem
 
 | Decision scope | Canonical source | Audit rule |
 | --- | --- | --- |
-| Governance, frozen decisions, document precedence | [PROJECT_OS.md](../../PROJECT_OS.md) | An audit cannot override a Project OS decision. |
-| Whole-system teaching architecture and teaching-quality Gates | [docs/TEACHING_OS_V2.md](../TEACHING_OS_V2.md) | Use `TO-G1` through `TO-G7` for quality checks. |
-| Grammar Vision course sequence and learning Gates | [docs/grammar-vision/GRAMMAR_VISION_MVP_COURSE_ARCHITECTURE_V1.0_FROZEN.md](GRAMMAR_VISION_MVP_COURSE_ARCHITECTURE_V1.0_FROZEN.md) | Use `GV-G1` through `GV-G7` for learner progress. |
+| Project OS: governance, frozen decisions, document precedence | [PROJECT_OS.md](../../PROJECT_OS.md) | An audit cannot override a Project OS decision. |
+| Teaching OS V2: whole-system teaching architecture and teaching-quality Gates | [docs/TEACHING_OS_V2.md](../TEACHING_OS_V2.md) | Use `TO-G1` through `TO-G7` for quality checks. |
+| frozen Grammar Vision: course sequence and learning Gates | [docs/grammar-vision/GRAMMAR_VISION_MVP_COURSE_ARCHITECTURE_V1.0_FROZEN.md](GRAMMAR_VISION_MVP_COURSE_ARCHITECTURE_V1.0_FROZEN.md) | Use `GV-G1` through `GV-G7` for learner progress. |
 
 For this audit, `TO-G1` through `TO-G7` identify the teaching-quality Gates defined in the Teaching OS, and `GV-G1` through `GV-G7` identify the Grammar Vision learning Gates in the frozen course architecture.
 
