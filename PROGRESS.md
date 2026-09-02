@@ -2,20 +2,21 @@
 
 **更新时间：** 2026-09-02
 **当前代码基线：** `integration/v2-core-learning-path`
-**Project OS 文档状态：** 已合流到当前整合分支
+**Project OS 文档状态：** 英语专属真源已建立，独立审查通过，待 Owner ACCEPT
 **状态：** In progress
 
 > **兼容摘要（2026-09-02）：** 当前事实状态以 [08_CURRENT_STATE.md](docs/english-thinking-os/08_CURRENT_STATE.md) 为准，当前优先行动以 [11_NEXT_ACTIONS.md](docs/english-thinking-os/11_NEXT_ACTIONS.md) 为准。本文件保留此前任务、验收与 LEARN 记录；本次 Reset 完成后会更新此处的顶层状态。
 
 ## 当前结论
 
-V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。Project OS v1.0 已建立治理层与实际项目文档；Culture → Camera → World 连续链、Word Image 与 Sentence 的首个样板均已完成 Owner 验收与独立审查。
+V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定资产；V2 正在通过 Culture、Camera、World、Word Image、Sentence 等样板逐步验证完整学习路线。英语专属 Project OS 已建立 Teaching OS V2、G1–G7 Quality Gates、冻结决策和证据化当前状态；独立审查已通过，等待 Owner 最终 ACCEPT。
 
 ## 本轮任务
 
 | 任务 | 等级 | 状态 | 证据 / 关联文件 | Owner 下一步 |
 | --- | --- | --- | --- | --- |
 | 建立 Project OS v1.0 规范与 Starter Template | T3 | 已完成并合流 | `docs/project-os/`、`templates/project-starter/` | 在后续 T3+ 任务中持续执行 |
+| 英语项目 Project OS Reset | T4 | Reviewer PASS，待 Owner ACCEPT | `docs/english-thinking-os/`、`docs/project-os/reviews/2026-09-02-english-project-os-reset-review.md` | 审阅新入口、G1–G7 与冻结决策后决定 ACCEPT |
 | 英语思维850 Project OS 实际文档接入 | T3 | 已完成并合流 | `PROJECT.md`、`PRD.md`、`ARCHITECTURE.md`、`RULES.md`、`DECISIONS.md`、本文件 | 以六份项目文档维护长期记忆 |
 | Word Image（ON）样板独立验收 | T3 | 已通过 Owner 验收 | `docs/project-os/reviews/2026-09-01-word-image-review.md` | 作为未来 Word Image 样板的验收参考 |
 | Word Image 认知减负调整 | T3 | 已通过 Owner 验收与独立审查 | `docs/project-os/reviews/2026-09-01-word-image-cognitive-load-refinement-review.md` | 单独提交，后续发布补齐多宽度记录 |
@@ -31,7 +32,8 @@ V1 的 Level 1 50 词离线学习闭环、850 词库和 170 天计划是稳定�
 
 ## 进行中与阻塞
 
-- **进行中：** 当前整合分支已完成 Word Image 与 Sentence 两个样板的验收闭环；下一阶段应选择一个明确的后续模块或发布范围，而不是把样板误扩大为完整 850 词课程。
+- **进行中：** 英语项目 Project OS Reset 已通过独立审查，等待 Owner ACCEPT；接受后优先建立 Grammar Vision V1.2 的可追溯规格和一个 Gate 审核的 Grammar Camera 样板。
+- **LEARN 状态：** 本 T4 任务将在 Owner ACCEPT 后记录最终沉淀；当前不提前写成已完成。
 - **验证限制：** 当前没有端到端浏览器自动化；涉及学习体验的任务仍需 Owner 实际页面验收和发布前多宽度记录。
 - **待决：** 旧图卡提示词/课程中的“诺诺”表述与当前图卡总规则冲突；需要专门 T2/T3 修正规格与生成产物，不在本次治理接入中处理。
 

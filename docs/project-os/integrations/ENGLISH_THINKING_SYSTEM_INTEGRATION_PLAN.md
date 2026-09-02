@@ -2,15 +2,16 @@
 
 > 类型：T3 治理接入｜范围：仅新增治理文档与模板，不改产品功能。
 > 审查日期：2026-09-01
+> **历史接入计划（2026-09-02）：** 本文件记录 v1.0 旁路接入的事实。当前英语项目真源已升级至 [英语专属 Project OS](../../english-thinking-os/PROJECT_OS.md)，本文件不再定义当前产品真源优先级。
 
 ## 结论
 
-项目已有成熟资产，适合采用“旁路接入、逐步生效”。不重命名或替代既有 `PROJECT_MASTER.md`、`ROADMAP.md`、`CURRENT_ARCHITECTURE.md`、现有 Skill、数据或产品代码。
+项目已有成熟资产，采用“旁路接入、逐步生效”建立过 v1.0 治理层。2026-09-02 的 Reset 保留 `PROJECT_MASTER.md`、`ROADMAP.md`、`CURRENT_ARCHITECTURE.md`、现有 Skill、数据和产品代码作为历史或实现证据，同时以英语专属 Project OS 统一当前教学与产品状态。
 
 ## 已确认现状
 
 - 静态离线 Web：`website/index.html`、原生 JavaScript、Node 内置测试。
-- 产品真源：`PROJECT_MASTER.md`；项目已拥有产品、架构、内容、数据、图卡和交接文档。
+- 历史产品证据：`PROJECT_MASTER.md`；当前产品真源：`docs/english-thinking-os/PROJECT_OS.md`。
 - 当前工作分支：`feature/v2-word-image`；另有多个 V2 与集成工作树。
 - 850 词、170 天计划、V1 学习闭环、V2 样板、浏览器本地进度均属于受保护资产。
 - 当前根工作区有未跟踪的方案、思维导图和图卡目录；本接入不得移动、删除或纳入提交。
@@ -44,7 +45,7 @@
 
 - 用既有真源填充 `PROJECT.md`、`PRD.md`、`ARCHITECTURE.md`、`RULES.md`、`DECISIONS.md`、`PROGRESS.md`。
 - 每一条规则或决定都链接回原始来源；冲突仅列出，不擅自裁决。
-- 验证：不改变产品代码、数据、目录结构；与 `PROJECT_MASTER.md` 的优先级一致。
+- 历史验收标准：不改变产品代码、数据、目录结构；当时与 `PROJECT_MASTER.md` 的优先级一致。当前英语项目已以 [英语专属 Project OS](../../english-thinking-os/PROJECT_OS.md) 为准。
 
 ### Phase 3｜首次实战验证（建议 T3，单独确认）
 

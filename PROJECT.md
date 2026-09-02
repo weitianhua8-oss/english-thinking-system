@@ -48,8 +48,8 @@
 
 ## 文档真源与优先级
 
-1. `PROJECT_MASTER.md`：既有最高产品规则；本文件为其 Project OS 摘要，冲突时以该文件为准。
-2. `RULES.md`：项目级稳定执行规则。
-3. `DECISIONS.md`：已接受的关键取舍与来源。
-4. 经过确认的 Golden Sample。
-5. `PRD.md`、`ARCHITECTURE.md`、`PROGRESS.md`：当前版本目标、实现现状与进度。
+1. Owner 对当前任务明确确认的验收标准。
+2. [英语专属 Project OS](docs/english-thinking-os/PROJECT_OS.md) 与其中的 [冻结决策](docs/english-thinking-os/09_DECISIONS.md)。
+3. 已确认的 Golden Sample 与独立审查记录。
+4. 本文件及 `RULES.md`、`DECISIONS.md`、`PRD.md`、`ARCHITECTURE.md`、`PROGRESS.md` 的兼容摘要。
+5. `PROJECT_MASTER.md`、`ROADMAP.md` 与旧计划：历史证据，不覆盖当前英语专属真源。

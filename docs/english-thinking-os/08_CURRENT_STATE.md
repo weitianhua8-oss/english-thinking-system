@@ -26,11 +26,11 @@
 
 | 能力 | 状态 | 已有证据 | 范围边界 |
 | --- | --- | --- | --- |
-| Culture | 已实现且已验收 | `v2-curriculum-data.js`、审查记录 | 5 个有限课程样板 |
-| Camera | 已实现且已验收 | 路线数据、页面与审查记录 | 1 个图书馆场景样板 |
-| World | 已实现且已验收 | 路线数据、页面与审查记录 | 1 个房间观察样板 |
-| Word Image（ON） | 已实现且已验收 | 页面、数据、审查记录 | 1 个 ON 样板，不代表全量词汇 |
-| Sentence | 已实现且已验收 | 页面、数据、审查记录 | 1 个句子样板，不是完整 Sentence 系统 |
+| Culture | 已实现且已验收 | `v2-curriculum-data.js`、[Culture/Camera/World 审查](../project-os/reviews/2026-09-02-culture-camera-world-chain-review.md) | 5 个有限课程样板 |
+| Camera | 已实现且已验收 | 路线数据、页面与 [Culture/Camera/World 审查](../project-os/reviews/2026-09-02-culture-camera-world-chain-review.md) | 1 个图书馆场景样板 |
+| World | 已实现且已验收 | 路线数据、页面与 [Culture/Camera/World 审查](../project-os/reviews/2026-09-02-culture-camera-world-chain-review.md) | 1 个房间观察样板 |
+| Word Image（ON） | 已实现且已验收 | 页面、数据与 [Word Image 审查](../project-os/reviews/2026-09-01-word-image-cognitive-load-refinement-review.md) | 1 个 ON 样板，不代表全量词汇 |
+| Sentence | 已实现且已验收 | 页面、数据与 [Sentence 审查](../project-os/reviews/2026-09-02-sentence-review.md) | 1 个句子样板，不是完整 Sentence 系统 |
 | Knowledge Network | 已实现且已验收 | 图校验、13 节点样板、Node 测试 | 不是 850 个完整网络节点 |
 | 3D 图卡视觉标准 | 已实现待验收 | BE 图卡标准、manifest 与回退逻辑 | 不能把资产数量表述为全量黄金课程 |
 
@@ -38,7 +38,7 @@
 
 | 方向 | 当前事实 | 下一步边界 |
 | --- | --- | --- |
-| Grammar Vision V1.2 | Owner 已确认；当前所有工作树未发现独立命名文档或已接入课程/代码 | 先建立 Grammar 规格和一个 Gate 审核的样板，不直接批量开发 |
+| Grammar Vision V1.2 | Owner 已确认；在 2026-09-02 审计的现有工作树中未发现独立命名文档或已接入课程/代码 | 先建立 Grammar 规格和一个 Gate 审核的样板，不直接批量开发 |
 | Grammar Camera | 已冻结为教学隐喻；当前 Grammar 路由仍为 `planned` | 用于后续 Grammar 任务的验收，不等于已上线模块 |
 | 用户自选新词数量 + 掌握度驱动复习 | 已冻结为产品方向；现有 170 天计划仍为 5 词/天 | 单独设计数据兼容、迁移与回归测试 |
 | English Thinking Skill Pro / Word Image Pro | 已冻结为对象命名与职责方向 | 在后续 Skill 或组件任务中按本真源实现 |

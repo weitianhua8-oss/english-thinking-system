@@ -1,7 +1,7 @@
 # English Thinking System｜RULES
 
 **用途：** 将现有项目总控、架构审计和已确认设计规范中长期有效的执行约束汇总为可检查规则。
-**优先级：** 与 `PROJECT_MASTER.md` 冲突时，以 `PROJECT_MASTER.md` 为准。
+**优先级：** 与 [英语专属 Project OS](docs/english-thinking-os/PROJECT_OS.md) 冲突时，以英语专属真源为准；`PROJECT_MASTER.md` 只保留历史证据职责。
 
 > **兼容摘要（2026-09-02）：** 教学验收以 [06_QUALITY_GATES.md](docs/english-thinking-os/06_QUALITY_GATES.md) 为准，表现规则以 [07_DESIGN_SYSTEM.md](docs/english-thinking-os/07_DESIGN_SYSTEM.md) 为准。若与旧 Master 冲突，按 [英语专属 Project OS](docs/english-thinking-os/PROJECT_OS.md) 的优先级裁决。
 
@@ -35,5 +35,6 @@
 ## 冲突处理
 
 1. 当前 Owner 已确认的任务验收优先；
-2. 其后以 `PROJECT_MASTER.md` 为最高产品规则；
-3. 规则冲突必须在 `DECISIONS.md` 或任务卡中记录来源、影响和裁决，不能静默选择一份旧文档。
+2. 其后以 [英语专属 Project OS](docs/english-thinking-os/PROJECT_OS.md) 与其冻结决策为准；
+3. `PROJECT_MASTER.md`、旧 Roadmap 和旧 Skill 只作为历史证据，不能覆盖英语专属真源；
+4. 规则冲突必须在 [英语专属 Decisions](docs/english-thinking-os/09_DECISIONS.md) 或任务卡中记录来源、影响和裁决，不能静默选择一份旧文档。

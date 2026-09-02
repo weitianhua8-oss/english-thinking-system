@@ -89,7 +89,7 @@ data.js → v2-data.js → v2-network.js → app.js
 
 ### 3.2 已有内容规范
 
-- `PROJECT_MASTER.md`：项目总控；与旧文档冲突时优先。
+- [英语专属 Project OS](docs/english-thinking-os/PROJECT_OS.md)：当前教学与产品真源；`PROJECT_MASTER.md` 保留为历史产品证据。
 - `skills/english-thinking/SKILL.md`：单词内容的核心本源、画面、逻辑、场景、关系规范。
 - `skills/3d-knowledge-card/SKILL.md` 与 `visual/3d-card-standard/BE-reference/STYLE_GUIDE.md`：3D 图卡标准；禁止把固定角色/IP 作为图卡必需元素。
 - `data/vocabulary.schema.json`、`data/LEARNING_LAYERS.md`、`data/golden-learning-layers.v1.json`：渐进增强、三层内容和黄金样本的基础约束。
