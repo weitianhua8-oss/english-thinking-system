@@ -32,6 +32,30 @@
 
 ---
 
+## P0.6 — Grammar Vision adoption audit
+
+目标：完成 Grammar Vision 审计包，明确当前证据、缺口与需要 Owner 决策的真实冲突；不改变任何产品实现。
+
+审计包：[Task 1 协议](docs/grammar-vision/01_ADOPTION_AUDIT_PROTOCOL.md)、[Task 2 43 节点矩阵](docs/grammar-vision/02_43_NODE_ADOPTION_MATRIX.md)、[Task 3 资产状态台账](docs/grammar-vision/03_ASSET_STATE_LEDGER.md)、[Task 3 Gate 证据交叉表](docs/grammar-vision/04_GATE_EVIDENCE_CROSSWALK.md)、[Task 4 冲突与缺口报告](docs/grammar-vision/05_CONFLICT_AND_GAP_REPORT.md)。
+
+- [ ] Complete the 43-node adoption matrix and both parallel rails.
+- [ ] Verify each module’s state against repository evidence.
+- [ ] Separate GV learner Gates from Teaching OS quality Gates in all new audit records.
+- [ ] Record true-source conflicts for Owner decision; do not silently resolve them.
+- [ ] Update the next implementation priority only after the audit package passes review.
+
+### P0.6 完成门槛
+
+- 五份审计文档均存在并可相互链接：Task 1 协议、Task 2 矩阵、Task 3 台账、Task 3 Gate 交叉表、Task 4 冲突与缺口报告。
+- 所有审计验证检查均通过，包括审计包存在性、43 节点矩阵、状态与 Gate 术语检查、网站回归测试。
+- 任何真实来源冲突均已由 Owner 审阅，且决策已记录在或明确链接自相应权威文档；不得以聊天记录代替。
+- `git diff --check` 无输出。
+- `git diff --name-only HEAD^ HEAD -- website data content curriculum visual` 无输出，受保护的产品目录保持未改动。
+
+执行边界：本阶段只产生审计记录与优先级说明；不得把冻结规格、可复用素材或缺口判定写成产品实现，也不得修改页面、数据、课程、视觉资产或既有 Skill。
+
+---
+
 ## P1 — Level 1 50词内容审查：建立黄金母版
 
 目标：不是“50 个词有内容”，而是让 Level 1 成为后续 800 词的质量模板。
@@ -211,6 +235,6 @@ Quick → Deep → Network → 关系解释 → 继续探索 → 返回 → 学�
 
 # 当前执行状态
 
-**NOW：P0.5｜Teaching OS V2 治理基线已固化；下一步是对 Level 1 黄金母版和现有学习链路做范围化审计。**
+**NOW：P0.6 — Grammar Vision adoption audit。**
 
 执行边界：先以 `G1–G7` 审核内容和学习体验，再决定对应的内容、数据或页面改动；不得把 `50/150/300/500/850` 覆盖度当作能力等级。P0 的迁移清单保留为历史合流记录，未完成项需在实际执行时以仓库与分支证据重新核验。
