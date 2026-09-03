@@ -97,7 +97,7 @@ Create headings for Stage 0 through Stage 4 using this fixed grouping:
 
 - [ ] **Step 2: Add all 43 frozen node rows without inventing implementation status**
 
-Copy the frozen cognition labels for Nodes 01–43 exactly from the frozen course specification. For each row, set `Current status` only after inspecting the referenced current asset. If no current asset demonstrably implements the node, enter `planned`; do not infer an implementation from a related word, a 3D card, or a general grammar heading.
+Copy the frozen cognition labels for Nodes 01–43 exactly from the frozen course specification. For each row, set `Current status` only after inspecting the referenced current asset. When the frozen specification sets a target but no current asset demonstrably delivers the node, enter `已确认方向`; use `planned` only when a future action has both a named output and dependency. Do not infer an implementation from a related word, a 3D card, or a general grammar heading.
 
 For Nodes 01–14, inspect `data/level1_lessons.json` and `content/Level1_50个骨架词完整教程.md`; for relationship nodes inspect `data/LEARNING_LAYERS.md`; for all remaining nodes state the absence or presence of direct evidence explicitly.
 
