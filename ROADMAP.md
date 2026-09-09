@@ -38,10 +38,10 @@
 
 审计包：[Task 1 协议](docs/grammar-vision/01_ADOPTION_AUDIT_PROTOCOL.md)、[Task 2 43 节点矩阵](docs/grammar-vision/02_43_NODE_ADOPTION_MATRIX.md)、[Task 3 资产状态台账](docs/grammar-vision/03_ASSET_STATE_LEDGER.md)、[Task 3 Gate 证据交叉表](docs/grammar-vision/04_GATE_EVIDENCE_CROSSWALK.md)、[Task 4 冲突与缺口报告](docs/grammar-vision/05_CONFLICT_AND_GAP_REPORT.md)。
 
-- [ ] Complete the 43-node adoption matrix and both parallel rails.
-- [ ] Verify each module’s state against repository evidence.
-- [ ] Separate GV learner Gates from Teaching OS quality Gates in all new audit records.
-- [ ] Record true-source conflicts for Owner decision; do not silently resolve them.
+- [x] Complete the 43-node adoption matrix and both parallel rails.
+- [x] Verify each module’s state against repository evidence.
+- [x] Separate GV learner Gates from Teaching OS quality Gates in all new audit records.
+- [x] Record true-source conflicts for Owner decision; do not silently resolve them.（本轮审计未发现实际真源冲突，已记录 4 项实现证据缺口。）
 - [ ] Update the next implementation priority only after the audit package passes review.
 
 ### P0.6 完成门槛

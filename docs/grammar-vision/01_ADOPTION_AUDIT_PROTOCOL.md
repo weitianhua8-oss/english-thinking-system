@@ -1,5 +1,7 @@
 # Grammar Vision Adoption Audit Protocol
 
+审计包导航：[01 协议](01_ADOPTION_AUDIT_PROTOCOL.md) · [02 43 节点矩阵](02_43_NODE_ADOPTION_MATRIX.md) · [03 资产状态台账](03_ASSET_STATE_LEDGER.md) · [04 Gate 证据交叉表](04_GATE_EVIDENCE_CROSSWALK.md) · [05 冲突与缺口报告](05_CONFLICT_AND_GAP_REPORT.md)
+
 ## Purpose and scope boundary
 
 This protocol governs the Grammar Vision adoption audit only. It makes no implementation claim and changes no product asset.

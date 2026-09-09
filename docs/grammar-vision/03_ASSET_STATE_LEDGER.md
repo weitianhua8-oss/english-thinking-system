@@ -1,5 +1,7 @@
 # Grammar Vision Asset State Ledger
 
+审计包导航：[01 协议](01_ADOPTION_AUDIT_PROTOCOL.md) · [02 43 节点矩阵](02_43_NODE_ADOPTION_MATRIX.md) · [03 资产状态台账](03_ASSET_STATE_LEDGER.md) · [04 Gate 证据交叉表](04_GATE_EVIDENCE_CROSSWALK.md) · [05 冲突与缺口报告](05_CONFLICT_AND_GAP_REPORT.md)
+
 ## Scope and evidence rule
 
 This ledger reports repository evidence and the status vocabulary from the [Task 1 audit protocol](01_ADOPTION_AUDIT_PROTOCOL.md). It creates no implementation claim. [Project OS](../../PROJECT_OS.md) remains the governance source, [Teaching OS V2](../TEACHING_OS_V2.md) defines module roles and quality expectations, and the [Task 2 adoption matrix](02_43_NODE_ADOPTION_MATRIX.md) records the Grammar Vision node audit. A frozen direction or a reusable candidate is not, by itself, a shipped implementation.
