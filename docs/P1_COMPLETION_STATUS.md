@@ -19,15 +19,16 @@
 - `data/p1-a-plus-20.v1.json`：20 个 A+ 三层黄金母版。
 - `prompts/Level1_3D知识图卡生产清单.md`：去角色化并同步 P1 内容修订。
 
-## 尚未执行的“同步动作”
+## 集成分支同步状态（2026-09-09）
 
-这些不是内容审校本身，但在 P1 合并 main 前必须完成：
+以下状态只适用于 `integration/v2-consolidation`，不表示已经合并 `main` 或发布：
 
-1. 将 `content/P1_Level1_9词修订稿.md` 的九个词合回 `content/Level1_50个骨架词完整教程.md`，保留其余 41 词原内容。
-2. 将九词修订同步到 `data/level1_lessons.json` / `website/data.js` 的对应数据源，不改变词序和 10 天 × 5 词课程结构。
-3. 对 20 个 A+ 的 Quick / Deep / Network 与 V2 已有 13 个样板做字段映射，重复节点以审校后的 P1 内容为内容准绳，V2 的关系校验机制继续保留。
-4. 运行现有 Node 测试与语法检查；任何测试回退先修复再合并。
-5. 完成差异复核后，以 PR 方式将 `audit/p1-level1-content` 合入 `main`，不得直接推 main。
+1. [x] 九词修订已合回 `content/Level1_50个骨架词完整教程.md`，其余词序与章节顺序保持不变。
+2. [x] 九词修订已同步到 `data/level1_lessons.json`，并由现有构建脚本重新生成 `website/data.js`；Level 1 仍为 10 天 × 5 词。
+3. [x] 图卡源内容、生产清单和 manifest 生成链路不再要求固定角色/IP；表达语义所需的中性人物、物体和位置关系继续保留。
+4. [ ] 将 20 个 A+ 的 Quick / Deep / Network 与 V2 已有 13 个样板做字段映射；重复节点以 P1 审校内容为内容准绳，保留 V2 关系校验机制。
+5. [ ] 完成最终 Node 测试、语法检查、浏览器验收与独立审查。
+6. [ ] 等待 Owner 验收；本任务不推送、不建 PR、不合并 `main`。
 
 ## P2 进入条件
 

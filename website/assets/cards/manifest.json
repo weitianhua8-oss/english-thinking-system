@@ -39,10 +39,10 @@
     "lessonNo": 5,
     "word": "it",
     "filename": "05-it.png",
-    "tagline": "it = 给已知的事物、动物或当前情况一个“继续指代的代号”。",
+    "tagline": "it = 一个中性的第三人称主语/宾语支点；有时继续指已知对象，有时只是把句子结构撑起来。",
     "imagePath": "assets/cards/05-it.png",
     "visualBrief": "单一静态中心场景，一个共同注意的球体被柔和焦点光环包围。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一个共同注意的球体被柔和焦点光环包围。 Render this as one single central static teaching scene. Place the English word \"it\" at the top and the exact Chinese tagline \"it = 给已知的事物、动物或当前情况一个“继续指代的代号”。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一个共同注意的球体被柔和焦点光环包围。 Render this as one single central static teaching scene. Place the English word \"it\" at the top and the exact Chinese tagline \"it = 一个中性的第三人称主语/宾语支点；有时继续指已知对象，有时只是把句子结构撑起来。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 6,
@@ -57,10 +57,10 @@
     "lessonNo": 7,
     "word": "they",
     "filename": "07-they.png",
-    "tagline": "they = 把多个第三方对象打包成一组。",
+    "tagline": "they = 把注意力放到“第三方”人物/对象上；可以是一组，也可以是一个人。",
     "imagePath": "assets/cards/07-they.png",
     "visualBrief": "单一静态中心场景，远处多位第三方处在同一个群体光环范围内，前景焦点指向该群体。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，远处多位第三方处在同一个群体光环范围内，前景焦点指向该群体。 Render this as one single central static teaching scene. Place the English word \"they\" at the top and the exact Chinese tagline \"they = 把多个第三方对象打包成一组。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，远处多位第三方处在同一个群体光环范围内，前景焦点指向该群体。 Render this as one single central static teaching scene. Place the English word \"they\" at the top and the exact Chinese tagline \"they = 把注意力放到“第三方”人物/对象上；可以是一组，也可以是一个人。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 8,
@@ -93,10 +93,10 @@
     "lessonNo": 11,
     "word": "there",
     "filename": "11-there.png",
-    "tagline": "there = 指向“不是当前这里”的另一个位置。",
+    "tagline": "there 有两个 Level 1 必须分开的镜头：地点“那里”，以及 there is/are 的“把新对象带进场景”。",
     "imagePath": "assets/cards/11-there.png",
     "visualBrief": "单一静态中心场景，当前位置焦点圆点与远处另一位置由方向箭头连接，终点有光环。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，当前位置焦点圆点与远处另一位置由方向箭头连接，终点有光环。 Render this as one single central static teaching scene. Place the English word \"there\" at the top and the exact Chinese tagline \"there = 指向“不是当前这里”的另一个位置。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，当前位置焦点圆点与远处另一位置由方向箭头连接，终点有光环。 Render this as one single central static teaching scene. Place the English word \"there\" at the top and the exact Chinese tagline \"there 有两个 Level 1 必须分开的镜头：地点“那里”，以及 there is/are 的“把新对象带进场景”。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 12,
@@ -120,19 +120,19 @@
     "lessonNo": 14,
     "word": "have",
     "filename": "14-have.png",
-    "tagline": "have = 某物、关系或经历处在主语的“拥有/经历范围”里。",
+    "tagline": "have = 主语与某个东西、特征、关系或经历建立“当前关联”。",
     "imagePath": "assets/cards/14-have.png",
     "visualBrief": "单一静态中心场景，一个物体安放在人物周围的半透明拥有范围内，范围边界清晰可见。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一个物体安放在人物周围的半透明拥有范围内，范围边界清晰可见。 Render this as one single central static teaching scene. Place the English word \"have\" at the top and the exact Chinese tagline \"have = 某物、关系或经历处在主语的“拥有/经历范围”里。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一个物体安放在人物周围的半透明拥有范围内，范围边界清晰可见。 Render this as one single central static teaching scene. Place the English word \"have\" at the top and the exact Chinese tagline \"have = 主语与某个东西、特征、关系或经历建立“当前关联”。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 15,
     "word": "do",
     "filename": "15-do.png",
-    "tagline": "do = 把一件事情、任务或活动执行出来。",
+    "tagline": "do 有两份工作：自己表示“执行事情”，也可以退到后台做句子的语法支架。",
     "imagePath": "assets/cards/15-do.png",
     "visualBrief": "单一静态中心场景，人物的手沿执行路径在一张任务清单上完成一个勾选，焦点落在动作接触点。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，人物的手沿执行路径在一张任务清单上完成一个勾选，焦点落在动作接触点。 Render this as one single central static teaching scene. Place the English word \"do\" at the top and the exact Chinese tagline \"do = 把一件事情、任务或活动执行出来。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，人物的手沿执行路径在一张任务清单上完成一个勾选，焦点落在动作接触点。 Render this as one single central static teaching scene. Place the English word \"do\" at the top and the exact Chinese tagline \"do 有两份工作：自己表示“执行事情”，也可以退到后台做句子的语法支架。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 16,
@@ -165,10 +165,10 @@
     "lessonNo": 19,
     "word": "take",
     "filename": "19-take.png",
-    "tagline": "take = 把某人/物纳入控制，并带离原来的参照点。",
+    "tagline": "take 的原型画面是“主动把某物纳入自己的行动，并从当前情境带走/带着走”；但很多高频 take 已经形成固定构式，要分支学习。",
     "imagePath": "assets/cards/19-take.png",
     "visualBrief": "单一静态中心场景，一只手从桌面起点接触一本书，方向箭头把书带离原位置。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一只手从桌面起点接触一本书，方向箭头把书带离原位置。 Render this as one single central static teaching scene. Place the English word \"take\" at the top and the exact Chinese tagline \"take = 把某人/物纳入控制，并带离原来的参照点。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一只手从桌面起点接触一本书，方向箭头把书带离原位置。 Render this as one single central static teaching scene. Place the English word \"take\" at the top and the exact Chinese tagline \"take 的原型画面是“主动把某物纳入自己的行动，并从当前情境带走/带着走”；但很多高频 take 已经形成固定构式，要分支学习。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 20,
@@ -219,10 +219,10 @@
     "lessonNo": 25,
     "word": "turn",
     "filename": "25-turn.png",
-    "tagline": "turn = 从原来的方向或状态转到另一个方向或状态。",
+    "tagline": "turn = 改变朝向，或从一种可识别状态切换到另一种。",
     "imagePath": "assets/cards/25-turn.png",
     "visualBrief": "单一静态中心场景，一条路径在中心转弯，方向箭头从原方向连续转向新方向。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一条路径在中心转弯，方向箭头从原方向连续转向新方向。 Render this as one single central static teaching scene. Place the English word \"turn\" at the top and the exact Chinese tagline \"turn = 从原来的方向或状态转到另一个方向或状态。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一条路径在中心转弯，方向箭头从原方向连续转向新方向。 Render this as one single central static teaching scene. Place the English word \"turn\" at the top and the exact Chinese tagline \"turn = 改变朝向，或从一种可识别状态切换到另一种。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 26,
@@ -273,10 +273,10 @@
     "lessonNo": 31,
     "word": "feel",
     "filename": "31-feel.png",
-    "tagline": "feel = 直接感知身体、情绪或接触带来的内部体验。",
+    "tagline": "feel = 通过身体或内在体验获得感受；既可以“感到”，也可以主动去触摸感知。",
     "imagePath": "assets/cards/31-feel.png",
     "visualBrief": "单一静态中心场景，一只手接触温暖表面，接触箭头指向人物内部的感受焦点。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一只手接触温暖表面，接触箭头指向人物内部的感受焦点。 Render this as one single central static teaching scene. Place the English word \"feel\" at the top and the exact Chinese tagline \"feel = 直接感知身体、情绪或接触带来的内部体验。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一只手接触温暖表面，接触箭头指向人物内部的感受焦点。 Render this as one single central static teaching scene. Place the English word \"feel\" at the top and the exact Chinese tagline \"feel = 通过身体或内在体验获得感受；既可以“感到”，也可以主动去触摸感知。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 32,
@@ -381,10 +381,10 @@
     "lessonNo": 43,
     "word": "over",
     "filename": "43-over.png",
-    "tagline": "over = 位于上方，并带有跨越、覆盖一个范围的关系。",
+    "tagline": "over 的空间原型是“在上方并越过/覆盖一个范围”；部分高频用法已经形成独立语义分支。",
     "imagePath": "assets/cards/43-over.png",
     "visualBrief": "单一静态中心场景，一条抛物线路径越过一个箱子，上方方向箭头指向终点。",
-    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一条抛物线路径越过一个箱子，上方方向箭头指向终点。 Render this as one single central static teaching scene. Place the English word \"over\" at the top and the exact Chinese tagline \"over = 位于上方，并带有跨越、覆盖一个范围的关系。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
+    "prompt": "vertical 1024x1536, light 3D educational card, white negative space, blue-violet structure, coral key change. Central scene instruction: 单一静态中心场景，一条抛物线路径越过一个箱子，上方方向箭头指向终点。 Render this as one single central static teaching scene. Place the English word \"over\" at the top and the exact Chinese tagline \"over 的空间原型是“在上方并越过/覆盖一个范围”；部分高频用法已经形成独立语义分支。\" at the bottom. Visible wording is limited to the English word and exact Chinese tagline. Use an anonymous simplified silhouette only if a person is necessary; never use a named or recurring character, face, watermark, logo, or busy background."
   },
   {
     "lessonNo": 44,

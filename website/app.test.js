@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { execFileSync } = require('node:child_process');
+const fs = require('node:fs');
 const path = require('node:path');
 const core = require('./app.js');
 const manifest = require('./assets/cards/manifest.json');
@@ -236,6 +237,57 @@ test('Level 1 data contains exactly ten five-word days with lesson coverage', ()
   assert.equal(data.plan.length, 10);
   assert.ok(data.plan.every(day => day.words.length === 5));
   assert.ok(data.plan.flatMap(day => day.words).every(word => data.lessons[word]));
+});
+
+test('P1 nine-word revisions are synchronized to tutorial, structured lessons, and website data', () => {
+  const structured = require('../data/level1_lessons.json');
+  const site = require('./data.js');
+  const tutorial = fs.readFileSync(require.resolve('../content/Level1_50个骨架词完整教程.md'), 'utf8');
+  const expectedTaglines = {
+    they: 'they = 把注意力放到“第三方”人物/对象上；可以是一组，也可以是一个人。',
+    it: 'it = 一个中性的第三人称主语/宾语支点；有时继续指已知对象，有时只是把句子结构撑起来。',
+    there: 'there 有两个 Level 1 必须分开的镜头：地点“那里”，以及 there is/are 的“把新对象带进场景”。',
+    do: 'do 有两份工作：自己表示“执行事情”，也可以退到后台做句子的语法支架。',
+    take: 'take 的原型画面是“主动把某物纳入自己的行动，并从当前情境带走/带着走”；但很多高频 take 已经形成固定构式，要分支学习。',
+    have: 'have = 主语与某个东西、特征、关系或经历建立“当前关联”。',
+    turn: 'turn = 改变朝向，或从一种可识别状态切换到另一种。',
+    feel: 'feel = 通过身体或内在体验获得感受；既可以“感到”，也可以主动去触摸感知。',
+    over: 'over 的空间原型是“在上方并越过/覆盖一个范围”；部分高频用法已经形成独立语义分支。',
+  };
+
+  Object.entries(expectedTaglines).forEach(([word, tagline]) => {
+    const lesson = structured.find(item => item.word === word);
+    assert.equal(lesson.tagline, tagline, `${word} structured lesson must use the reviewed P1 tagline`);
+    assert.equal(site.lessons[word].tagline, tagline, `${word} website lesson must use the reviewed P1 tagline`);
+    assert.ok(tutorial.includes(`> **${tagline}**`), `${word} tutorial must use the reviewed P1 tagline`);
+    assert.doesNotMatch(`${lesson.image}\n${lesson.card}`, /诺诺|固定角色|固定人物|固定IP/);
+  });
+});
+
+test('P1 A+ golden templates contain twenty complete Quick Deep Network contracts', () => {
+  const golden = require('../data/p1-a-plus-20.v1.json');
+  assert.equal(golden.items.length, 20);
+  assert.equal(new Set(golden.items.map(item => item.word)).size, 20);
+  golden.items.forEach(item => {
+    ['word', 'system'].forEach(field => assert.ok(item[field]));
+    ['core_image', 'core_logic', 'example', 'memory_hook'].forEach(field => assert.ok(item.quick[field]));
+    ['meaning_growth', 'structures', 'confusions', 'pitfalls'].forEach(field => {
+      assert.ok(Array.isArray(item.deep[field]) && item.deep[field].length, `${item.word}.${field}`);
+    });
+    assert.ok(item.network.system);
+    assert.ok(Array.isArray(item.network.relations) && item.network.relations.length);
+    item.network.relations.forEach(relation => {
+      assert.ok(['system', 'growth', 'combination', 'contrast'].includes(relation.type));
+      assert.ok(relation.target && relation.explanation);
+    });
+  });
+});
+
+test('Level 1 card source content uses neutral semantic people instead of a fixed character IP', () => {
+  const lessons = require('../data/level1_lessons.json');
+  const tutorial = fs.readFileSync(require.resolve('../content/Level1_50个骨架词完整教程.md'), 'utf8');
+  assert.ok(lessons.every(lesson => !/诺诺|固定人物角色/.test(`${lesson.image}\n${lesson.card}`)));
+  assert.doesNotMatch(tutorial, /诺诺/);
 });
 
 test('filterWords combines text, category, and mastery filters', () => {

@@ -25,7 +25,7 @@
 
 ## 核心画面
 
-诺诺手指自己；镜头中心就是“当前说话者”。
+一位中性说话者指向自己；镜头中心就是“当前说话者”。
 
 ## 底层逻辑
 
@@ -52,7 +52,7 @@ I vs me：I 是动作/状态的出发位置；me 是动作到达的对象。
 
 ## 3D知识图卡提炼
 
-人物视角卡：诺诺居中，胸前 I / SPEAKER 标签。
+人物视角卡：中性说话者居中，I / SPEAKER 只标示语义角色。
 
 
 # 02｜you
@@ -173,38 +173,40 @@ she vs her：she 做主语；her 可作动作目标，也可建立所属关系�
 
 ## 一句话抓住本源
 
-> **it = 给已知的事物、动物或当前情况一个“继续指代的代号”。**
+> **it = 一个中性的第三人称主语/宾语支点；有时继续指已知对象，有时只是把句子结构撑起来。**
 
 ## 核心画面
 
-先指向一个球 THIS BALL，下一格把标签换成 IT。
+两条中性支路：KNOWN THING → IT；天气、时间、距离或后置内容 → IT 主语支点。
 
 ## 底层逻辑
 
-对象一旦已经进入共同注意力，就可以用 it 继续说；天气、时间等也可把“整个当前情况”放到 it 这个主语支点上。
+`it` 至少要分成两个高频镜头：指代 it 在对象进入共同注意力后继续指它；结构 it 则为天气、时间、距离或较长后置内容占住英语句子的主语位置，不必硬找具体指代物。Level 1 先掌握这两个分支。
 
 ## 高频例句
 
 - It is red.
-- It is raining.
 - I like it.
+- It is raining.
+- It is late.
 
 ## 易混 / 关键对比
 
-this/that 用来主动指出；it 用来继续指已知对象或情境。
+`this / that` 主动指出对象；指代 `it` 继续说已明确对象；结构 `it` 不需要具体指代物。
 
 ## 记忆钩子
 
-> **IT = 刚才那个东西 / 当前这个情况。**
+> **IT = 要么接着指“它”，要么先把主语位置撑住。**
 
 ## 知识树连接
 
-- 分类：人与指向 → 人称指代
-- 关联：he / she / we / they
+- 上位：人物与视角 → 第三人称中性指代 / 结构主语
+- 对比：this / that → it
+- 生长：referential it / dummy it / anticipatory it（后两者在高阶课程展开）
 
 ## 3D知识图卡提炼
 
-THIS → IT 指代切换卡。
+中性双通道：THIS BALL → IT；WEATHER/TIME → IT → STATE。
 
 
 # 06｜we
@@ -215,7 +217,7 @@ THIS → IT 指代切换卡。
 
 ## 核心画面
 
-诺诺和其他人一起站进一个透明圆圈。
+一位中性说话者和其他人一起站进一个透明圆圈。
 
 ## 底层逻辑
 
@@ -249,38 +251,39 @@ we vs they：we 的圈里一定有 I；they 的圈里没有当前说话者。
 
 ## 一句话抓住本源
 
-> **they = 把多个第三方对象打包成一组。**
+> **they = 把注意力放到“第三方”人物/对象上；可以是一组，也可以是一个人。**
 
 ## 核心画面
 
-I / YOU 在前景，远处多人被一个圆圈框住。
+I / YOU 在对话前景；中性的 THIRD-PERSON 指代区可圈住多人，也可圈住一个人。
 
 ## 底层逻辑
 
-they 可以是一群人、动物或物体；核心是“多个不含当前说话者的第三方对象”。
+`they` 的关键是第三人称指代。它既可指多个人、动物或事物，也可在性别未知、不重要或当事人使用 they 时指一个人。不要把 `they` 死记成“他们 = 多个人”。
 
 ## 高频例句
 
 - They are outside.
-- They have a car.
-- I see them.
+- Someone left their bag. I hope they come back.
+- Alex said they are ready.
 
 ## 易混 / 关键对比
 
-they vs we：是否包含 I。
+`we` 一定包含当前说话者 I；`they` 是第三方指代，不把当前说话者放进这个代词里。
 
 ## 记忆钩子
 
-> **THEY = 远处那一组。**
+> **THEY = 对话之外的第三方槽位，可一可多。**
 
 ## 知识树连接
 
-- 分类：人与指向 → 人称指代
-- 关联：it / we / me / him
+- 上位：人物与视角 → 第三人称指代
+- 对比：we ↔ they（是否包含 I）
+- 连接：he / she / it 是更具体的第三人称指代；they 可在不指定性别时承担单数人物指代
 
 ## 3D知识图卡提炼
 
-第三方群体卡。
+中性对话站位：I / YOU 在前，THIRD PERSON 区域显示 1 ↔ many。
 
 
 # 08｜this
@@ -291,7 +294,7 @@ they vs we：是否包含 I。
 
 ## 核心画面
 
-诺诺手里拿着一本书，书被 THIS 光圈标记。
+一位中性人物手里拿着一本书，书被 THIS 光圈标记。
 
 ## 底层逻辑
 
@@ -329,7 +332,7 @@ this vs that：近 vs 远。
 
 ## 核心画面
 
-诺诺指向远处一个物体，目标被 THAT 标记。
+一位中性人物指向远处一个物体，目标被 THAT 标记。
 
 ## 底层逻辑
 
@@ -367,7 +370,7 @@ this vs that：近 vs 远。
 
 ## 核心画面
 
-诺诺脚下出现发光 HERE 圆点。
+一位中性人物脚下出现发光 HERE 圆点。
 
 ## 底层逻辑
 
@@ -401,38 +404,40 @@ HERE 地面焦点卡。
 
 ## 一句话抓住本源
 
-> **there = 指向“不是当前这里”的另一个位置。**
+> **there 有两个 Level 1 必须分开的镜头：地点“那里”，以及 there is/are 的“把新对象带进场景”。**
 
 ## 核心画面
 
-HERE 点在脚下，远处另一个点被标成 THERE。
+两个中性镜头：HERE ↔ THERE 空间点；EMPTY SCENE → THERE IS → NEW OBJECT。
 
 ## 底层逻辑
 
-there 建立第二个空间位置；there is/are 进一步用于把某个对象引入当前场景。
+地点 `there` 指不是当前 `here` 的另一个位置；存现 `there is/are` 主要把一个新存在的人或物引入听者注意力，不能机械理解成“那里有”。听到 `there is/are`，先问“什么东西被带进场景了？”
 
 ## 高频例句
 
 - Go there.
 - Put it there.
-- There is a cat outside.
+- There is a problem.
+- There are three students here.
 
 ## 易混 / 关键对比
 
-there vs here：另一个位置 vs 当前焦点。
+地点 `there` 真的在指地点；存现 `there` 主要承担引入存在项的句法功能。
 
 ## 记忆钩子
 
-> **THERE = 那边那个位置。**
+> **THERE：一个是“那边”；一个是“有个东西登场了”。**
 
 ## 知识树连接
 
-- 分类：人与指向 → 指示与位置
-- 关联：those / here / this / that
+- 上位：指示与位置 / 信息结构
+- 对比：here ↔ there（地点）
+- 结构：there + be + 新信息
 
 ## 3D知识图卡提炼
 
-HERE ↔ THERE 双点卡。
+中性空间点与空舞台引入新对象的双分支卡。
 
 
 # 12｜who
@@ -515,53 +520,55 @@ be vs do：be 管状态；do 管执行事情。be vs get：be 在状态里；get
 
 ## 一句话抓住本源
 
-> **have = 某物、关系或经历处在主语的“拥有/经历范围”里。**
+> **have = 主语与某个东西、特征、关系或经历建立“当前关联”。**
 
 ## 核心画面
 
-人物周围有一个透明“我的范围圈”，里面放 DOG / PHONE / TIME。
+中性 SUBJECT 周围有 THING / FEATURE / RELATION / EXPERIENCE 四个连接端口。
 
 ## 底层逻辑
 
-have 不只表示拥有物品，也可表示拥有特征、经历事件。底层都是“它现在在我的范围里”。
+拥有是 `have` 最容易看见的原型；它也表达主语带有特征、当前经历某种情况和 `have + meal` 等稳定构式。完成时 `have + past participle` 中的辅助 have 留作后续分支。
 
 ## 高频例句
 
 - I have a dog.
 - She has blue eyes.
+- I have a problem.
 - I have breakfast at seven.
 
 ## 易混 / 关键对比
 
-get vs have：get 是进入范围/到手；have 是已经在范围里。
+`get` 强调从没有或未到达进入结果；`have` 强调当前持有、特征或经历关系已经建立。
 
 ## 记忆钩子
 
-> **HAVE = 在我的圈里。**
+> **HAVE = 现在和我“连着”。**
 
 ## 知识树连接
 
-- 分类：核心动作引擎 → 核心动作母词
-- 关联：be / do / get / go
+- 上位：状态与核心动作
+- 对比：get → have（进入关联 → 已有关系）
+- 生长：possession / feature / experience / have + meal / auxiliary have
 
 ## 3D知识图卡提炼
 
-GET → 进圈；HAVE → 已在圈内。
+中性 SUBJECT 中心连接 THING / FEATURE / RELATION / EXPERIENCE；辅助 have 只作后续入口提示。
 
 
 # 15｜do
 
 ## 一句话抓住本源
 
-> **do = 把一件事情、任务或活动执行出来。**
+> **do 有两份工作：自己表示“执行事情”，也可以退到后台做句子的语法支架。**
 
 ## 核心画面
 
-任务卡 HOMEWORK 被诺诺逐项完成。
+中性双层工作台：前景执行 TASK；后台 DO 支撑 QUESTION / NOT / EMPHASIS。
 
 ## 底层逻辑
 
-do 关注“执行事情”，也可作为普通动作句疑问/否定/强调的结构支架。
+实义 `do` 表示执行任务、活动或事情；辅助 `do/does/did` 在一般现在或过去时的疑问、否定和强调结构中主要承担语法工作，不能都解释成“做事情”。
 
 ## 高频例句
 
@@ -571,20 +578,21 @@ do 关注“执行事情”，也可作为普通动作句疑问/否定/强调的
 
 ## 易混 / 关键对比
 
-do vs make：do 执行任务；make 产生结果。
+`do` vs `make` 是执行活动 vs 产生结果；实义 `do` 有动作意义，辅助 `do` 主要承担句法功能。
 
 ## 记忆钩子
 
-> **DO = 做事情。**
+> **DO = 台前做事；也能退到后台帮句子搭架子。**
 
 ## 知识树连接
 
-- 分类：核心动作引擎 → 核心动作母词
-- 关联：be / have / get / go
+- 上位：状态与核心动作 / 句法支架
+- 对比：do ↔ make
+- 生长：do-support → question / negative / emphasis
 
 ## 3D知识图卡提炼
 
-任务清单卡；配套 DO vs MAKE。
+中性任务清单与 DO 支撑问号、NOT、强调符号的双层工作台。
 
 
 # 16｜get
@@ -705,38 +713,41 @@ come vs go：朝焦点靠近 vs 离开焦点。
 
 ## 一句话抓住本源
 
-> **take = 把某人/物纳入控制，并带离原来的参照点。**
+> **take 的原型画面是“主动把某物纳入自己的行动，并从当前情境带走/带着走”；但很多高频 take 已经形成固定构式，要分支学习。**
 
 ## 核心画面
 
-手抓住桌上的书，然后箭头把书带离桌面。
+主画面 HAND → OBJECT → MOVE WITH ME；外围以中性模块提示 BUS / TIME / PHOTO 等常用构式。
 
 ## 底层逻辑
 
-take 的关键是“控制 + 带走”，因此可延伸到带某人、使用交通方式等。
+先掌握拿取或带走的原型，再分别识别 `take + person + to`、`take transport`、`take time`、`take a photo` 等高频构式，不要求把每个构式硬解释成“抓住再带走”。
 
 ## 高频例句
 
 - Take this book.
 - I take my son to school.
 - Take a bus.
+- It takes ten minutes.
+- Take a photo.
 
 ## 易混 / 关键对比
 
-take vs bring：带走 vs 带来；take vs get：动作过程 vs 最终到手。
+典型空间镜头中 `take` 朝离开参照点，`bring` 朝参照焦点带来；`take` 强调主动采取/携带，`get` 常强调触达结果。
 
 ## 记忆钩子
 
-> **TAKE = 抓住，然后带走。**
+> **TAKE = 先抓住“主动采取”的感觉，再认高频构式，不要一词硬套到底。**
 
 ## 知识树连接
 
-- 分类：核心动作引擎 → 核心动作母词
-- 关联：go / come / give / put
+- 上位：核心动作
+- 对比：take ↔ bring；take ↔ get；take ↔ put
+- 高频构式：take + object / take + person + to / take transport / take time / take a photo
 
 ## 3D知识图卡提炼
 
-桌面 → 手 → 远处。
+中性主画面呈现拿起并带走；COMMON PATTERNS 独立列出 BUS / TIME / PHOTO。
 
 
 # 20｜give
@@ -933,38 +944,40 @@ bring vs take：朝焦点带来 vs 从焦点带走。
 
 ## 一句话抓住本源
 
-> **turn = 从原来的方向或状态转到另一个方向或状态。**
+> **turn = 改变朝向，或从一种可识别状态切换到另一种。**
 
 ## 核心画面
 
-道路从直行转弯；旁边白天切换到黑夜。
+中性方向盘/道路发生旋转；状态牌从 A 翻转到 B。
 
 ## 底层逻辑
 
-turn 的核心是“切换”，因此既能转方向，也能 turn on/off、turn red、turn cold。
+`turn` 最稳定的画面是方向改变，也常表示有鲜明边界的状态切换；`turn on/off` 是高频短语构式，不能把 `on/off` 的全部意义归到 `turn`。
 
 ## 高频例句
 
 - Turn left.
 - Turn the key.
 - The sky turned dark.
+- Turn on the light.
 
 ## 易混 / 关键对比
 
-turn vs get/become：turn 强调明显切换；get 更口语、动态；become 更中性地变成。
+`turn` 常带鲜明的切换/转向边界；`get + adjective` 常较口语地表达状态变化；`become` 更中性地表达成为。
 
 ## 记忆钩子
 
-> **TURN = 从这边转到那边。**
+> **TURN = 从这个朝向/状态，转到另一个。**
 
 ## 知识树连接
 
-- 分类：核心动作引擎 → 核心动作母词
-- 关联：keep / bring / be / have
+- 上位：状态变化 / 方向动作
+- 组合：turn + on/off
+- 对比：turn / get / become
 
 ## 3D知识图卡提炼
 
-方向切换 + 状态切换双场景卡。
+中性方向旋转与状态翻牌；ON/OFF 放在高频组合区域。
 
 
 # 26｜see
@@ -1161,15 +1174,15 @@ EAR → TO → SOUND。
 
 ## 一句话抓住本源
 
-> **feel = 直接感知身体、情绪或接触带来的内部体验。**
+> **feel = 通过身体或内在体验获得感受；既可以“感到”，也可以主动去触摸感知。**
 
 ## 核心画面
 
-温度、触觉、情绪的箭头都进入人物内部。
+中性双方向：COLD/HAPPY → BODY/HEART；HAND → WATER。
 
 ## 底层逻辑
 
-feel 的焦点不是外部客观状态本身，而是“我内部体验到了什么”。
+`feel` 既可表示身体或内心出现体验，也可表示主动用触觉获取信息，不能只画成外部信号进入身体。
 
 ## 高频例句
 
@@ -1179,20 +1192,21 @@ feel 的焦点不是外部客观状态本身，而是“我内部体验到了什
 
 ## 易混 / 关键对比
 
-feel vs be：体验到状态 vs 陈述状态。
+`feel` 强调主体的体验，`be` 直接陈述主体处于什么状态；`feel` 与 `see/hear` 同属感知，但更紧密地落在主体内部或触觉接触。
 
 ## 记忆钩子
 
-> **FEEL = 从身体和内心里面知道。**
+> **FEEL = 身体/内心有感觉，也可以伸手去感。**
 
 ## 知识树连接
 
-- 分类：感知·思考·交流 → 感知与思考
-- 关联：hear / listen / smell / taste
+- 上位：感知与认知
+- 对比：feel ↔ be
+- 并列感知：see / hear / feel
 
 ## 3D知识图卡提炼
 
-BODY/HEART 内部体验卡。
+中性人物剪影呈现情绪/温度进入身体与手接触 WATER 的两条通道。
 
 
 # 32｜know
@@ -1617,38 +1631,41 @@ down vs up：降低 vs 提升。
 
 ## 一句话抓住本源
 
-> **over = 位于上方，并带有跨越、覆盖一个范围的关系。**
+> **over 的空间原型是“在上方并越过/覆盖一个范围”；部分高频用法已经形成独立语义分支。**
 
 ## 核心画面
 
-人物沿抛物线越过箱子。
+中性空间原型：弧线从物体上方跨过，或覆盖物罩住一个区域；BE OVER → FINISHED 独立标示。
 
 ## 底层逻辑
 
-over 比单纯的“更高”更强调跨过/盖住一个范围，因此可延伸到克服、结束。
+空间原型包含跨越或覆盖范围，`get over a problem` 仍可保留越过障碍/阶段的画面；`be over = finished` 必须作为高频独立分支识别。
 
 ## 高频例句
 
 - jump over the box
 - a blanket over the baby
 - get over a problem
+- The game is over.
 
 ## 易混 / 关键对比
 
-over vs above：跨越/覆盖感更强 vs 单纯更高。
+`over` 常带跨越、覆盖或关联范围；`above` 更适合单纯表达较高位置；`be over` 直接作为“结束”分支识别。
 
 ## 记忆钩子
 
-> **OVER = 从上面跨过去。**
+> **OVER = 先抓“跨过/罩过一个范围”；遇到 be over，直接识别“结束”。**
 
 ## 知识树连接
 
-- 分类：空间与方向 → 基础空间关系
-- 关联：up / down / under / above
+- 上位：空间与方向
+- 对比：over ↔ under；over ↔ above
+- 生长：crossing / covering / overcoming
+- 高频独立分支：be over = finished
 
 ## 3D知识图卡提炼
 
-抛物线跨越卡。
+中性主图呈现弧线跨越和覆盖范围；BE OVER → FINISHED 作为独立分支。
 
 
 # 44｜under

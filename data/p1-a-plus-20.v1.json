@@ -80,7 +80,7 @@
       "word":"HEAR","system":"attention",
       "quick":{"core_image":"声波进入耳朵，听觉结果发生。","core_logic":"HEAR 不要求主动注意；声音可以自己进入感知范围。","example":"I hear a sound.","memory_hook":"HEAR = 声音进耳朵。"},
       "deep":{"meaning_growth":["听到声音","听到消息/信息"],"structures":["hear + sound/person","hear + clause/about"],"confusions":["HEAR vs LISTEN：感知结果 vs 主动听觉定向"],"pitfalls":["Can you hear me? 问的是声音是否成功到达，不等于“你有没有认真听”"]},
-      "network":{"system":"注意力与感知","relations":[{"type":"contrast","target":"LISTEN","explanation":"HEAR 接收声音；LISTEN 主动把注意指向声音。"},{"type":"parallel","target":"SEE","explanation":"SEE/HEAR 都可作为非主动感知结果。"}]}
+      "network":{"system":"注意力与感知","relations":[{"type":"contrast","target":"LISTEN","explanation":"HEAR 接收声音；LISTEN 主动把注意指向声音。"},{"type":"contrast","target":"SEE","explanation":"SEE 接收视觉结果；HEAR 接收听觉结果。"}]}
     },
     {
       "word":"LISTEN","system":"attention",
