@@ -284,6 +284,39 @@ test('P1 A+ golden templates contain twenty complete Quick Deep Network contract
   });
 });
 
+test('overlapping V2 samples use the reviewed P1 A+ content as their content source', () => {
+  const golden = require('../data/p1-a-plus-20.v1.json').items;
+  const v2 = require('./v2-data.js');
+  const nodeIdByWord = new Map(v2.nodes.map(node => [node.word, node.id]));
+  const overlaps = v2.nodes.filter(node => golden.some(item => item.word === node.word));
+  assert.equal(overlaps.length, 9);
+
+  overlaps.forEach(node => {
+    const reviewed = golden.find(item => item.word === node.word);
+    assert.equal(node.coreMeaning, reviewed.quick.core_logic, `${node.word}.coreMeaning`);
+    assert.equal(node.coreImage, reviewed.quick.core_image, `${node.word}.coreImage`);
+    assert.deepEqual(node.quick, {
+      origin: reviewed.quick.core_logic,
+      example: reviewed.quick.example,
+      memoryHook: reviewed.quick.memory_hook,
+    });
+
+    const deepText = JSON.stringify(node.deep);
+    ['meaning_growth', 'structures', 'confusions', 'pitfalls'].forEach(field => {
+      reviewed.deep[field].forEach(value => assert.ok(deepText.includes(value), `${node.word}.deep must retain ${field}: ${value}`));
+    });
+
+    const supported = reviewed.network.relations
+      .filter(relation => nodeIdByWord.has(relation.target))
+      .map(relation => ({ ...relation, target: nodeIdByWord.get(relation.target) }));
+    supported.forEach(relation => {
+      assert.ok(node.relations.some(candidate => candidate.type === relation.type
+        && candidate.target === relation.target
+        && candidate.explanation === relation.explanation), `${node.word} must include reviewed ${relation.type}:${relation.target}`);
+    });
+  });
+});
+
 test('Level 1 card source content uses neutral semantic people instead of a fixed character IP', () => {
   const lessons = require('../data/level1_lessons.json');
   const tutorial = fs.readFileSync(require.resolve('../content/Level1_50个骨架词完整教程.md'), 'utf8');
@@ -921,7 +954,8 @@ test('V2 graph relations use supported types, explanations, and required learnin
   assert.equal(toTooToRelation.label, tooToLabel);
   assert.equal(tooToToRelation.label, tooToLabel);
   assert.equal(tooToNode.coreImage, '程度量表越过阈值，后接一个尚未能够完成的动作。');
-  [toNode.deep.logic, toTooToRelation.explanation, tooToNode.deep.logic, tooToToRelation.explanation].forEach(text => {
+  assert.match(toNode.deep.logic, /不定式 to 是语法分支，不能一律当空间箭头/);
+  [toTooToRelation.explanation, tooToNode.deep.logic, tooToToRelation.explanation].forEach(text => {
     assert.match(text, /不定式标记/);
     assert.match(text, /程度过高以致后续动作无法实现/);
   });

@@ -7,6 +7,7 @@ const levelName = 'Level 1｜50骨架词';
 
 const vocabulary = readJson('data/vocabulary_850.json').filter(item => item.level === levelName);
 const lessonList = readJson('data/level1_lessons.json');
+const p1APlus = readJson('data/p1-a-plus-20.v1.json').items;
 const lessons = Object.fromEntries(lessonList.map(lesson => [lesson.word, lesson]));
 
 const [header, ...rows] = fs.readFileSync(path.join(projectRoot, 'data/learning_plan_170days.csv'), 'utf8')
@@ -30,7 +31,7 @@ const contrasts = [
   { title: 'so / because', words: ['so', 'because'], summary: 'SO 推向结果；BECAUSE 回答原因。' },
 ];
 
-const payload = { vocabulary, lessons, plan, contrasts };
+const payload = { vocabulary, lessons, plan, contrasts, p1APlus };
 const output = [
   'const root = typeof window !== \'undefined\' ? window : globalThis;',
   `const payload = ${JSON.stringify(payload)};`,

@@ -166,6 +166,45 @@ const payload = {
   ],
 };
 
+function relationLabel(node, relation, targetId) {
+  const targetWord = payload.nodes.find(item => item.id === targetId)?.word || relation.target;
+  if (relation.type === 'combination') return `${node.word} + ${targetWord}`;
+  if (relation.type === 'contrast') return `${node.word} vs ${targetWord}`;
+  return `${node.word} → ${targetWord}`;
+}
+
+function applyReviewedP1Content(data, reviewedItems) {
+  if (!Array.isArray(reviewedItems)) return data;
+  const idByWord = new Map(data.nodes.map(node => [node.word, node.id]));
+  data.nodes.forEach(node => {
+    const reviewed = reviewedItems.find(item => item?.word === node.word);
+    if (!reviewed) return;
+    const { quick, deep, network } = reviewed;
+    node.coreMeaning = quick.core_logic;
+    node.coreImage = quick.core_image;
+    node.quick = { origin: quick.core_logic, example: quick.example, memoryHook: quick.memory_hook };
+    node.deep = {
+      logic: [quick.core_logic, ...deep.meaning_growth].join('；'),
+      scenes: deep.meaning_growth.map((body, index) => ({ title: `含义生长 ${index + 1}`, body, example: quick.example })),
+      structures: deep.structures.join('；'),
+      chineseTrap: [...deep.confusions, ...deep.pitfalls].join('；'),
+      studyTip: quick.memory_hook,
+    };
+    network.relations.forEach(relation => {
+      const targetId = idByWord.get(relation.target);
+      if (!targetId) return;
+      const existing = node.relations.find(candidate => candidate.type === relation.type && candidate.target === targetId);
+      if (existing) existing.explanation = relation.explanation;
+      else node.relations.push({ type: relation.type, target: targetId, label: relationLabel(node, relation, targetId), explanation: relation.explanation });
+    });
+  });
+  return data;
+}
+
+const reviewedItems = root.ENGLISH850_DATA?.p1APlus
+  || (typeof require === 'function' ? require('../data/p1-a-plus-20.v1.json').items : []);
+applyReviewedP1Content(payload, reviewedItems);
+
 root.ENGLISH850_V2_DATA = payload;
 if (typeof module !== 'undefined' && module.exports) module.exports = payload;
 })();
