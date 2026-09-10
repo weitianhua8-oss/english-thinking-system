@@ -31,6 +31,7 @@
 - 路线图试验词是 `BE / AT / ON / IN / GET`；实际 PNG 词是 `I / GET / LOOK / IN / BECAUSE`，重合 `GET / IN`，缺少 `BE / AT / ON`，并多出 `I / LOOK / BECAUSE`。
 - 当前网页课程渲染使用结构化数据中的文字 `coreImage`/文字视觉提示；`website/app.js` 没有把 PNG 作为课程 `<img>` 加载。因而不能表述为已接入真实图卡；缺图时的现状是文字核心视觉，不是图片加载后的回退。
 - 本轮未批量生成或补齐图卡。
+- 现行 `skills/3d-knowledge-card/SKILL.md` 未被旧 P1 分支覆盖；只读核验确认 Lite/Pro 双模式、核心视觉优先、四侧安全边距（约 4–6%）规则仍在。
 
 ## 浏览器人工验收
 
