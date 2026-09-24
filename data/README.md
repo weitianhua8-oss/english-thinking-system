@@ -1,5 +1,15 @@
 # Data layer
 
+**Status:** Active domain index
+
+## 850 vocabulary source authority
+
+- **Canonical Editable Source:** [`vocabulary_850.json`](vocabulary_850.json)
+- **Derived Representation:** [`vocabulary_850.csv`](vocabulary_850.csv) — compatibility mirror; not an independent editing source
+- **Runtime Projection:** [`website/data.js`](../website/data.js) — the Level 1 subset produced by [`scripts/build_level1_site_data.js`](../scripts/build_level1_site_data.js) from the JSON source
+
+Repository audit on 2026-09-25 confirmed that the JSON and CSV contain the same 850 records and the same eight fields after normalizing the JSON `related` array to the CSV delimiter. Application build and validation code read the JSON source. No JSON↔CSV generator currently exists, so the CSV is a manually synchronized Derived mirror, not a generated authority. Any authorized vocabulary change must edit the JSON canonical source first, synchronize the CSV mirror, and verify record-level equivalence. Neither representation may be changed silently.
+
 ## Recovered vocabulary baseline
 The previous Basic English web system contains a clean 850-item vocabulary dataset with IDs, word/base form, IPA, Chinese gloss, category, example and Chinese example translation. This is the legacy baseline for the new project.
 

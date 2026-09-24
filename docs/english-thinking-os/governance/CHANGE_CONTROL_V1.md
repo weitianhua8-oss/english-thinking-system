@@ -18,8 +18,8 @@
 - Grammar Vision 主轨、Grammar Camera、核心术语或学习 Gate；
 - 数据 schema、ID、状态模型、兼容契约或 Source of Truth；
 - Vocabulary / Word Teaching Standard；
-- One New Variable；
-- Seed → System → Return；
+- [One New Variable](../grammar/GRAMMAR_VISION_CORE_CONTRACT_V1.md)（§3 canonical definition）；
+- [Seed → System → Return](../grammar/GRAMMAR_VISION_CORE_CONTRACT_V1.md)（§4 canonical definition）；
 - 核心视觉语义、关系隐喻或已冻结视觉标准；
 - 项目级目录、指令层级、治理规则或 canonical 导航；
 - 会改变既有课程依赖、学习进度、公开行为或迁移要求的变更。

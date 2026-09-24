@@ -66,7 +66,28 @@
 
 仅保存背景、研究、审计输入或历史设计。它可以支持讨论，不能授权产品状态、FROZEN 状态或实现行为。
 
-## 5. Source-of-Truth Rules
+## 5. Canonical Authority Matrix
+
+本表按 concern 分配唯一编辑权。Project OS 只导航这些来源，不复制本矩阵的规则正文。
+
+| Concern | Canonical Editing Source | Role |
+| --- | --- | --- |
+| Project Mission / Product North Star | [01_PRODUCT_NORTH_STAR.md](../01_PRODUCT_NORTH_STAR.md) | Canonical；使命与长期产品目标的唯一正文编辑源 |
+| Project Instruction Governance | [PROJECT_INSTRUCTIONS.md](../../../PROJECT_INSTRUCTIONS.md) | Canonical — Instruction Governance |
+| Frozen Decision Registry | [09_DECISIONS.md](../09_DECISIONS.md) | Decision Ledger / Frozen Decision Registry；记录采用与冻结状态，不编辑使命正文 |
+| Teaching OS / Grammar Camera | [TEACHING_OS_V2.md](../TEACHING_OS_V2.md) | Canonical 教学母架构 |
+| Grammar Vision Core Contract | [GRAMMAR_VISION_CORE_CONTRACT_V1.md](../grammar/GRAMMAR_VISION_CORE_CONTRACT_V1.md) | Canonical / Adopted；只管理少量跨课程 Grammar Vision 核心合同 |
+| Instruction Conflict Rules | [INSTRUCTION_HIERARCHY_V1.md](INSTRUCTION_HIERARCHY_V1.md) | Canonical |
+| Change Authorization | [CHANGE_CONTROL_V1.md](CHANGE_CONTROL_V1.md) | Canonical |
+| Independent Review Protocol | [REVIEW_PROTOCOL_V1.md](REVIEW_PROTOCOL_V1.md) | Canonical |
+| AI Execution Workflow | [AGENTS.md](../../../AGENTS.md) | Canonical execution rule；不得改变上层产品语义 |
+| 850 Vocabulary | [data/vocabulary_850.json](../../../data/vocabulary_850.json) | Canonical editable source；[data/vocabulary_850.csv](../../../data/vocabulary_850.csv) 是 Derived compatibility mirror，详见 [data/README.md](../../../data/README.md) |
+| Project-wide Visual Standard | [07_DESIGN_SYSTEM.md](../07_DESIGN_SYSTEM.md) | Canonical |
+| BE 3D Card Visual Standard | [STYLE_GUIDE.md](../../../visual/3d-card-standard/BE-reference/STYLE_GUIDE.md) | Canonical for BE 3D Card scope |
+| Learning Object / UI Boundary | [03_LEARNING_OBJECTS.md](../03_LEARNING_OBJECTS.md) | Canonical |
+| Web / Runtime Architecture | [ARCHITECTURE.md](../../../ARCHITECTURE.md) | Canonical for technical runtime architecture；不得接管 Learning Object / UI 的职责边界 |
+
+## 6. Source-of-Truth Rules
 
 - 新标准只有在 Proposal 获批、指定唯一 canonical 路径并加入 [Project OS](../PROJECT_OS.md) 后，才获得项目级权威。
 - 文件名中的 `FINAL`、`MASTER`、`FROZEN` 或版本号不是权威证明；权威来自登记、批准与可追溯版本。
@@ -74,7 +95,7 @@
 - 摘要、代码常量、页面文案与 canonical 不一致时，先修复 Derived；除非任务已获授权，不反向改写 canonical。
 - 聊天、截图、未合入分支和外部镜像默认是证据或提案输入，不自动成为项目真源。
 
-## 6. Frozen-change Exception
+## 7. Frozen-change Exception
 
 用户可以要求改变任何项目规则，但不能要求系统把变化隐藏成普通实现。涉及 FROZEN 时：
 

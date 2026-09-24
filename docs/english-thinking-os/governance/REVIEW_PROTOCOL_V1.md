@@ -15,6 +15,7 @@ Reviewer 开始前必须取得：
 - 当前任务、验收标准和批准范围；
 - [PROJECT_INSTRUCTIONS.md](../../../PROJECT_INSTRUCTIONS.md) 与 [Instruction Hierarchy](INSTRUCTION_HIERARCHY_V1.md)；
 - 本任务涉及的 FROZEN Specifications 与 Domain Standards；
+- Grammar Vision 任务必须读取 [Grammar Vision Core Contract](../grammar/GRAMMAR_VISION_CORE_CONTRACT_V1.md)；
 - Change Proposal（如触发）；
 - base commit、完整 diff、测试证据和迁移/回退说明。
 
@@ -29,7 +30,8 @@ Reviewer 开始前必须取得：
 | Duplicate Source | 是否建立第二个 active canonical source | 同主题存在两个 canonical 声明 |
 | Terminology | 是否新增、替换或漂移核心术语 | 无迁移记录或旧新含义不清 |
 | Schema | 是否改变字段、类型、ID、状态或兼容契约 | 无版本、迁移、回滚或回归证据 |
-| One New Variable | 单步是否引入多个主要认知变量 | 无拆分理由或违反已批准教学规格 |
+| One New Variable | 是否违反 [canonical definition](../grammar/GRAMMAR_VISION_CORE_CONTRACT_V1.md) §3，对一节 Micro Lesson 同时新增多个核心认知变量 / 新能力 | 无拆分理由或发生未授权 semantic change |
+| Seed → System → Return | 是否违反 [canonical definition](../grammar/GRAMMAR_VISION_CORE_CONTRACT_V1.md) §4，尤其是 Return 是否验证新场景迁移而非重复 Seed | 闭环被删改、降格为关键词或发生未授权 semantic change |
 | Dependencies | 是否破坏现有课程、节点、数据或进度依赖 | 关键依赖未验证或已回归失败 |
 | Content / UI | UI 是否自行造义，内容是否被表现层反向定义 | 内容与表现重新耦合 |
 | Regression | 风险对应的自动/人工检查是否执行 | 必需回归缺失或失败 |
@@ -37,6 +39,8 @@ Reviewer 开始前必须取得：
 | Behavior | 是否存在未声明的用户可见或执行行为变化 | 行为变化无授权或证据 |
 
 Reviewer 还必须确认修改只落在批准文件范围内；无关历史问题记录为 `OUT OF SCOPE`，不得在本次顺手修复。
+
+对受治理概念的审查必须从表中链接进入 canonical source，引用定义并对比 candidate 的语义与行为；关键词存在、关键词搜索命中或名称未变，都不能单独证明规则未改变。
 
 ## 3. 越权判定
 

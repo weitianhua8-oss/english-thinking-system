@@ -1,6 +1,8 @@
 # English Thinking 850｜Project Instructions
 
-**Status:** Canonical project instruction entry
+**Status:** Canonical — Instruction Governance
+
+**Authority:** 项目长期 AI / Agent / 执行原则的 canonical 入口
 
 **Scope:** 英语思维 850 / 看见英语 / Grammar Vision
 
@@ -11,6 +13,10 @@
 本文件是项目长期原则的入口，不复制课程、视觉、数据或页面的全部细则。详细规则由 [English Thinking Project OS](docs/english-thinking-os/PROJECT_OS.md) 导航；规则冲突与变更必须按 [Instruction Hierarchy](docs/english-thinking-os/governance/INSTRUCTION_HIERARCHY_V1.md) 和 [Change Control](docs/english-thinking-os/governance/CHANGE_CONTROL_V1.md) 处理。
 
 ## 1. 项目使命
+
+**Derived from:** [docs/english-thinking-os/01_PRODUCT_NORTH_STAR.md](docs/english-thinking-os/01_PRODUCT_NORTH_STAR.md)
+
+**Do not edit mission here.** 使命、产品北极星与长期产品目标的正文只在上述 canonical source 编辑；本节仅保留执行所需摘要。
 
 > 把英语变成看得见的画面。
 
@@ -36,7 +42,8 @@
 
 | 领域 | Canonical 入口 | 说明 |
 | --- | --- | --- |
-| 项目长期原则 | 本文件 | 只保存跨领域长期原则与导航 |
+| 项目使命 / Product North Star | [Product North Star](docs/english-thinking-os/01_PRODUCT_NORTH_STAR.md) | 使命与长期产品目标的唯一正文编辑源 |
+| 项目 Instruction Governance | 本文件 | 只保存跨领域 AI / Agent / 执行原则与导航 |
 | 指令层级与冲突 | [Instruction Hierarchy](docs/english-thinking-os/governance/INSTRUCTION_HIERARCHY_V1.md) | 判定规则权限、范围和来源状态 |
 | 冻结决策 | [Frozen Decisions](docs/english-thinking-os/09_DECISIONS.md) | 当前已冻结的 Owner 决策 |
 | 教学与产品导航 | [English Thinking Project OS](docs/english-thinking-os/PROJECT_OS.md) | 领域真源和当前状态入口 |

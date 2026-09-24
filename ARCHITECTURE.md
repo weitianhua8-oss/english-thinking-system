@@ -1,5 +1,7 @@
 # English Thinking System｜ARCHITECTURE
 
+**状态：** Canonical — Web / Runtime Architecture；Vocabulary source authority 由 [data/README.md](data/README.md) 登记
+
 **最后审计：** 2026-09-01
 **适用版本/分支：** `integration/v2-core-learning-path`，基线提交 `a6db286`
 
@@ -23,14 +25,14 @@
 | 图关系 | `website/v2-network.js` | 图校验、可探索关系与路径辅助 | V2 数据 | 不返回无目标、无解释的关系 |
 | 页面逻辑 | `website/app.js` | 状态、渲染分发、学习反馈、事件委托、可访问降级 | 所有前端数据模块 | 不直接改写 source 数据 |
 | 样式 | `website/styles.css`、`website/v2-route.css` | 响应式学习界面与阅读层级 | 页面结构 | 不以视觉重做破坏已有交互 |
-| Canonical 数据 | `data/vocabulary_850.*`、`data/learning_plan_170days.csv` | 850 词和 170 天排程 | 内容/测试 | 不被新 schema 回写 |
+| Canonical / Derived 数据 | `data/vocabulary_850.json`、`data/vocabulary_850.csv`、`data/learning_plan_170days.csv` | JSON canonical 词库、CSV derived mirror 和 170 天排程 | 内容/测试 | 不被新 schema 回写 |
 | 内容与规范 | `content/`、`docs/`、`skills/`、`visual/` | 课程、规则、生产 SOP、视觉标准 | Project Master | 不因一次任务被无证据改写 |
 
 ## 数据与状态
 
 | 数据/状态 | 来源 | 存储位置 | 兼容要求 | 异常处理 |
 | --- | --- | --- | --- | --- |
-| 850 词 | 人工维护的 canonical 数据 | `data/vocabulary_850.json` / `.csv` | 精确词形、ID、等级和 Level 保持不变 | 校验数量、大小写和唯一排程 |
+| 850 词 | JSON canonical editable source；CSV derived compatibility mirror | `data/vocabulary_850.json`；`data/vocabulary_850.csv` | 精确词形、ID、等级和 Level 保持不变 | 校验数量、大小写、JSON/CSV 等价和唯一排程 |
 | 170 天计划 | canonical 排程 | `data/learning_plan_170days.csv` | 每词精确出现一次 | 出错时不改写原计划 |
 | V1 进度 | 学习者反馈 | `localStorage: english850_level1_progress_v1` | 新模块不能破坏旧 JSON | 解析失败时清洗或安全回退 |
 | V2 模块进度 | V2 样板交互 | V1 profile 的可选 `v2` 扩展 | 缺失字段视为未学习 | 不进入 V1 复习队列，除非任务明确设计 |

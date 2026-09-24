@@ -40,8 +40,8 @@ Governance
 
 | 主题 | Canonical 文件 | 职责 |
 | --- | --- | --- |
-| Project Instructions | [PROJECT_INSTRUCTIONS.md](../../PROJECT_INSTRUCTIONS.md) | 长期项目原则与治理总入口 |
-| Instruction Hierarchy | [governance/INSTRUCTION_HIERARCHY_V1.md](governance/INSTRUCTION_HIERARCHY_V1.md) | 权限层级、冲突与来源状态 |
+| Project Instructions | [PROJECT_INSTRUCTIONS.md](../../PROJECT_INSTRUCTIONS.md) | 项目长期 AI / Agent / 执行原则的 canonical 入口；使命摘要为 Derived |
+| Instruction Hierarchy / Authority Matrix | [governance/INSTRUCTION_HIERARCHY_V1.md](governance/INSTRUCTION_HIERARCHY_V1.md) | 权限层级、冲突、来源状态与唯一编辑权矩阵 |
 | Change Control | [governance/CHANGE_CONTROL_V1.md](governance/CHANGE_CONTROL_V1.md) | Proposal、版本、迁移与标准生命周期 |
 | Review Protocol | [governance/REVIEW_PROTOCOL_V1.md](governance/REVIEW_PROTOCOL_V1.md) | 越权、静默变化、重复真源与回归审查 |
 | AI Execution | [AGENTS.md](../../AGENTS.md) | 仓库内 AI/Codex 执行顺序 |
@@ -50,7 +50,7 @@ Governance
 
 | 主题 | 文件 | 更新时机 |
 | --- | --- | --- |
-| 01 产品北极星 | [01_PRODUCT_NORTH_STAR.md](01_PRODUCT_NORTH_STAR.md) | 品牌、用户或长期目标变化 |
+| 01 产品北极星 | [01_PRODUCT_NORTH_STAR.md](01_PRODUCT_NORTH_STAR.md) | Project Mission / Product North Star / 长期产品目标的唯一 canonical editing source |
 | 02 教学母架构 | [TEACHING_OS_V2.md](TEACHING_OS_V2.md) | 教学链路有证据化升级 |
 | 03 学习对象 | [03_LEARNING_OBJECTS.md](03_LEARNING_OBJECTS.md) | 模块职责变化 |
 | 04 课程 | [04_CURRICULUM.md](04_CURRICULUM.md) | 课程分层或范围变化 |
@@ -58,7 +58,7 @@ Governance
 | 06 质量门禁 | [06_QUALITY_GATES.md](06_QUALITY_GATES.md) | 新教学验收规则 |
 | 07 设计系统 | [07_DESIGN_SYSTEM.md](07_DESIGN_SYSTEM.md) | 表现规则变化 |
 | 08 当前状态 | [08_CURRENT_STATE.md](08_CURRENT_STATE.md) | 每个任务节点 |
-| 09 决策 | [09_DECISIONS.md](09_DECISIONS.md) | Owner 确认关键取舍后 |
+| 09 决策 | [09_DECISIONS.md](09_DECISIONS.md) | Decision Ledger / Frozen Decision Registry；记录采用与冻结状态 |
 | 10 风险 | [10_RISKS.md](10_RISKS.md) | 新风险或风险解除 |
 | 11 下一步 | [11_NEXT_ACTIONS.md](11_NEXT_ACTIONS.md) | 当前优先级改变 |
 
@@ -66,8 +66,8 @@ Governance
 
 | 领域 | Canonical / active 入口 | 边界 |
 | --- | --- | --- |
-| Grammar | [Teaching OS V2](TEACHING_OS_V2.md)、[Learning Objects](03_LEARNING_OBJECTS.md)、[Curriculum](04_CURRICULUM.md)、[Frozen Decisions](09_DECISIONS.md) | 当前主线只冻结已登记决定；研究或审计输入不自动成为 Grammar Vision canonical 规格 |
-| Vocabulary | [Learning Objects](03_LEARNING_OBJECTS.md)、[Curriculum](04_CURRICULUM.md)、[English Thinking Skill](../../skills/english-thinking/SKILL.md)、[data/README.md](../../data/README.md) | 教学原则与 850 canonical 数据分离 |
+| Grammar | [Teaching OS V2](TEACHING_OS_V2.md)、[Grammar Vision Core Contract](grammar/GRAMMAR_VISION_CORE_CONTRACT_V1.md)、[Learning Objects](03_LEARNING_OBJECTS.md)、[Curriculum](04_CURRICULUM.md)、[Frozen Decisions](09_DECISIONS.md) | Teaching OS 管理母架构与 Grammar Camera；Core Contract 只管理 One New Variable 与 Seed → System → Return；43 节点材料未被晋升 |
+| Vocabulary | [data/vocabulary_850.json](../../data/vocabulary_850.json)、[data/README.md](../../data/README.md)、[Learning Objects](03_LEARNING_OBJECTS.md)、[Curriculum](04_CURRICULUM.md)、[English Thinking Skill](../../skills/english-thinking/SKILL.md) | JSON 是 850 词唯一 canonical editable source；`data/vocabulary_850.csv` 是 Derived compatibility mirror；教学原则与数据真源分离 |
 | Visual | [Design System](07_DESIGN_SYSTEM.md)、[BE 3D Card Standard](../../visual/3d-card-standard/BE-reference/STYLE_GUIDE.md) | 核心视觉语义与表现规则 |
 | Web | [ARCHITECTURE.md](../../ARCHITECTURE.md)、[Learning Objects](03_LEARNING_OBJECTS.md) | 页面消费内容，不成为内容真源 |
 | Knowledge | [Learning Objects](03_LEARNING_OBJECTS.md)、[LEARNING_LAYERS.md](../../data/LEARNING_LAYERS.md) | 语义对象、三层学习与关系边界 |

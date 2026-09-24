@@ -1,5 +1,9 @@
 # English Thinking System｜当前架构审计
 
+**状态：** Reference Only — historical architecture audit
+
+**Current canonical navigation：** [English Thinking Project OS](docs/english-thinking-os/PROJECT_OS.md)；850 Vocabulary 权威见 [data/README.md](data/README.md)
+
 > 审计日期：2026-08-20
 > 审计范围：`feature/v2-knowledge-network` 开发分支；仅记录现状，不改变产品行为、850 词数据或目录结构。
 > 审计结论：项目已有可运行的 Level 1 离线学习闭环、完整 850 母词与 170 天计划，以及 13 个 V2 三层/知识网络样板。下一步应新增“英语如何组织画面”的基础课程与训练能力，并以小批量样板验证，不能把 850 词库误当作 850 份深度课程。
@@ -80,7 +84,7 @@ data.js → v2-data.js → v2-network.js → app.js
 
 | 数据 | 路径 | 现状 | 约束 |
 | --- | --- | --- | --- |
-| 母词库 | `data/vocabulary_850.json` / `.csv` | 850 个精确词形：S80、A200、B570 | 绝不批量替换；`may` 与 `May` 是不同知识点。 |
+| 母词库 | `data/vocabulary_850.json`（canonical editable source）；`data/vocabulary_850.csv`（Derived compatibility mirror） | 850 个精确词形：S80、A200、B570 | 绝不批量替换；`may` 与 `May` 是不同知识点。 |
 | 170 天计划 | `data/learning_plan_170days.csv` | 170 天 × 5 槽位 = 850；每词一次 | 保留顺序与精确词形；网页尚未接入完整 170 天日历。 |
 | Level 1 深度课程 | `data/level1_lessons.json`、`content/Level1_50个骨架词完整教程.md` | 50 个完整教程 | 是质量基线，先审查再渐进增强。 |
 | Level 2–5 地图 | `content/Level2-5_课程地图与生产队列.md` | 有生产队列，无 800 词深度正文 | 不能宣传为已完成课程。 |
