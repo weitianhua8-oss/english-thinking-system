@@ -1,7 +1,7 @@
 # 3D Knowledge Card Skill v1
 
 ## Purpose
-Convert reviewed structured learning content into a spatial visual summary for understanding, sharing or export. The image is part of the teaching model, not decoration, but this Skill is not a content source or a complete Pro teaching carrier.
+Convert reviewed structured learning content into a spatial visual summary for quick understanding, review, sharing or export. The image is part of the teaching model, not decoration, but this Skill is not a content source or a complete Pro teaching carrier.
 
 ## Canonical visual reference
 The approved `BE动词：连接身份、位置与状态` 3D knowledge card is the visual source of truth.
@@ -17,6 +17,7 @@ Lite and Pro describe learning-content depth, not 3D Card production modes. Thei
 
 - Consume reviewed Lite or Pro structured content; do not independently redefine its teaching depth.
 - A Pro static export must select from completed Pro structured content. It is a visual summary, not Pro itself.
+- For a Pro static summary, preserve the core image, core structure, most important meaning, most necessary comparison and one compressed conclusion before lower-priority details.
 - If the required structured content is missing, return to the content source for completion or review instead of inventing a parallel Pro analysis inside this Skill.
 - Historical Lite / Pro card-mode rules, including default-Lite routing and high-density Pro cards, are superseded by the current content-depth architecture. Keep their Git history; do not restore them as active rules.
 
@@ -41,7 +42,7 @@ Reviewed structured content
 5. Keep the visual hierarchy obvious at a glance.
 6. The card should help a learner infer the core logic without memorizing a Chinese translation list.
 7. Preserve the BE reference language: warm framed card, soft rounded 3D objects, navy high-contrast title, central semantic metaphor, modular lower explanation cards, meaningful connector paths and a strong final takeaway.
-8. Preserve comprehension before completeness: when the source does not fit, remove lower-priority content instead of shrinking the core visual or making text unreadable.
+8. Preserve comprehension before information completeness: when the source does not fit, remove lower-priority content instead of shrinking the core visual or making text unreadable.
 
 ## Reference composition logic
 The BE card demonstrates the preferred architecture:
@@ -67,7 +68,7 @@ Before accepting a generated card, verify:
 - Are examples subordinate to the core concept rather than dominating the card?
 - Is there visible safe space on all four sides?
 - Are text, arrows, people and the visual subject fully inside the canvas without crowded or cropped edges?
-- If content was removed, were decoration, low-frequency examples, non-essential additions, secondary comparisons and lower-priority knowledge reduced before the core understanding?
+- If content was removed, were decoration, low-frequency examples, secondary collocations, secondary comparisons, low-frequency meanings, non-essential etymology and website-expandable supplements reduced before the core understanding?
 - Does a Pro static export trace back to completed Pro structured content rather than a parallel analysis created by this Skill?
 - Is the style recognizably from the same family as the BE reference?
 - Has a fixed character/IP system accidentally been introduced?

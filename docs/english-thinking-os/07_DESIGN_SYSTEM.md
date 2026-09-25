@@ -11,19 +11,21 @@
 | Knowledge Network | 已解释的语义关系 | 使用 Simple Mind Map、按词性/主题制造伪边、默认上下树状结构 |
 | 课程页面 | 一个主要认知动作和清晰的下一步 | 同屏让儿童完成过多判断、阅读和术语记忆 |
 
-## 内容与载体
+## Content Depth × Output Carrier
 
 [Lite / Pro](03_LEARNING_OBJECTS.md#lite--pro-内容深度) 是学习内容深度，不是静态图卡模式。表现层只消费已经审校的结构化内容：
 
 ```text
-Canonical / Structured Content
+Learning Content Depth: Lite / Pro
             ↓
-Web Learning Components / 3D Card Renderer
+Structured Content Source
             ↓
-Interactive Learning / Visual Summary / Export
+Output Carrier
+├── Web Learning Components → 展开 / 对比 / 交互 / 测试 / 知识网络
+└── 3D Card Renderer → 快速理解 / 复习 / 分享 / 导出
 ```
 
-- Pro 完整内容优先由结构化网页组件承载；静态图卡只做视觉摘要、分享或导出。
+- Pro 完整内容优先由结构化网页组件承载；静态图卡只做视觉摘要、复习、分享或导出。
 - Pro Static Export 必须以已经完成的 Pro structured content 为输入，不得由 3D Card Skill 另建一套 Pro 内容真源。
 - 当单张图卡无法自然容纳全部内容时，优先保持理解而不是保持完整；不得缩小核心视觉或极度缩小文字来塞入全部 Pro 内容。
 

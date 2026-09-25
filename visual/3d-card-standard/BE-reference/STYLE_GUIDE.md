@@ -99,12 +99,14 @@ The reference is information-rich but segmented. Reproduce that logic:
 - large visual metaphor in the center;
 - examples remain secondary to the core image.
 
-When the content does not fit naturally, remove or compress it in this order:
+For a Pro static summary, preserve the core image, core structure, most important meaning, most necessary comparison and one compressed conclusion. When the content does not fit naturally, remove or compress it in this order:
 1. decorative information;
 2. low-frequency examples;
-3. non-essential additions;
+3. secondary collocations;
 4. secondary comparisons;
-5. lower-priority knowledge.
+5. low-frequency meanings;
+6. non-essential etymology;
+7. supplementary information that can remain expandable on the website.
 
 Preserve comprehension before completeness. Never shrink the core visual into a minor illustration, reduce text to an unreadable size or fill every open area merely to retain more source content. These rules do not change the approved title, definition, formula and central-metaphor reading order above.
 

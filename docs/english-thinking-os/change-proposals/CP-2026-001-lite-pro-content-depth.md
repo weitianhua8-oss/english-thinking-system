@@ -12,9 +12,10 @@ The repository defined English Thinking content, Word Image Pro and 3D Knowledge
 
 ## Approved Rule
 
+- Adopt the `Content Depth × Output Carrier` architecture: Lite / Pro define depth; Web / 3D Card define carriers; structured content is the source between them.
 - Lite / Pro are `Learning Content Depth`, not card templates, image sizes, Skill output modes or visual-density modes.
 - Pro complete learning content is primarily carried by structured web components.
-- 3D Knowledge Card consumes canonical structured content and produces a visual summary for understanding, sharing or export.
+- 3D Knowledge Card consumes canonical structured content and produces a visual summary for quick understanding, review, sharing or export.
 - Pro Static Export must select from completed Pro structured content and must not create a parallel Pro content source.
 - When a card cannot fit all source content, preserve comprehension before completeness.
 
