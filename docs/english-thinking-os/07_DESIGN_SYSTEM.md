@@ -11,6 +11,22 @@
 | Knowledge Network | 已解释的语义关系 | 使用 Simple Mind Map、按词性/主题制造伪边、默认上下树状结构 |
 | 课程页面 | 一个主要认知动作和清晰的下一步 | 同屏让儿童完成过多判断、阅读和术语记忆 |
 
+## 内容与载体
+
+[Lite / Pro](03_LEARNING_OBJECTS.md#lite--pro-内容深度) 是学习内容深度，不是静态图卡模式。表现层只消费已经审校的结构化内容：
+
+```text
+Canonical / Structured Content
+            ↓
+Web Learning Components / 3D Card Renderer
+            ↓
+Interactive Learning / Visual Summary / Export
+```
+
+- Pro 完整内容优先由结构化网页组件承载；静态图卡只做视觉摘要、分享或导出。
+- Pro Static Export 必须以已经完成的 Pro structured content 为输入，不得由 3D Card Skill 另建一套 Pro 内容真源。
+- 当单张图卡无法自然容纳全部内容时，优先保持理解而不是保持完整；不得缩小核心视觉或极度缩小文字来塞入全部 Pro 内容。
+
 ## 已冻结视觉与结构原则
 
 - 3D 知识卡以已确认的 BE 图卡为视觉基准：关系、方向、边界优先；
@@ -20,6 +36,7 @@
 - 不使用 Simple Mind Map / SimpleMindMap；
 - 图片不是完成标志：缺图时必须安全回退为可读内容；
 - 一个教学屏幕优先只增加一个主要认知动作。
+- 静态图卡必须保留四边安全区，并检查文字、箭头、人物和视觉主体是否拥挤、裁切或越界；具体质量门禁见 [BE 3D Card Standard](../../visual/3d-card-standard/BE-reference/STYLE_GUIDE.md)。
 
 ## 认知负荷检查
 

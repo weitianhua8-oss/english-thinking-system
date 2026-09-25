@@ -19,6 +19,8 @@ The bridge metaphor must remain visually dominant. BE is not shown as an action 
 - Warm off-white / cream background.
 - Thick rounded outer frame with soft 3D depth and a subtle gold/cream edge.
 - Generous internal padding; content never touches the frame.
+- Preserve a clearly visible safe area on the top, bottom, left and right. Titles, text, arrows, people, props and the core visual must remain fully inside it.
+- Inspect the final export for crowded edges, cropped text, cropped arrows, cropped people and any visual subject crossing the canvas boundary.
 - Overall feel: clean, soft, tactile, child-friendly 3D educational infographic.
 
 ## 3D rendering language
@@ -96,6 +98,15 @@ The reference is information-rich but segmented. Reproduce that logic:
 - obvious whitespace between modules;
 - large visual metaphor in the center;
 - examples remain secondary to the core image.
+
+When the content does not fit naturally, remove or compress it in this order:
+1. decorative information;
+2. low-frequency examples;
+3. non-essential additions;
+4. secondary comparisons;
+5. lower-priority knowledge.
+
+Preserve comprehension before completeness. Never shrink the core visual into a minor illustration, reduce text to an unreadable size or fill every open area merely to retain more source content. These rules do not change the approved title, definition, formula and central-metaphor reading order above.
 
 ## Image-generation rule
 Before generating any English 3D knowledge card:
