@@ -1,5 +1,11 @@
 # English Thinking System｜PROJECT
 
+**状态：** Derived Compatibility Summary
+
+**Canonical governance：** [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md)、[INSTRUCTION_HIERARCHY_V1.md](docs/english-thinking-os/governance/INSTRUCTION_HIERARCHY_V1.md)
+
+**Canonical project mission：** [01_PRODUCT_NORTH_STAR.md](docs/english-thinking-os/01_PRODUCT_NORTH_STAR.md)
+
 **版本：** Project OS 接入版 v1.0
 **Owner：** 项目 Owner
 **最后更新：** 2026-09-01

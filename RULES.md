@@ -1,5 +1,11 @@
 # English Thinking System｜RULES
 
+**状态：** Derived Compatibility Summary
+
+**Canonical governance：** [PROJECT_INSTRUCTIONS.md](PROJECT_INSTRUCTIONS.md)、[INSTRUCTION_HIERARCHY_V1.md](docs/english-thinking-os/governance/INSTRUCTION_HIERARCHY_V1.md)
+
+**Canonical project mission：** [01_PRODUCT_NORTH_STAR.md](docs/english-thinking-os/01_PRODUCT_NORTH_STAR.md)
+
 **用途：** 将现有项目总控、架构审计和已确认设计规范中长期有效的执行约束汇总为可检查规则。
 **优先级：** 与 [英语专属 Project OS](docs/english-thinking-os/PROJECT_OS.md) 冲突时，以英语专属真源为准；`PROJECT_MASTER.md` 只保留历史证据职责。
 
@@ -34,7 +40,4 @@
 
 ## 冲突处理
 
-1. 当前 Owner 已确认的任务验收优先；
-2. 其后以 [英语专属 Project OS](docs/english-thinking-os/PROJECT_OS.md) 与其冻结决策为准；
-3. `PROJECT_MASTER.md`、旧 Roadmap 和旧 Skill 只作为历史证据，不能覆盖英语专属真源；
-4. 规则冲突必须在 [英语专属 Decisions](docs/english-thinking-os/09_DECISIONS.md) 或任务卡中记录来源、影响和裁决，不能静默选择一份旧文档。
+本节仅为兼容摘要；完整权限与冲突规则以 [Instruction Hierarchy V1](docs/english-thinking-os/governance/INSTRUCTION_HIERARCHY_V1.md) 为准。当前任务可以发起变更，但触碰 FROZEN 时必须进入 [Change Control](docs/english-thinking-os/governance/CHANGE_CONTROL_V1.md)，不得直接覆盖。`PROJECT_MASTER.md`、旧 Roadmap 和旧 Skill 只作为历史证据，不能覆盖英语专属真源；任何冲突都必须记录来源、影响和裁决。

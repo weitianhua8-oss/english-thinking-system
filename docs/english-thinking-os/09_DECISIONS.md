@@ -1,11 +1,17 @@
 # 09｜Frozen Decisions
 
+**Status:** Decision Ledger / Frozen Decision Registry
+
+**Authority:** 记录 Owner 已采用并冻结的决定；不是 Project Mission 正文的编辑源
+
 **决策者：** 项目 Owner
 
 **生效日期：** 2026-09-02
 **默认状态：** `FROZEN`
 
 冻结意味着任何 Builder、Reviewer、Skill、Prompt 或页面都不得静默改变。冻结不等于永不改变：若有明确教学证据，Owner 可重新确认，并以新的 Decision 记录原因、影响和迁移方式。
+
+FD-01 记录项目已经正式采用并冻结使命决定；使命正文的唯一 canonical editing source 是 [01_PRODUCT_NORTH_STAR.md](01_PRODUCT_NORTH_STAR.md)。未来若使命经 [Change Control](governance/CHANGE_CONTROL_V1.md) 合法升级，必须先更新该 canonical source，再同步本 Ledger 的版本或状态记录；不得直接在 FD-01 中创造不同的第二份使命正文。
 
 | ID | 状态 | 决策 | 对系统的约束 |
 | --- | --- | --- | --- |

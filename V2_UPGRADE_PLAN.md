@@ -1,5 +1,9 @@
 # English Thinking System V2｜升级实施计划
 
+**状态：** Reference Only — historical implementation plan
+
+**Current canonical navigation：** [English Thinking Project OS](docs/english-thinking-os/PROJECT_OS.md)；850 Vocabulary 权威见 [data/README.md](data/README.md)
+
 > 计划日期：2026-08-20
 > 前置审计：[CURRENT_ARCHITECTURE.md](CURRENT_ARCHITECTURE.md)
 > 执行边界：本计划尚未授权任何功能改动。每个阶段必须单独确认、测试、提交和复盘。
@@ -48,7 +52,7 @@ git diff --check
 
 | 文件类别 | 本计划的角色 | 首阶段是否修改 |
 | --- | --- | --- |
-| `data/vocabulary_850.*`、`data/learning_plan_170days.csv` | canonical 只读数据源 | 否 |
+| `data/vocabulary_850.json`、`data/vocabulary_850.csv`、`data/learning_plan_170days.csv` | JSON canonical 词库、CSV Derived compatibility mirror、canonical 排程；本计划均只读 | 否 |
 | `website/data.js`、`website/app.js`、`website/styles.css` | 已有 V1/V2 UI 与状态边界 | 仅在获批阶段做最小接入 |
 | `website/v2-data.js`、`website/v2-network.js` | 已有词汇三层/网络样板 | 仅 P4 小批量扩展 |
 | 新建 `website/v2-curriculum-data.js`（建议） | Culture/Camera/Sentence/Grammar/Scene 样板数据 | P1 后建立；不放进 850 词文件 |

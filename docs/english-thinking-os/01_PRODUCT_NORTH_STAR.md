@@ -1,5 +1,9 @@
 # 01｜Product North Star
 
+**Status:** Canonical
+
+**Authority:** Project Mission、Product North Star 与长期产品目标的唯一 canonical editing source
+
 ## 品牌核心
 
 > **把英语变成看得见的画面。**
