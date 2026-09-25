@@ -110,11 +110,12 @@ Preserve comprehension before completeness. Never shrink the core visual into a 
 
 ## Image-generation rule
 Before generating any English 3D knowledge card:
-1. Run the English Thinking Skill.
-2. Identify the single core image / underlying logic.
-3. Decide whether bridge, container, path, surface, point, direction, contact, separation, transfer or state-change is the best spatial metaphor.
-4. Build the visual around that metaphor.
-5. Only then add examples and labels.
+1. Load the completed, reviewed structured content from the current content source.
+2. If that content is missing or unreviewed, return to the upstream English Thinking content workflow to complete and review it before card generation; do not create a parallel analysis inside the card workflow.
+3. Identify the approved single core image / underlying logic.
+4. Decide whether bridge, container, path, surface, point, direction, contact, separation, transfer or state-change is the best spatial metaphor.
+5. Build the visual around that metaphor.
+6. Only then add examples and labels selected from the reviewed source.
 
 Never begin with a decorative scene and force the knowledge into it afterward.
 
