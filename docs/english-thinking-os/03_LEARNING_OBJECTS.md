@@ -7,7 +7,7 @@
 | English Thinking Skill Pro | 单词内容大脑 | 一个英语知识点与可信语言资料 | 核心画面、逻辑、意义生长、边界、迁移题、关系候选 | 网页视觉排版或批量发布决定 |
 | Word Image Pro | 单词/英语块的网页表现层 | 已审校的核心画面与逻辑 | 低负荷的画面、聚焦、阅读和输出交互 | 自行发明词义或改写内容大脑 |
 | Grammar Camera | 语法学习的意义镜头 | 现实场景、信息焦点和表达任务 | 从意义到形式名称的可解释路径 | 脱离意义的术语灌输 |
-| 3D Knowledge Card | 可视化一个知识点 | 核心画面、空间隐喻和逻辑 | 单点理解的视觉证据 | 连接完整知识网络 |
+| 3D Knowledge Card | 把已审校的结构化内容压缩成视觉摘要 | 核心画面、空间隐喻和已批准的内容层 | 快速理解、复习、分享或导出的视觉证据 | 成为内容真源、定义 Lite / Pro 或承载完整 Pro 教学 |
 | Knowledge Network | 连接多个知识点 | 已解释的语义关系 | 可到达、可解释的关系边 | 按词性、主题或猜测强行连线 |
 | 课程页面 | 把一个教学步骤交给学习者 | 已审校内容与交互边界 | 一次一个认知动作、可观察的学习行为 | 替代内容审校或扩大课程完成度 |
 | Mastery / Review | 记录并再次调用学习证据 | 任务表现、掌握度和复习规则 | 下一次适合的再调用机会 | 修改 V1 进度或伪造掌握 |
@@ -18,6 +18,29 @@
 - **Word Image Pro 不等于词汇内容本身。** 一个界面再漂亮，也不能补救 G1 Truth、G3 Logic 或 G4 Transfer 的缺失。
 - **Grammar Camera 不等于语法术语库。** 术语是后置标签，学习者先要能看见镜头焦点与信息关系。
 - **知识卡不等于知识网络。** 前者帮助理解一个点，后者帮助理解点和点之间的真实关系。
+
+## Lite / Pro 内容深度
+
+Lite 与 Pro 定义的是 **Learning Content Depth**，不是两种图卡模板、尺寸、视觉密度或 Skill 输出模式。
+
+```text
+Learning Content Depth
+├── Lite Content
+└── Pro Content
+         ↓
+Structured Content Source
+         ↓
+Output Carrier
+├── Web Learning Components
+└── 3D Knowledge Card / Static Export
+```
+
+- **Lite Content：** 用核心画面、一句话本源、最必要结构、简单真实例句和关键视觉关系，快速建立正确、可见、低认知负担的理解。它少而准，优先高频和可看见的信息，不追求完整覆盖。
+- **Pro Content：** 用记忆外挂、核心画面、核心结构、意义生长、现代语义分支、使用频率、语域、易混对比、高频搭配、知识网络、必要词源和输出测试，建立完整、可迁移的 English Thinking mental model；目标不是堆叠更多文字。
+
+Lite / Pro 内容可被网页组件、3D Card、复习卡和其他学习界面共同消费。Pro 完整内容优先由结构化网页组件承载；静态 3D Card 只能生成其中的视觉摘要，不是 Pro 本体。
+
+本职责边界由 [CP-2026-001](change-proposals/CP-2026-001-lite-pro-content-depth.md) 记录。旧的 Lite / Pro 图卡生产模式只保留为历史证据，不再定义当前内容深度。
 
 ## 新对象的最小接入条件
 

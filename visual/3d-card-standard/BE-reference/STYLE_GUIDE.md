@@ -19,6 +19,8 @@ The bridge metaphor must remain visually dominant. BE is not shown as an action 
 - Warm off-white / cream background.
 - Thick rounded outer frame with soft 3D depth and a subtle gold/cream edge.
 - Generous internal padding; content never touches the frame.
+- Preserve a clearly visible safe area on the top, bottom, left and right. Titles, text, arrows, people, props and the core visual must remain fully inside it.
+- Inspect the final export for crowded edges, cropped text, cropped arrows, cropped people and any visual subject crossing the canvas boundary.
 - Overall feel: clean, soft, tactile, child-friendly 3D educational infographic.
 
 ## 3D rendering language
@@ -97,13 +99,25 @@ The reference is information-rich but segmented. Reproduce that logic:
 - large visual metaphor in the center;
 - examples remain secondary to the core image.
 
+For a Pro static summary, preserve the core image, core structure, most important meaning, most necessary comparison and one compressed conclusion. When the content does not fit naturally, remove or compress it in this order:
+1. decorative information;
+2. low-frequency examples;
+3. secondary collocations;
+4. secondary comparisons;
+5. low-frequency meanings;
+6. non-essential etymology;
+7. supplementary information that can remain expandable on the website.
+
+Preserve comprehension before completeness. Never shrink the core visual into a minor illustration, reduce text to an unreadable size or fill every open area merely to retain more source content. These rules do not change the approved title, definition, formula and central-metaphor reading order above.
+
 ## Image-generation rule
 Before generating any English 3D knowledge card:
-1. Run the English Thinking Skill.
-2. Identify the single core image / underlying logic.
-3. Decide whether bridge, container, path, surface, point, direction, contact, separation, transfer or state-change is the best spatial metaphor.
-4. Build the visual around that metaphor.
-5. Only then add examples and labels.
+1. Load the completed, reviewed structured content from the current content source.
+2. If that content is missing or unreviewed, return to the upstream English Thinking content workflow to complete and review it before card generation; do not create a parallel analysis inside the card workflow.
+3. Identify the approved single core image / underlying logic.
+4. Decide whether bridge, container, path, surface, point, direction, contact, separation, transfer or state-change is the best spatial metaphor.
+5. Build the visual around that metaphor.
+6. Only then add examples and labels selected from the reviewed source.
 
 Never begin with a decorative scene and force the knowledge into it afterward.
 
