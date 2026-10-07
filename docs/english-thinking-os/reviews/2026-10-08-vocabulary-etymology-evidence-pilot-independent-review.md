@@ -142,7 +142,24 @@ Open notes:
 
 None of R1–R4 blocks adoption of V0.1 as a **research-layer standard**.
 
-## Owner decision requested
+## Owner acceptance
+
+**ACCEPTED — 2026-10-08**
+
+Owner approved Vocabulary Etymology Evidence Standard V0.1 as the project's research-layer etymology evidence standard, with R1–R4 retained as recorded review notes.
+
+Acceptance scope:
+- approves V0.1 for research/editorial evidence work;
+- approves the 10-word Pilot conclusions at their recorded confidence/gate levels;
+- does not approve a vocabulary schema change;
+- does not modify Vocabulary V1.1 teaching-track order;
+- does not modify Grammar Vision frozen rules;
+- does not authorize website/runtime changes;
+- detailed post historical narrative remains conditional.
+
+Next phase, if separately authorized: design an Evidence Sidecar architecture before considering any canonical schema extension.
+
+## Original Owner decision request
 
 Owner may now:
 - ACCEPT V0.1 as the project research-layer etymology evidence standard, with R1–R4 recorded;
