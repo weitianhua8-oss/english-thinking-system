@@ -1,6 +1,6 @@
 # Vocabulary Etymology Evidence Sidecar Contract V0.2
 
-Status: OWNER-APPROVED DESIGN REVISION / NON-CANONICAL
+Status: OWNER ACCEPTED / NON-CANONICAL DESIGN CONTRACT
 Date: 2026-10-08
 Canonical learner source remains: data/vocabulary_850.json
 
