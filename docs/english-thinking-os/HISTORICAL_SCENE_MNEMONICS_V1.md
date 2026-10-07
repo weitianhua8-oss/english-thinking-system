@@ -1,6 +1,6 @@
 # 历史生活场景助记规范 V1
 
-**Status:** Canonical（本分支候选；主线生效待 Review / Owner 验收与合入）
+**Status:** OWNER ACCEPTED CANONICAL CANDIDATE — mainline-effective after dependency-aware integration
 **Owner:** 项目 Owner
 **Version:** 1.0
 **Date:** 2026-10-08
