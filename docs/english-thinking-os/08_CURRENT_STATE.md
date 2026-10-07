@@ -54,3 +54,28 @@
 ## 基线验证
 
 2026-09-02 在当前工作树运行 `node --test website/app.test.js`，结果为 **157/157 通过**。
+
+## 2026-10-08 文档候选：历史生活场景助记
+
+- 核对远端主线：`5d9086a0ea62871ead677d4f5e7988a322ed4a74`。本次未把聊天中的 P3.1 Candidate 当成已合入主线。
+- 独立分支：`docs/historical-scene-mnemonics`。
+- Owner 已授权规则方向与写入；[CP-2026-003](change-proposals/CP-2026-003-historical-scene-mnemonics.md) 记录授权、范围、回退与未完成门禁。
+- [专项规范](HISTORICAL_SCENE_MNEMONICS_V1.md) 已形成文档候选并接入导航；状态为已实现待验收。
+- 文档验证见 [Builder 自查](reviews/2026-10-08-historical-scene-mnemonics-self-check.md)。独立 Review、Owner 成果验收、推送与主线合入未完成。
+- 词库、schema、Skill 正文、页面与既有课程未改；上传资料中的具体词源主张尚未在本任务核验。
+
+## 2026-10-08 研究候选：词源网站十词试点
+
+- 前述助记规范已保存到远端 `docs/historical-scene-mnemonics`，提交 `919392ffdd504e19c33c0e93a8d298e46150e440`；该保存不等于主线验收。
+- 本研究分支为 `research/etymology-ten-word-pilot`，从上述候选继续；研究交付见 [十词试点](research/etymology-pilot/README.md)。
+- 已形成十词证据、现代教学画面候选、采用建议、迁移题与答案、可复用记录模板及试教方案。
+- 仅 understand / few / girl 在当前词库真源中，另七词为方法压力测试。记录为 Reference Only，不增加词库或变更正式教学字段。
+- 外部 few / little 材料中四项相关主张已在研究中纠正；其他上传资料未做全量审计。
+- 状态：研究文档已形成待独立审查；没有学习者实测，不宣称教学效果通过。
+
+## 十词试点续作：审查准备
+
+- 续作基线为已保存的研究提交 `2a406178f779742b0b89a2376f5a7ca61cec43a0`。
+- 修订 [试教方案](research/etymology-pilot/BUILDER_CHECK.md)：A / B 总时长和练习机会匹配，记录实际偏差，逐词分析；增加匿名空白记录表。
+- 审查必须覆盖研究文档与上游历史助记候选两层差异；草稿 PR 仅作为交接入口，不代表通过审查或可合入。
+- 独立 Review、真实试教、Owner 成果验收与主线合并仍未完成。

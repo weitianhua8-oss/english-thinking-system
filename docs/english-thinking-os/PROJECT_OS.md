@@ -69,6 +69,7 @@ Governance
 | Grammar | [Teaching OS V2](TEACHING_OS_V2.md)、[Grammar Vision Core Contract](grammar/GRAMMAR_VISION_CORE_CONTRACT_V1.md)、[Learning Objects](03_LEARNING_OBJECTS.md)、[Curriculum](04_CURRICULUM.md)、[Frozen Decisions](09_DECISIONS.md) | Teaching OS 管理母架构与 Grammar Camera；Core Contract 只管理 One New Variable 与 Seed → System → Return；43 节点材料未被晋升 |
 | Vocabulary | [data/vocabulary_850.json](../../data/vocabulary_850.json)、[data/README.md](../../data/README.md)、[Learning Objects](03_LEARNING_OBJECTS.md)、[Curriculum](04_CURRICULUM.md)、[English Thinking Skill](../../skills/english-thinking/SKILL.md) | JSON 是 850 词唯一 canonical editable source；`data/vocabulary_850.csv` 是 Derived compatibility mirror；教学原则与数据真源分离 |
 | Visual | [Design System](07_DESIGN_SYSTEM.md)、[BE 3D Card Standard](../../visual/3d-card-standard/BE-reference/STYLE_GUIDE.md) | 核心视觉语义与表现规则 |
+| Vocabulary 记忆外挂 | [历史生活场景助记规范 V1](HISTORICAL_SCENE_MNEMONICS_V1.md)、[CP-2026-003](change-proposals/CP-2026-003-historical-scene-mnemonics.md) | 助记来源选择与历史真实性的唯一正文；本分支候选，主线生效待审查、验收与合入；不替代完整词汇标准 |
 | Web | [ARCHITECTURE.md](../../ARCHITECTURE.md)、[Learning Objects](03_LEARNING_OBJECTS.md) | 页面消费内容，不成为内容真源 |
 | Knowledge | [Learning Objects](03_LEARNING_OBJECTS.md)、[LEARNING_LAYERS.md](../../data/LEARNING_LAYERS.md) | 语义对象、三层学习与关系边界 |
 | Research | [Risks](10_RISKS.md)、[历史规格与计划](../superpowers/specs/2026-09-02-english-project-os-reset-design.md) | 研究与设计证据默认 Reference Only，除非经 Change Control 采用 |
