@@ -63,3 +63,12 @@
 - [专项规范](HISTORICAL_SCENE_MNEMONICS_V1.md) 已形成文档候选并接入导航；状态为已实现待验收。
 - 文档验证见 [Builder 自查](reviews/2026-10-08-historical-scene-mnemonics-self-check.md)。独立 Review、Owner 成果验收、推送与主线合入未完成。
 - 词库、schema、Skill 正文、页面与既有课程未改；上传资料中的具体词源主张尚未在本任务核验。
+
+## 2026-10-08 研究候选：词源网站十词试点
+
+- 前述助记规范已保存到远端 `docs/historical-scene-mnemonics`，提交 `919392ffdd504e19c33c0e93a8d298e46150e440`；该保存不等于主线验收。
+- 本研究分支为 `research/etymology-ten-word-pilot`，从上述候选继续；研究交付见 [十词试点](research/etymology-pilot/README.md)。
+- 已形成十词证据、现代教学画面候选、采用建议、迁移题与答案、可复用记录模板及试教方案。
+- 仅 understand / few / girl 在当前词库真源中，另七词为方法压力测试。记录为 Reference Only，不增加词库或变更正式教学字段。
+- 外部 few / little 材料中四项相关主张已在研究中纠正；其他上传资料未做全量审计。
+- 状态：研究文档已形成待独立审查；没有学习者实测，不宣称教学效果通过。
