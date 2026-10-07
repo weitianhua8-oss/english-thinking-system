@@ -34,11 +34,13 @@ Second-source verification requires two qualifying sources with distinct known i
 
 Evidence states: DRAFT, FIRST_SOURCE_CHECKED, SECOND_SOURCE_CHECKED, EVIDENCE_REVIEWED, CONDITIONAL, REJECTED.
 
-Teaching review states: NOT_REVIEWED, TEACHING_REVIEWED, APPROVED_INPUT, REJECTED.
+Teaching review states: NOT_REVIEWED, TEACHING_REVIEWED, REJECTED.
 
 Teaching decision status: PENDING, APPROVED_INPUT, REJECTED.
 
-APPROVED_INPUT only permits a claim to inform a normal canonical edit proposal. It is not canonical content.
+APPROVED_INPUT exists only in teaching_decision_status. It permits a claim to inform a normal canonical edit proposal; it is not canonical content.
+
+Hard promotion rule: teaching_decision_status may be APPROVED_INPUT only when evidence_review_status is EVIDENCE_REVIEWED and teaching_review_status is TEACHING_REVIEWED. SECOND_SOURCE_CHECKED alone is insufficient.
 
 Proposed teaching use: MAIN_LESSON, ADULT_EXPANDABLE, MEMORY_HOOK, RESEARCH_ONLY, REJECT.
 
