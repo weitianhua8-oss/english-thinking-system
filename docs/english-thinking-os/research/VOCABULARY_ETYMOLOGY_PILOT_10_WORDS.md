@@ -1,6 +1,6 @@
 # Vocabulary Etymology Evidence Pilot — 10 Word Audit
 
-Status: FIRST-PASS COMPLETE / REVIEW REQUIRED
+Status: SECOND-SOURCE GATE COMPLETE / INDEPENDENT REVIEW REQUIRED
 Standard: Vocabulary Etymology Evidence Standard V0.1
 Research date: 2026-10-08
 
@@ -122,3 +122,43 @@ PASS WITH SECOND-SOURCE CHECK REQUIRED.
 The framework catches attractive false explanations, prevents unrelated post branches from collapsing, preserves useful genuine history, and protects modern Grammar Vision models from historical overclaiming.
 
 Next gate: second-source verification of learner-facing claims, then Independent Review. No canonical schema change is authorized.
+## Second-source verification — teaching-critical claims
+
+Status: COMPLETE FOR TEACHING-CRITICAL CLAIMS
+
+### few / a few — VERIFIED
+- Oxford Advanced Learner's Dictionary independently gives Old English feawe/feawa, Germanic origin, with an Indo-European root shared by Latin paucus and Greek pauros “small”.
+- American Heritage independently gives Middle English fewe < Old English feawe and defines few/a few as an indefinitely small/small number, not a fixed 2–4 range.
+- Therefore the external-material claims “few is compressed five”, “few specifically means 2/3/4”, and “a in a few is shortened negative ab-” are not eligible as etymology. The first may only survive as an explicitly labelled D mnemonic if testing shows value; the fixed-number and negative-prefix explanations should be rejected from teaching content.
+- Learner-facing decision: teach quantity + viewpoint/pragmatics, not invented word formation.
+
+### insist — VERIFIED
+- American Heritage independently derives insist from Latin insistere “to persist”, in- “on” + sistere “to stand”.
+- This independently supports the core historical relation behind the teaching picture “站住自己的立场，不退”.
+- Learner-facing decision: eligible for an A-backed meaning-growth explanation; the exact person/pose remains B reconstruction.
+
+### digit / digital — VERIFIED
+- American Heritage independently derives digit from Latin digitus “finger, toe” and defines both bodily digit and numerical digit.
+- American Heritage digital preserves the finger/digit senses and the discrete-numerical/computer senses.
+- This independently supports the teaching bridge finger/toe → digit/number → digital information. The visual timeline itself remains B reconstruction.
+- Learner-facing decision: high-priority exemplar for “真实历史关系 → 看得见的意义生长”.
+
+### factory — VERIFIED WITH HISTORICAL CAUTION
+- American Heritage independently derives factory from Late/Medieval Latin factoria, including an establishment for factors, from Latin factor.
+- American Heritage factor independently derives factor from Latin factor “maker”, from facere “to make”.
+- This confirms the facere/factor family while also confirming that the English historical route is richer than a simplistic “make + place = factory” formula.
+- Learner-facing decision: child main lesson stays modern factory scene; adult expansion may show facere/factor/factory family and historical timeline.
+
+### post — FIRST-PASS BRANCH SPLIT RETAINED; CANONICAL PROMOTION STILL NEEDS STRONG SECOND SOURCE
+- First-pass historical evidence clearly separates post n.1 (upright post) from post n.2 (station/position) and derives postal post from the station/relay branch.
+- This branch separation is important enough that the Pilot must not collapse the senses even before canonical promotion.
+- Learner-facing decision for now: modern senses may be visually separated; detailed historical branch claims stay research/adult-layer candidates until a strong independent historical dictionary check is attached.
+
+## Second-source gate verdict
+
+PASS for: few rejection/redesign; insist morphology; digit/digital bridge; factory family with caution.
+CONDITIONAL for: detailed post historical branch narrative.
+
+No evidence from this verification authorizes a schema change, Vocabulary V1.1 change, or runtime change.
+
+Next gate: Independent Review of the Pilot standard + ten-word audit + second-source decisions.
