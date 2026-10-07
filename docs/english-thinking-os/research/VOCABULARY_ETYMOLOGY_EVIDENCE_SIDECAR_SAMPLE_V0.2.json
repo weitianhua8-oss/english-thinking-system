@@ -2,7 +2,8 @@
   "_meta": {
     "status": "DESIGN_SAMPLE_V0.2",
     "canonical": false,
-    "runtime_consumable": false
+    "runtime_consumable": false,
+    "contract_version": "0.2"
   },
   "records": [
     {
@@ -18,7 +19,7 @@
           "evidence_class": "A_ATTESTED_OR_HISTORICAL",
           "evidence_basis": "HISTORICAL_DICTIONARY_SYNTHESIS",
           "confidence": "HIGH",
-          "evidence_review_status": "SECOND_SOURCE_CHECKED",
+          "evidence_review_status": "EVIDENCE_REVIEWED",
           "teaching_review_status": "TEACHING_REVIEWED",
           "proposed_teaching_use": "ADULT_EXPANDABLE",
           "teaching_decision_status": "APPROVED_INPUT"
@@ -53,7 +54,7 @@
           "evidence_class": "A_ATTESTED_OR_HISTORICAL",
           "evidence_basis": "HISTORICAL_DICTIONARY_SYNTHESIS",
           "confidence": "HIGH",
-          "evidence_review_status": "SECOND_SOURCE_CHECKED",
+          "evidence_review_status": "EVIDENCE_REVIEWED",
           "teaching_review_status": "TEACHING_REVIEWED",
           "proposed_teaching_use": "ADULT_EXPANDABLE",
           "teaching_decision_status": "APPROVED_INPUT"
@@ -105,7 +106,7 @@
           "evidence_class": "A_ATTESTED_OR_HISTORICAL",
           "evidence_basis": "HISTORICAL_DICTIONARY_SYNTHESIS",
           "confidence": "HIGH",
-          "evidence_review_status": "SECOND_SOURCE_CHECKED",
+          "evidence_review_status": "EVIDENCE_REVIEWED",
           "teaching_review_status": "TEACHING_REVIEWED",
           "proposed_teaching_use": "RESEARCH_ONLY",
           "teaching_decision_status": "APPROVED_INPUT"
