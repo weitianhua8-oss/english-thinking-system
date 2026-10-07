@@ -38,6 +38,8 @@
 5. **FROZEN 不得静默修改。** 冻结内容不是永远不能改变，但任何实质变化都必须先进入 Change Proposal，经授权、影响分析、迁移与回归审查后才能实施。
 6. **小步、可验证、可回滚。** 每次只处理已授权范围，保留旧版本与迁移记录，用明确测试和 Git 节点支持回退。
 
+Vocabulary 记忆外挂的来源优先级与真实性标记执行 [历史生活场景助记规范 V1](docs/english-thinking-os/HISTORICAL_SCENE_MNEMONICS_V1.md)。本入口只引用该专项正文，不平行维护助记规则。
+
 ## 3. Source of Truth
 
 | 领域 | Canonical 入口 | 说明 |
