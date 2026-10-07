@@ -1,7 +1,7 @@
 # Change Proposal: 历史生活场景优先的记忆外挂
 
 **Proposal ID:** CP-2026-003
-**Status:** Approved（规则方向已授权；候选已实施，独立 Review / Owner 成果验收待完成）
+**Status:** OWNER ACCEPTED / CLOSED — integration to main remains a separate dependency-aware gate
 **Requested By:** 项目 Owner
 **Date:** 2026-10-08
 **Base:** `5d9086a0ea62871ead677d4f5e7988a322ed4a74`
@@ -51,7 +51,7 @@ Yes，文档入口接入；No，数据 / 课程迁移。未来词条按新规则
 
 ## Reviewer
 
-独立 Reviewer 待安排。本轮由 Builder 自查，不冒称 Independent Review。
+Independent Review completed 2026-10-08: PASS WITH NOTES — READY FOR OWNER ACCEPTANCE. Owner subsequently accepted the candidate.
 
 ## Version Impact
 
@@ -59,8 +59,18 @@ Yes，文档入口接入；No，数据 / 课程迁移。未来词条按新规则
 
 ## Source Status Changes
 
-新增 Canonical 专项正文候选，从 Project OS 登记。其他标准维持原状态，不创建第二份完整 Vocabulary Teaching Standard。主线生效待 Review / Owner 成果验收和合入。
+新增 Canonical 专项正文已获 Owner Acceptance；在依赖感知集成进入 main 前，仍属于已接受候选，不冒称 mainline-effective。其他标准维持原状态，不创建第二份完整 Vocabulary Teaching Standard。主线生效待 Review / Owner 成果验收和合入。
 
 ## Owner Decision
 
 规则内容授权来自本次提供的跨线程上下文：Owner 明确要求“以后做助记联想时，优先往‘造词时的背景环境’联想”，并要求“把它写进项目”；随后要求“进入工作模式”。真实性闸门与四级优先级已在该上下文明确。本提案将已有授权写成可核查记录，不把授权扩大为推送、主线合并、全量课程迁移或成果验收。
+
+
+## Final Owner Acceptance
+
+**Date:** 2026-10-08
+**Decision:** ACCEPTED
+
+Owner accepts CP-2026-003 and Historical Scene Mnemonics V1 following Independent Review PASS WITH NOTES.
+
+Acceptance authorizes the rule as the approved project direction for future Vocabulary mnemonic-source selection and historical-scene authenticity. It does not authorize bulk rewriting of existing vocabulary, schema/runtime changes, automatic etymology publication, or direct merge of the downstream Sidecar branch to main.
