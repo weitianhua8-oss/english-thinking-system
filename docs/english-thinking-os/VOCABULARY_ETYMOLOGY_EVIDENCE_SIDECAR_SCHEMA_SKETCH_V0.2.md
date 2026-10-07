@@ -82,7 +82,6 @@ REJECTED
 Allowed teaching_review_status:
 NOT_REVIEWED
 TEACHING_REVIEWED
-APPROVED_INPUT
 REJECTED
 
 Allowed teaching_decision_status:
@@ -96,8 +95,8 @@ REJECTED
 2. C/D claims normally use NOT_APPLICABLE evidence_basis unless a specific reviewed reason says otherwise.
 3. A claims require at least one source.supports reference.
 4. SECOND_SOURCE_CHECKED requires at least two supporting sources with distinct known independence_group values.
-5. APPROVED_INPUT teaching decision requires teaching review not NOT_REVIEWED.
-6. Historical A claims that are CONDITIONAL or REJECTED cannot have APPROVED_INPUT teaching decision.
+5. APPROVED_INPUT teaching decision requires evidence_review_status == EVIDENCE_REVIEWED and teaching_review_status == TEACHING_REVIEWED.
+6. SECOND_SOURCE_CHECKED alone cannot have APPROVED_INPUT teaching decision. Historical A claims that are CONDITIONAL or REJECTED cannot have APPROVED_INPUT teaching decision.
 7. B claims cannot be APPROVED_INPUT when any required parent is CONDITIONAL or REJECTED.
 8. REJECTED claims require rejection_reason and reviewed_at.
 9. All based_on_claim_ids, conflicting_evidence, and source.supports references must resolve.
