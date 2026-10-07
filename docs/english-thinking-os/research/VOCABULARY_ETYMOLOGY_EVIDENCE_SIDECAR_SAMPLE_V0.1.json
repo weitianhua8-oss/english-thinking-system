@@ -1,0 +1,181 @@
+{
+  "_meta": {
+    "status": "DESIGN_SAMPLE_ONLY",
+    "canonical": false,
+    "standard": "Vocabulary Etymology Evidence Standard V0.1",
+    "contract": "Vocabulary Etymology Evidence Sidecar Contract V0.1"
+  },
+  "records": [
+    {
+      "word": "digital",
+      "sense_id": "digital.numerical_computing",
+      "part_of_speech": "adjective",
+      "modern_target": "represented or processed using numerical digits",
+      "claims": [
+        {
+          "claim_id": "digital.c1",
+          "claim_type": "SEMANTIC_DEVELOPMENT",
+          "statement": "The digital/digit family connects Latin digitus 'finger/toe' with numerical digit senses and later numerical/computing uses.",
+          "evidence_class": "A_ATTESTED_OR_HISTORICAL",
+          "confidence": "HIGH",
+          "review_status": "SECOND_SOURCE_CHECKED",
+          "teaching_use": "ADULT_EXPANDABLE"
+        },
+        {
+          "claim_id": "digital.c2",
+          "claim_type": "HISTORICAL_CONTEXT",
+          "statement": "Visualize fingers counting, then numerical digits, then computer data.",
+          "evidence_class": "B_EVIDENCE_GROUNDED_RECONSTRUCTION",
+          "confidence": "HIGH",
+          "based_on_claim_ids": ["digital.c1"],
+          "review_status": "REVIEWED",
+          "teaching_use": "MAIN_LESSON"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "digital.s1",
+          "title": "digital / digit",
+          "publisher_or_work": "Online Etymology Dictionary",
+          "url_or_bibliography": "Etymonline entries: digital; digit",
+          "retrieved_at": "2026-10-08",
+          "supports": ["digital.c1"],
+          "independence_group": "etymonline"
+        },
+        {
+          "source_id": "digital.s2",
+          "title": "digit / digital",
+          "publisher_or_work": "American Heritage Dictionary",
+          "url_or_bibliography": "American Heritage entries: digit; digital",
+          "retrieved_at": "2026-10-08",
+          "supports": ["digital.c1"],
+          "independence_group": "ahd"
+        }
+      ]
+    },
+    {
+      "word": "insist",
+      "sense_id": "insist.persist_claim",
+      "part_of_speech": "verb",
+      "modern_target": "persist firmly in saying or demanding",
+      "claims": [
+        {
+          "claim_id": "insist.c1",
+          "claim_type": "MORPHOLOGY",
+          "statement": "Latin insistere contains in- 'on/upon' + sistere 'to stand/take a stand'.",
+          "evidence_class": "A_ATTESTED_OR_HISTORICAL",
+          "confidence": "HIGH",
+          "review_status": "SECOND_SOURCE_CHECKED",
+          "teaching_use": "ADULT_EXPANDABLE"
+        },
+        {
+          "claim_id": "insist.c2",
+          "claim_type": "HISTORICAL_CONTEXT",
+          "statement": "A person plants their feet at a position and does not yield.",
+          "evidence_class": "B_EVIDENCE_GROUNDED_RECONSTRUCTION",
+          "confidence": "HIGH",
+          "based_on_claim_ids": ["insist.c1"],
+          "review_status": "REVIEWED",
+          "teaching_use": "MAIN_LESSON"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "insist.s1",
+          "title": "insist",
+          "publisher_or_work": "Online Etymology Dictionary",
+          "url_or_bibliography": "Etymonline entry: insist",
+          "retrieved_at": "2026-10-08",
+          "supports": ["insist.c1"],
+          "independence_group": "etymonline"
+        },
+        {
+          "source_id": "insist.s2",
+          "title": "insist",
+          "publisher_or_work": "American Heritage Dictionary",
+          "url_or_bibliography": "American Heritage entry: insist",
+          "retrieved_at": "2026-10-08",
+          "supports": ["insist.c1"],
+          "independence_group": "ahd"
+        }
+      ]
+    },
+    {
+      "word": "few",
+      "sense_id": "few.small_number",
+      "part_of_speech": "determiner_adjective",
+      "modern_target": "a small number; contrast viewpoint with a few",
+      "claims": [
+        {
+          "claim_id": "few.c1",
+          "claim_type": "MNEMONIC",
+          "statement": "few is a compressed form of five and therefore specifically means two, three, or four",
+          "evidence_class": "D_MNEMONIC_ONLY",
+          "confidence": "LOW",
+          "review_status": "REJECTED",
+          "teaching_use": "REJECT",
+          "rejection_reason": "Conflicts with attested Old English/Germanic etymology and imposes an unsupported fixed numeric range.",
+          "conflicting_evidence": ["few.c2"],
+          "reviewed_at": "2026-10-08"
+        },
+        {
+          "claim_id": "few.c2",
+          "claim_type": "HISTORICAL_MEANING",
+          "statement": "few continues Old English feawe/related Germanic forms meaning a small number/not many.",
+          "evidence_class": "A_ATTESTED_OR_HISTORICAL",
+          "confidence": "HIGH",
+          "review_status": "SECOND_SOURCE_CHECKED",
+          "teaching_use": "RESEARCH_ONLY"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "few.s1",
+          "title": "few",
+          "publisher_or_work": "Online Etymology Dictionary",
+          "url_or_bibliography": "Etymonline entry: few",
+          "retrieved_at": "2026-10-08",
+          "supports": ["few.c2"],
+          "independence_group": "etymonline"
+        },
+        {
+          "source_id": "few.s2",
+          "title": "few",
+          "publisher_or_work": "Oxford Advanced Learner's Dictionary",
+          "url_or_bibliography": "Oxford Learner's Dictionaries entry: few",
+          "retrieved_at": "2026-10-08",
+          "supports": ["few.c2"],
+          "independence_group": "oxford"
+        }
+      ]
+    },
+    {
+      "word": "post",
+      "sense_id": "post.multibranch_placeholder",
+      "part_of_speech": "multiple",
+      "modern_target": "keep upright-post and station/position/mail branches separate pending stronger verification",
+      "claims": [
+        {
+          "claim_id": "post.c1",
+          "claim_type": "RELATIONSHIP",
+          "statement": "The upright-post branch and station/position branch should not be collapsed into one historical chain.",
+          "evidence_class": "A_ATTESTED_OR_HISTORICAL",
+          "confidence": "MEDIUM",
+          "review_status": "CONDITIONAL",
+          "teaching_use": "RESEARCH_ONLY"
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "post.s1",
+          "title": "post",
+          "publisher_or_work": "Online Etymology Dictionary",
+          "url_or_bibliography": "Etymonline entry: post",
+          "retrieved_at": "2026-10-08",
+          "supports": ["post.c1"],
+          "independence_group": "etymonline"
+        }
+      ]
+    }
+  ]
+}
