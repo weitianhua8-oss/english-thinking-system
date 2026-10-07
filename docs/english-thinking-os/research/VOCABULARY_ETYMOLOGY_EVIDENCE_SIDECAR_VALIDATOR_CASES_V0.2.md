@@ -13,7 +13,7 @@ P04 — rejected D mnemonic retained with rejection_reason and reviewed_at.
 P05 — CONDITIONAL post branch kept RESEARCH_ONLY/PENDING.
 P06 — two post records with separate sense_id values.
 P07 — no sidecar record for a canonical 850 word; validation still passes.
-P08 — APPROVED_INPUT research claim exists while _meta canonical/runtime flags remain false.
+P08 — APPROVED_INPUT research claim has EVIDENCE_REVIEWED + TEACHING_REVIEWED while _meta canonical/runtime flags remain false.
 
 ## Negative cases — must FAIL
 
@@ -38,6 +38,7 @@ N18 — _meta.canonical is true.
 N19 — _meta.runtime_consumable is true.
 N20 — learner-content field such as core_picture or lesson is stored in a sidecar record.
 N21 — teaching_decision_status APPROVED_INPUT while teaching_review_status is NOT_REVIEWED.
+N24 — teaching_decision_status APPROVED_INPUT while evidence_review_status is only SECOND_SOURCE_CHECKED.
 N22 — spelling similarity alone creates HISTORICALLY_RELATED without an evidence claim.
 N23 — one post record collapses known distinct research branches using a multibranch placeholder in the production sample.
 
