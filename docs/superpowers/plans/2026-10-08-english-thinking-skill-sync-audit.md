@@ -18,15 +18,15 @@
 - Reference: `docs/english-thinking-os/HISTORICAL_SCENE_MNEMONICS_V1.md`
 - Reference: `docs/english-thinking-os/reviews/2026-10-08-cp-2026-003-owner-acceptance-closure.md`
 
-- [ ] **Step 1: Confirm authority and protected scope**
+- [x] **Step 1: Confirm authority and protected scope**
 
 Read the Project Instructions, Project OS, Instruction Hierarchy, Frozen Decisions, CP-2026-003, and Owner closure. Record that the memory-hook rule is already accepted; do not recreate a Skill, alter data, or change the 0–7 order.
 
-- [ ] **Step 2: Add one link-only execution section to the existing Skill**
+- [x] **Step 2: Add one link-only execution section to the existing Skill**
 
 Place a short `Memory-hook policy (Step 1 integration)` section after the standard analysis pipeline. Link to the canonical historical-scene document as the sole detailed policy; state that this is a Step 1 integration only and preserves the modern semantic core, the existing 0–7 track, and the distinction among evidenced history, teaching reconstruction, mnemonic association, and uncertainty.
 
-- [ ] **Step 3: Create the audit record**
+- [x] **Step 3: Create the audit record**
 
 Record the task level, canonical sources, unique-Skill finding, mainline synchronization check, affected files, explicit non-goals, validation commands, rollback point, LEARN result, and the fact that Owner acceptance of this new candidate is still pending.
 
@@ -37,19 +37,19 @@ Record the task level, canonical sources, unique-Skill finding, mainline synchro
 - Verify: `docs/english-thinking-os/reviews/2026-10-08-english-thinking-skill-sync-audit.md`
 - Verify: `website/app.test.js`
 
-- [ ] **Step 1: Run structural and content checks**
+- [x] **Step 1: Run structural and content checks**
 
 Run `git diff --check`; validate every changed Markdown file's local links; search the Skill for the canonical policy reference and for prohibited claims that make a mnemonic into etymological evidence; compare the diff with the declared scoped file list.
 
-- [ ] **Step 2: Run the existing regression suite**
+- [x] **Step 2: Run the existing regression suite**
 
 Run `node --test website/app.test.js`. The expected result is a zero-failure Node test run; this confirms the documentation-only change did not disturb the existing web baseline.
 
-- [ ] **Step 3: Commit only the scoped audit artifacts**
+- [x] **Step 3: Commit only the scoped audit artifacts**
 
 Commit only the plan, Skill link integration, and audit record on `audit/skill-sync-historical-scene`. Do not push or merge. Use the resulting commit SHA as the review candidate.
 
-- [ ] **Step 4: Obtain an independent governance review**
+- [x] **Step 4: Obtain an independent governance review**
 
 Provide the reviewer with the base/head SHAs, complete diff, frozen-scope evidence, test output, and rollback command. Record the independent verdict separately; do not treat it as Owner acceptance.
 

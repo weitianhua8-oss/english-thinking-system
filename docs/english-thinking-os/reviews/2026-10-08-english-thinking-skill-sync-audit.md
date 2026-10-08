@@ -4,7 +4,7 @@
 **Task level:** T3 — 已有教学 Skill 的受治理同步审计
 **Branch:** `audit/skill-sync-historical-scene`
 **Base:** `daa4f7e29f6cd90eb19756c11c82d1eec7b17149` (`origin/main`)
-**Status:** Candidate pending independent review and Owner acceptance; not merged to `main`
+**Status:** Independent Review PASS; Candidate pending Owner acceptance; not merged to `main`
 
 ## 1. 目标与范围
 
@@ -54,3 +54,11 @@ Independent Review 必须覆盖：authority、FROZEN、silent change、duplicate
 ## 6. 已知的范围外问题
 
 [`08_CURRENT_STATE.md`](../08_CURRENT_STATE.md) 的“2026-10-08 文档候选”段仍写有“Owner 成果验收、推送与主线合入未完成”，与同目录的 Owner closure 及当前 `origin/main` 已含专项规范不一致。该状态漂移在本次被记录，但未修改：它不属于此 Skill 接入的最小范围，应由单独治理状态核对任务处理。
+
+## 7. Independent Review
+
+**Reviewer outcome:** PASS
+
+Reviewer independently checked the complete Base/Head diff, all authority and frozen-scope sources, the single-Skill boundary, the canonical-policy link, Step 1 / 0–7 protection, the modern-semantic-core boundary, and the four-way information distinction. It reproduced `git diff --check`, local Markdown-link and Skill-assertion checks, and `node --test website/app.test.js` with **157 passed / 0 failed**.
+
+The review found no blocking or non-blocking finding. It confirmed that this Candidate can enter Owner acceptance, but its PASS neither constitutes Owner acceptance nor authorizes a push or merge to `main`.
