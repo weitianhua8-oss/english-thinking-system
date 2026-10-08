@@ -8,7 +8,7 @@
 
 **候选分支：** `audit/p3-vocabulary-golden-path`
 
-**状态：** `AUDIT COMPLETE — NO PRODUCT CHANGE — OWNER DECISION REQUIRED`
+**状态：** `AUDIT COMPLETE — OWNER DECISIONS RECORDED — NO PRODUCT CHANGE`
 
 ## 1. 任务卡
 
@@ -40,7 +40,7 @@
 | 目标对象 / 规则 | 已有真源或资产 | 现有消费者 | 已实现事实 | 差距或风险 | 结论 |
 | --- | --- | --- | --- | --- | --- |
 | English Thinking Skill Pro 内容大脑 | `skills/english-thinking/SKILL.md`；FD-05；`03_LEARNING_OBJECTS.md` | 目前主要靠人工将内容写入 V1/V2/样例文件 | 定义核心画面、逻辑、意义生长、搭配、易混、误区、钩子、网络与可选词源 | Skill 标题仍为 v1；没有“输出对象 → 审校 → canonical → runtime”的可执行数据接口 | **部分具备，未落地为单一数据通路** |
-| Vocabulary V1.1 的 0–7 教学轨 | 项目任务指令中已明确；`HISTORICAL_SCENE_MNEMONICS_V1.md` 仅引用其中第 1 步 | 无明确 runtime 映射 | 0 词型判断、1 记忆外挂、2 核心画面、3 核心结构、4 意义生长、5 易混、6 场景/搭配、7 总结/输出是本任务的上位教学约束 | `origin/main` 未找到独立、可导航的 `NEW_WORD_TEACHING_STANDARD_V1_1.md`；无法从 Project OS 的 Vocabulary 导航直接追溯完整 0–7 正文 | **P0 治理/可追溯性缺口；本次只记录，不补写标准** |
+| Vocabulary V1.1 的 0–7 教学轨 | `vocabulary/NEW_WORD_TEACHING_STANDARD_V1_1.md`；`HISTORICAL_SCENE_MNEMONICS_V1.md` 细化第 1 步 | 无明确 runtime 映射 | 0 词型判断、1 记忆外挂、2 核心画面、3 核心结构、4 意义生长、5 易混、6 场景/搭配、7 总结/输出是本任务的上位教学约束 | 恢复版不是历史逐字原稿；其恢复边界必须长期披露 | **已由 CP-2026-004 建立唯一主线正文；不替代词库数据真源** |
 | 850 canonical 词库 | `data/vocabulary_850.json`，850 条、8 个现有字段；`data/vocabulary_850.csv` 为 Derived | `scripts/build_level1_site_data.js`、数据完整性测试 | 850 条与 S/A/B 分级稳定，且保留 `related` | 850/850 条均没有 schema 中声明的 `learning_layers`、`core_image` 等 Pro 内容字段；当前 schema 与实际数据 0/850 一致 | **P0：文档/schema 与事实漂移；不可直接宣称已具备 Pro 真源** |
 | Golden 内容样例 | `data/golden-samples.v1.json`（20 个）；`data/golden-learning-layers.v1.json`（20 个 Quick/Deep/Network 映射） | 当前无 runtime consumer | 包含 `on`、`in`、`at`、`be`、`see` 等可复用样例 | 文件未被 `data/README.md` 明确列为 canonical，且与 V2、Level 1 可能语义重叠；不能直接当新真源 | **可作为受控输入/对照，不可绕过 canonical 审校** |
 | Level 1 内容 | `data/level1_lessons.json`（50 课） | `website/data.js` / `website/app.js` | 核心画面、逻辑、例句、对比、钩子、关联词与 V1 复习闭环均可用 | 内容不回写 850 canonical；关系只给词表，没有学习者可见的边解释；没有 Quick/Deep/Network 的同一结构化对象 | **稳定 legacy 课程，不能充当 Golden Path 真源** |
@@ -71,7 +71,7 @@
 
 | 优先级 | 断点 | 证据 | 风险 | 本阶段处理 |
 | --- | --- | --- | --- | --- |
-| P0 | V1.1 的完整 0–7 正文没有在 `origin/main` 找到独立可导航文件 | Project OS 仅列 Vocabulary 入口；历史助记规范引用 V1.1 第 1 步 | 后续作者可能各自解释“Pro 必填项”，形成第二真源 | 记录为 Owner 应确认的来源定位问题；本次不新建/重排标准 |
+| P0（已决） | V1.1 的完整 0–7 正文未在初始 `origin/main` 找到独立可导航文件 | Project OS 仅列 Vocabulary 入口；历史助记规范引用 V1.1 第 1 步 | 后续作者可能各自解释“Pro 必填项”，形成第二真源 | Owner 已授权，CP-2026-004 将恢复基线纳入唯一 canonical 路径；仍需独立审查 |
 | P0 | canonical schema / README 与 850 JSON 的实际字段不一致 | 0/850 记录拥有旧 schema 的 required 字段；0/850 拥有 `learning_layers` | 将“设计字段”误读为“可直接上线的真源”，导致漂移或覆盖 | 后续实施前先做单独的 schema/authority 复核；本次不改数据 |
 | P1 | Pro 内容没有 canonical → runtime 的单向投影 | Golden layers 和 V2 都不由 `vocabulary_850.json` 生成 | 内容更正需要多处同步；UI 可能自行造义 | 试点必须建立一个可验证、不可反向写入的单向路径 |
 | P1 | `ON` 存在多份并行解释 | Golden / Level 1 / V2 / Word Image 四处 | 用户进入不同入口可能得到不同范围与措辞 | 把 `ON` 作为收敛试点，先做差异清单和定稿审批，禁止盲合并 |
@@ -189,9 +189,9 @@
 - **Test：** 后续实现必须把“内容来自批准投影”“未教迁移场景”“输出完成条件”“既有进度隔离”固化为测试。
 - **Template / Skill：** 暂不新增。先验证一个收敛试点，避免为未来假设建立抽象框架。
 
-### Owner 下一步操作
+### Owner 决定记录（2026-10-08）
 
-请只确认以下两点，随后再进入独立的 P3.x.1 设计/实现任务：
+1. Owner 授权 Codex 决定 V1.1 0–7 的 canonical 路径；采用 `docs/english-thinking-os/vocabulary/NEW_WORD_TEACHING_STANDARD_V1_1.md`，版本 V1.1，受 `CP-2026-004` 约束。
+2. Owner 批准以 `ON` 作为“收敛已有内容、补齐迁移与输出”的唯一试点，不扩展到第二个词。
 
-1. V1.1 0–7 的完整 canonical 正文应引用哪个已经批准的文件/版本？若尚未入库，是否先立一个仅治理标准的任务？
-2. 是否批准以 `ON` 作为“收敛已有内容、补齐迁移与输出”的唯一试点，而不扩展到第二个词？
+后续仍须先完成独立的 P3.x.1 试点设计与实施计划，才可改动数据、页面或运行时。
