@@ -175,7 +175,7 @@
 | 隔离 | 从远端主线建立 `audit/p3-vocabulary-golden-path` worktree；未触及原有 dirty integration worktree |
 | `node --test website/app.test.js` | **157 passed / 0 failed** |
 | `node --check`：`app.js`、`data.js`、`v2-data.js`、`v2-network.js` | 通过 |
-| `git diff --check`（审计开始时） | 通过 |
+| `git diff --check`（审计开始时） | 通过；候选提交前需再次执行 |
 | 数据核查 | `vocabulary_850.json` 850 条；S/A/B = 80/200/570；Level 1 lessons = 50；V2 nodes = 13；Golden layers = 20 |
 | 只读核查 | 未改 `data/vocabulary_850.json`、`website/data.js`、`website/app.js`、冻结规则 |
 
@@ -195,4 +195,3 @@
 
 1. V1.1 0–7 的完整 canonical 正文应引用哪个已经批准的文件/版本？若尚未入库，是否先立一个仅治理标准的任务？
 2. 是否批准以 `ON` 作为“收敛已有内容、补齐迁移与输出”的唯一试点，而不扩展到第二个词？
-
