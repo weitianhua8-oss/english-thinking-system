@@ -40,7 +40,7 @@
 | 目标对象 / 规则 | 已有真源或资产 | 现有消费者 | 已实现事实 | 差距或风险 | 结论 |
 | --- | --- | --- | --- | --- | --- |
 | English Thinking Skill Pro 内容大脑 | `skills/english-thinking/SKILL.md`；FD-05；`03_LEARNING_OBJECTS.md` | 目前主要靠人工将内容写入 V1/V2/样例文件 | 定义核心画面、逻辑、意义生长、搭配、易混、误区、钩子、网络与可选词源 | Skill 标题仍为 v1；没有“输出对象 → 审校 → canonical → runtime”的可执行数据接口 | **部分具备，未落地为单一数据通路** |
-| Vocabulary V1.1 的 0–7 教学轨 | `vocabulary/NEW_WORD_TEACHING_STANDARD_V1_1.md`；`HISTORICAL_SCENE_MNEMONICS_V1.md` 细化第 1 步 | 无明确 runtime 映射 | 0 词型判断、1 记忆外挂、2 核心画面、3 核心结构、4 意义生长、5 易混、6 场景/搭配、7 总结/输出是本任务的上位教学约束 | 恢复版不是历史逐字原稿；其恢复边界必须长期披露 | **已由 CP-2026-004 建立唯一主线正文；不替代词库数据真源** |
+| Vocabulary V1.1 的 0–7 教学轨 | `vocabulary/NEW_WORD_TEACHING_STANDARD_V1_1.md`；`HISTORICAL_SCENE_MNEMONICS_V1.md` 细化第 1 步 | 无明确 runtime 映射 | 0 词型判断、1 记忆外挂、2 核心画面、3 核心结构、4 意义生长、5 易混、6 场景/搭配、7 总结/输出是本任务的上位教学约束 | 恢复版不是历史逐字原稿；其恢复边界必须长期披露 | **CP-2026-004 的 Owner Approved canonical candidate；待审查并合入后成为唯一主线正文，不替代词库数据真源** |
 | 850 canonical 词库 | `data/vocabulary_850.json`，850 条、8 个现有字段；`data/vocabulary_850.csv` 为 Derived | `scripts/build_level1_site_data.js`、数据完整性测试 | 850 条与 S/A/B 分级稳定，且保留 `related` | 850/850 条均没有 schema 中声明的 `learning_layers`、`core_image` 等 Pro 内容字段；当前 schema 与实际数据 0/850 一致 | **P0：文档/schema 与事实漂移；不可直接宣称已具备 Pro 真源** |
 | Golden 内容样例 | `data/golden-samples.v1.json`（20 个）；`data/golden-learning-layers.v1.json`（20 个 Quick/Deep/Network 映射） | 当前无 runtime consumer | 包含 `on`、`in`、`at`、`be`、`see` 等可复用样例 | 文件未被 `data/README.md` 明确列为 canonical，且与 V2、Level 1 可能语义重叠；不能直接当新真源 | **可作为受控输入/对照，不可绕过 canonical 审校** |
 | Level 1 内容 | `data/level1_lessons.json`（50 课） | `website/data.js` / `website/app.js` | 核心画面、逻辑、例句、对比、钩子、关联词与 V1 复习闭环均可用 | 内容不回写 850 canonical；关系只给词表，没有学习者可见的边解释；没有 Quick/Deep/Network 的同一结构化对象 | **稳定 legacy 课程，不能充当 Golden Path 真源** |
