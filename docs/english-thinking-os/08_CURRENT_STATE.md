@@ -54,3 +54,12 @@
 ## 基线验证
 
 2026-09-02 在当前工作树运行 `node --test website/app.test.js`，结果为 **157/157 通过**。
+
+## 2026-10-08 文档候选：历史生活场景助记
+
+- 核对远端主线：`5d9086a0ea62871ead677d4f5e7988a322ed4a74`。本次未把聊天中的 P3.1 Candidate 当成已合入主线。
+- 独立分支：`docs/historical-scene-mnemonics`。
+- Owner 已授权规则方向与写入；[CP-2026-003](change-proposals/CP-2026-003-historical-scene-mnemonics.md) 记录授权、范围、回退与未完成门禁。
+- [专项规范](HISTORICAL_SCENE_MNEMONICS_V1.md) 已形成文档候选并接入导航；状态为已实现待验收。
+- 文档验证见 [Builder 自查](reviews/2026-10-08-historical-scene-mnemonics-self-check.md)。独立 Review、Owner 成果验收、推送与主线合入未完成。
+- 词库、schema、Skill 正文、页面与既有课程未改；上传资料中的具体词源主张尚未在本任务核验。
