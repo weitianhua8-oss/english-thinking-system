@@ -128,6 +128,7 @@ learning_layers 是可选对象：只对已审校、准备进入 Pro runtime 的
       "study_tip": "…"
     },
     "network": {
+      "system_id": "space-relations",
       "relations": [
         {
           "type": "contrast",
@@ -172,6 +173,7 @@ learning_layers 是可选对象：只对已审校、准备进入 Pro runtime 的
 
 - review_status: reviewed 是构建进入 D.proLessons 的门槛；其他状态不进入 runtime。
 - quick、deep、network、assessment 对 reviewed 记录均为必填。
+- network.system_id 必须是现有 V2 system id；本试点的 on 固定属于 space-relations。
 - deep.scenes 在本试点只允许一个“接触 + 承托”场景，防止把其他 on 义项带入主线。
 - network.relations.target 必须在合并后的 V2 图中存在；关系类型只能使用现有图支持的 system、growth、combination、contrast。
 - assessment.asset 必须是站内相对路径；不使用外链、追踪资源或生成式图片服务。
