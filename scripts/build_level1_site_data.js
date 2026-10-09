@@ -126,11 +126,14 @@ function buildPlan() {
 function buildPayload() {
   const allVocabulary = readJson('data/vocabulary_850.json');
   const lessonList = readJson('data/level1_lessons.json');
+  const staticV2Data = require(path.join(projectRoot, 'website/v2-data.js'));
+  const staticV2Ids = new Set(staticV2Data.nodes.map(node => node.id));
   return {
     vocabulary: allVocabulary.filter(item => item.level === levelName),
     lessons: Object.fromEntries(lessonList.map(lesson => [lesson.word, lesson])),
     plan: buildPlan(),
     contrasts,
+    proLessons: projectReviewedProLessons(allVocabulary, staticV2Ids),
   };
 }
 

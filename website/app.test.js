@@ -20,7 +20,10 @@ test('canonical vocabulary keeps 850 eight-field records', () => {
 });
 
 test('reviewed ON content projects only when complete', () => {
-  assert.deepEqual(buildLevel1.projectReviewedProLessons(vocabulary850, new Set(['at', 'in'])), []);
+  assert.deepEqual(
+    buildLevel1.projectReviewedProLessons(vocabulary850, new Set(['at', 'in'])).map(item => item.id),
+    ['on'],
+  );
   const on = {
     ...vocabulary850.find(item => item.word === 'on'),
     learning_layers: {
@@ -47,6 +50,13 @@ test('reviewed ON content projects only when complete', () => {
     [{ ...on, learning_layers: { ...on.learning_layers, network: { ...on.learning_layers.network, relations: [{ type: 'bad', target: 'in', label: 'x', explanation: 'x' }] } } }],
     new Set(['at', 'in']),
   ), /invalid relation type/);
+});
+
+test('build output derives one ON Pro lesson from canonical JSON', () => {
+  const output = buildLevel1.buildPayload();
+  assert.equal(output.proLessons.length, 1);
+  assert.equal(output.proLessons[0].id, 'on');
+  assert.equal(output.proLessons[0].assessment.output.answer, 'on');
 });
 
 test('manifest covers fifty unique cards', () => {
