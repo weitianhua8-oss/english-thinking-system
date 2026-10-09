@@ -25,6 +25,11 @@ Input word / structure
 → connect to the wider knowledge network
 → optionally add useful root/prefix/suffix/etymology
 
+## Memory-hook policy (Step 1 integration)
+The `memory hook` action above follows [Historical Scene Mnemonics V1](../../docs/english-thinking-os/HISTORICAL_SCENE_MNEMONICS_V1.md), the sole detailed policy for mnemonic-source priority, historical authenticity, and labels. Apply that policy rather than copying or inventing a competing rule here.
+
+This is an integration of Vocabulary V1.1 Step 1 only: it does not reorder the confirmed 0–7 teaching track, replace the modern semantic core, or turn every word into an etymology lesson. When historical material is used, keep the canonical distinction between evidenced history, teaching reconstruction, mnemonic association, and uncertainty; when the evidence is insufficient, do not present a mnemonic as etymology.
+
 ## Required learning-card fields
 - Word / structure
 - Core image
