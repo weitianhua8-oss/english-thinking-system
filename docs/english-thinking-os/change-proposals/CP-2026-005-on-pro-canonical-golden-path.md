@@ -2,7 +2,7 @@
 
 **Proposal ID:** CP-2026-005
 
-**Status:** Under Owner Acceptance
+**Status:** Implemented
 
 **Requested By:** Project Owner
 
@@ -121,7 +121,7 @@ Independent reviewer required under docs/english-thinking-os/governance/REVIEW_P
 - **Independent review:** [2026-10-09 P3.x.1 ON independent review](../reviews/2026-10-09-p3x1-on-independent-review.md) — PASS.
 - **Automated evidence:** `node --test website/app.test.js` completed with 164 passed and 0 failed; the canonical build reproduced `website/data.js` without a diff.
 - **Manual evidence:** desktop and 375 × 812 local-browser paths completed for `on`; `in`, `at`, `see`, Word Image and Sentence route availability were spot-checked.
-- **Acceptance boundary:** implementation is complete for the approved ON-only pilot, but it is not Owner accepted, merged to `main`, pushed, or expanded to another word.
+- **Owner acceptance:** Accepted — 2026-10-09. The Owner accepted Product Candidate 7a96f8b71012a6be6c5f11c0f61d57d79d9497df after reviewing the acceptance evidence. The pilot remains unmerged to main, unpushed, and limited to on.
 
 ## Version Impact
 
