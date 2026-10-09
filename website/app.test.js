@@ -8,6 +8,46 @@ const core = require('./app.js');
 const manifest = require('./assets/cards/manifest.json');
 const cardManifestGenerator = require('../scripts/build_level1_card_manifest.js');
 const curriculum = require('./v2-curriculum-data.js');
+const buildLevel1 = require('../scripts/build_level1_site_data.js');
+const vocabulary850 = require('../data/vocabulary_850.json');
+
+test('canonical vocabulary keeps 850 eight-field records', () => {
+  const required = ['id', 'word', 'grade', 'level', 'category', 'subcategory', 'core_direction', 'related'];
+  assert.equal(vocabulary850.length, 850);
+  vocabulary850.forEach(item => required.forEach(field => {
+    assert.ok(Object.hasOwn(item, field), `${item.word}:${field}`);
+  }));
+});
+
+test('reviewed ON content projects only when complete', () => {
+  assert.deepEqual(buildLevel1.projectReviewedProLessons(vocabulary850, new Set(['at', 'in'])), []);
+  const on = {
+    ...vocabulary850.find(item => item.word === 'on'),
+    learning_layers: {
+      review_status: 'reviewed',
+      quick: { hook: '贴住表面。', core_image: '球接触桌面。', one_line: 'ON = 接触表面。', prototype: 'The ball is on the table.' },
+      deep: {
+        logic: '物体接触承托表面。',
+        scenes: [{ title: '接触 + 承托', body: '球接触桌面。', example: 'The ball is on the table.' }],
+        structures: ['be on + surface'], chinese_trap: '不是在里面。', study_tip: '先找接触点。',
+      },
+      network: {
+        system_id: 'space-relations',
+        relations: [{ type: 'contrast', target: 'in', label: '表面 vs 内部', explanation: 'ON 接触表面。' }],
+        next_recommended: ['in'],
+      },
+      assessment: {
+        transfer: { asset: 'assets/on-transfer-hat-bed.svg', alt: '帽子在床上。', prompt: '帽子和床是什么关系？', answer: 'on', feedback_correct: '对。', feedback_incorrect: '再看接触面。' },
+        output: { prompt: '补全句子。', before_blank: 'The hat is ', after_blank: ' the bed.', answer: 'on', feedback_correct: '完成。', feedback_incorrect: '想想接触面。' },
+      },
+    },
+  };
+  assert.deepEqual(buildLevel1.projectReviewedProLessons([on], new Set(['at', 'in'])).map(item => item.id), ['on']);
+  assert.throws(() => buildLevel1.projectReviewedProLessons(
+    [{ ...on, learning_layers: { ...on.learning_layers, network: { ...on.learning_layers.network, relations: [{ type: 'bad', target: 'in', label: 'x', explanation: 'x' }] } } }],
+    new Set(['at', 'in']),
+  ), /invalid relation type/);
+});
 
 test('manifest covers fifty unique cards', () => {
  assert.equal(manifest.length,50); assert.equal(new Set(manifest.map(c=>c.filename)).size,50); assert.equal(manifest[0].filename,'01-i.png'); assert.equal(manifest.at(-1).filename,'50-because.png'); assert.ok(manifest.every(c=>!(/诺诺|固定人物角色/.test(c.prompt))));
