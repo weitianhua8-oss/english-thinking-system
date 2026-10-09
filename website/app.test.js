@@ -8,6 +8,82 @@ const core = require('./app.js');
 const manifest = require('./assets/cards/manifest.json');
 const cardManifestGenerator = require('../scripts/build_level1_card_manifest.js');
 const curriculum = require('./v2-curriculum-data.js');
+const buildLevel1 = require('../scripts/build_level1_site_data.js');
+const vocabulary850 = require('../data/vocabulary_850.json');
+const runtimeV2 = () => core.mergeRuntimeV2(require('./v2-data.js'), require('./data.js').proLessons);
+
+test('canonical vocabulary keeps 850 eight-field records', () => {
+  const required = ['id', 'word', 'grade', 'level', 'category', 'subcategory', 'core_direction', 'related'];
+  assert.equal(vocabulary850.length, 850);
+  vocabulary850.forEach(item => required.forEach(field => {
+    assert.ok(Object.hasOwn(item, field), `${item.word}:${field}`);
+  }));
+});
+
+test('reviewed ON content projects only when complete', () => {
+  assert.deepEqual(
+    buildLevel1.projectReviewedProLessons(vocabulary850, new Set(['at', 'in'])).map(item => item.id),
+    ['on'],
+  );
+  const on = {
+    ...vocabulary850.find(item => item.word === 'on'),
+    learning_layers: {
+      review_status: 'reviewed',
+      quick: { hook: '贴住表面。', core_image: '球接触桌面。', one_line: 'ON = 接触表面。', prototype: 'The ball is on the table.' },
+      deep: {
+        logic: '物体接触承托表面。',
+        scenes: [{ title: '接触 + 承托', body: '球接触桌面。', example: 'The ball is on the table.' }],
+        structures: ['be on + surface'], chinese_trap: '不是在里面。', study_tip: '先找接触点。',
+      },
+      network: {
+        system_id: 'space-relations',
+        relations: [{ type: 'contrast', target: 'in', label: '表面 vs 内部', explanation: 'ON 接触表面。' }],
+        next_recommended: ['in'],
+      },
+      assessment: {
+        transfer: { asset: 'assets/on-transfer-hat-bed.svg', alt: '帽子在床上。', prompt: '帽子和床是什么关系？', answer: 'on', feedback_correct: '对。', feedback_incorrect: '再看接触面。' },
+        output: { prompt: '补全句子。', before_blank: 'The hat is ', after_blank: ' the bed.', answer: 'on', feedback_correct: '完成。', feedback_incorrect: '想想接触面。' },
+      },
+    },
+  };
+  assert.deepEqual(buildLevel1.projectReviewedProLessons([on], new Set(['at', 'in'])).map(item => item.id), ['on']);
+  assert.throws(() => buildLevel1.projectReviewedProLessons(
+    [{ ...on, learning_layers: { ...on.learning_layers, network: { ...on.learning_layers.network, relations: [{ type: 'bad', target: 'in', label: 'x', explanation: 'x' }] } } }],
+    new Set(['at', 'in']),
+  ), /invalid relation type/);
+});
+
+test('build output derives one ON Pro lesson from canonical JSON', () => {
+  const output = buildLevel1.buildPayload();
+  assert.equal(output.proLessons.length, 1);
+  assert.equal(output.proLessons[0].id, 'on');
+  assert.equal(output.proLessons[0].assessment.output.answer, 'on');
+});
+
+test('runtime V2 merges exactly one derived ON node', () => {
+  const baseV2 = require('./v2-data.js');
+  const runtimeData = require('./data.js');
+  const network = require('./v2-network.js');
+  const merged = core.mergeRuntimeV2(baseV2, runtimeData.proLessons);
+
+  assert.equal(baseV2.nodes.some(node => node.id === 'on'), false);
+  assert.equal(merged.nodes.filter(node => node.id === 'on').length, 1);
+  assert.equal(merged.nodes.length, 13);
+  assert.equal(merged.systems.length, 4);
+  assert.notEqual(merged.systems, baseV2.systems);
+  assert.notEqual(merged.nodes[0], baseV2.nodes[0]);
+  assert.deepEqual(network.validateGraph(merged).errors, []);
+});
+
+test('runtime V2 rejects a collision', () => {
+  const baseV2 = require('./v2-data.js');
+  const runtimeData = require('./data.js');
+
+  assert.throws(
+    () => core.mergeRuntimeV2(baseV2, [{ ...runtimeData.proLessons[0], id: 'in' }]),
+    /duplicate V2 node id/,
+  );
+});
 
 test('manifest covers fifty unique cards', () => {
  assert.equal(manifest.length,50); assert.equal(new Set(manifest.map(c=>c.filename)).size,50); assert.equal(manifest[0].filename,'01-i.png'); assert.equal(manifest.at(-1).filename,'50-because.png'); assert.ok(manifest.every(c=>!(/诺诺|固定人物角色/.test(c.prompt))));
@@ -244,7 +320,8 @@ test('Level 1 data contains exactly ten five-word days with lesson coverage', ()
 test('complete vocabulary and learning plan keep their required coverage, including case-sensitive knowledge points', () => {
   const vocabulary = JSON.parse(fs.readFileSync(require.resolve('../data/vocabulary_850.json'), 'utf8'));
   const planRows = fs.readFileSync(require.resolve('../data/learning_plan_170days.csv'), 'utf8').trim().split(/\r?\n/).slice(1);
-  const v2 = require('./v2-data.js');
+  const baseV2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
 
   assert.equal(vocabulary.length, 850);
@@ -261,6 +338,8 @@ test('complete vocabulary and learning plan keep their required coverage, includ
   assert.equal(levels.size, 5);
   [1, 2, 3, 4, 5].forEach(number => assert.ok([...levels].some(level => level.startsWith(`Level ${number}`))));
   assert.equal(planRows.length, 170);
+  assert.equal(baseV2.nodes.length, 12);
+  assert.equal(baseV2.nodes.some(node => node.id === 'on'), false);
   assert.equal(v2.nodes.length, 13);
   assert.deepEqual(network.validateGraph(v2).errors, []);
   v2.nodes.flatMap(node => node.relations).forEach(relation => assert.ok(relation.explanation.trim()));
@@ -421,18 +500,18 @@ test('lessonFor returns null for an unknown lesson', () => {
 });
 
 test('v2LessonFor returns a V2 lesson only when the word matches a V2 node', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   assert.equal(core.v2LessonFor(v2, 'to').word, 'TO');
   assert.equal(core.v2LessonFor(v2, 'go'), null);
 });
 
 test('every V2 sample node has a complete three-layer lesson', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   v2.nodes.forEach(node => assert.ok(core.v2LessonFor(v2, node.id), `${node.id} should open a V2 lesson`));
 });
 
 test('network content opens the selected V2 sample course and exposes its mobile step', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   const markup = core.renderNetworkContent(v2, network, { networkSystem: 'structural-choice', networkNode: 'too-to', explorePath: [], networkStep: 'detail' });
   assert.match(markup, /data-network-step="detail"/);
@@ -443,7 +522,7 @@ test('network content opens the selected V2 sample course and exposes its mobile
 });
 
 test('renderNetworkContent exposes only the relation type badges present on each node', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   const graph = require('./v2-network.js');
   const toMarkup = core.renderNetworkContent(data, graph, {
     networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkStep: 'detail',
@@ -502,8 +581,28 @@ test('lessonLayerForAction switches only among the three V2 learning layers', ()
   assert.equal(core.lessonLayerForAction(null, 'toString'), 'quick');
 });
 
+test('ON assessment validates transfer and output without persistent progress', () => {
+  const lesson = require('./data.js').proLessons[0];
+  assert.equal(core.onAssessmentResult(lesson.assessment, 'transfer', 'in').correct, false);
+  assert.equal(core.onAssessmentResult(lesson.assessment, 'transfer', 'on').correct, true);
+  assert.equal(core.onAssessmentResult(lesson.assessment, 'output', ' ON ').correct, true);
+  assert.equal(core.onAssessmentResult(lesson.assessment, 'output', '').correct, false);
+  const markup = core.renderOnAssessment(lesson, { transferAnswer: 'on', outputAnswer: 'on', outputChecked: true });
+  assert.match(markup, /你把 on 用到了一个新的场景/);
+  assert.match(markup, /assets\/on-transfer-hat-bed\.svg/);
+  assert.match(markup, /data-action="select-on-transfer" data-answer="on"/);
+  assert.match(markup, /data-on-output/);
+  assert.match(markup, /role="status"/);
+  assert.equal(core.renderOnAssessment({ id: 'in' }, {}), '');
+  const progress = core.applyFeedback(core.emptyProgress(), 'I', 'understood', new Date('2026-10-09T08:00:00Z'));
+  const before = structuredClone(progress);
+  core.onAssessmentResult(lesson.assessment, 'transfer', 'on');
+  core.renderOnAssessment(lesson, { transferAnswer: 'on', outputAnswer: 'on', outputChecked: true });
+  assert.deepEqual(progress, before);
+});
+
 test('renderLessonMiniNetwork shows the selected V2 lesson and safe network entry points', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   const markup = core.renderLessonMiniNetwork(v2, network, core.v2LessonFor(v2, 'to'));
   assert.match(markup, /TO/);
@@ -527,7 +626,7 @@ test('renderLessonMiniNetwork shows the selected V2 lesson and safe network entr
 });
 
 test('renderLessonMiniNetwork shows a neutral message without explorable relations', () => {
-  const v2 = structuredClone(require('./v2-data.js'));
+  const v2 = structuredClone(runtimeV2());
   const network = require('./v2-network.js');
   v2.nodes.forEach(node => { node.relations = []; });
   const markup = core.renderLessonMiniNetwork(v2, network, core.v2LessonFor(v2, 'to'));
@@ -535,7 +634,7 @@ test('renderLessonMiniNetwork shows a neutral message without explorable relatio
 });
 
 test('renderLessonMiniNetwork safely handles null and throwing relation APIs', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   const node = core.v2LessonFor(v2, 'to');
   [
@@ -549,7 +648,7 @@ test('renderLessonMiniNetwork safely handles null and throwing relation APIs', (
 });
 
 test('renderV2LessonWorkspace keeps semantic content in one selected layer', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   const markup = core.renderV2LessonWorkspace(data, require('./v2-network.js'), core.v2LessonFor(data, 'to'), 'quick');
   assert.match(markup, /data-action="lesson-layer-deep"/);
   assert.match(markup, /workspaceLayer[^\"]* active/);
@@ -716,7 +815,7 @@ test('V2 workspace tabs stay three equal touch targets on narrow screens', () =>
 });
 
 test('V2 keeps one active learning layer and does not enroll V1 GO', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   const graph = require('./v2-network.js');
   const markup = core.renderV2LessonWorkspace(data, graph, core.v2LessonFor(data, 'to'), 'deep');
   assert.equal(core.v2LessonFor(data, 'go'), null);
@@ -726,7 +825,7 @@ test('V2 keeps one active learning layer and does not enroll V1 GO', () => {
 });
 
 test('reviewContentFor preserves V1 cards and renders revealed V2 review details safely', () => {
-  const v2 = structuredClone(require('./v2-data.js'));
+  const v2 = structuredClone(runtimeV2());
   const v2Word = 'too-to';
   const node = v2.nodes.find(item => item.id === v2Word);
   node.coreImage = '<img src=x onerror=alert(1)>';
@@ -745,7 +844,7 @@ test('reviewContentFor preserves V1 cards and renders revealed V2 review details
 });
 
 test('V2 graph use requires a validator with no reported errors', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   const invalid = structuredClone(v2);
   invalid.nodes.find(node => node.id === 'to').deep.scenes = [];
@@ -754,7 +853,7 @@ test('V2 graph use requires a validator with no reported errors', () => {
 });
 
 test('network readiness requires usable V2 data and a valid graph API', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   assert.equal(core.isNetworkReady(v2, network), true);
   assert.equal(core.isNetworkReady(null, network), false);
@@ -769,7 +868,7 @@ test('relationSelectionKey identifies one complete relation by all learner-visib
 });
 
 test('selectedNetworkRelation returns only the current node’s real explorable relation', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const graph = require('./v2-network.js');
   const node = graph.nodeById(v2, 'to');
   const relation = node.relations.find(item => item.target === 'into');
@@ -779,7 +878,7 @@ test('selectedNetworkRelation returns only the current node’s real explorable 
 });
 
 test('selectedNetworkRelation rejects invalid graph inputs without throwing', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const graph = require('./v2-network.js');
   const node = graph.nodeById(v2, 'to');
   const relation = node.relations.find(item => item.target === 'into');
@@ -806,7 +905,7 @@ test('selectedNetworkRelation rejects invalid graph inputs without throwing', ()
 });
 
 test('selectedNetworkRelation rejects fabricated and incomplete graph relations', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const node = v2.nodes.find(item => item.id === 'to');
   const canonical = node.relations.find(relation => relation.target === 'into');
   const selectionKey = JSON.stringify([canonical.type, canonical.target, canonical.label, canonical.explanation]);
@@ -822,7 +921,7 @@ test('selectedNetworkRelation rejects fabricated and incomplete graph relations'
 });
 
 test('selectNetworkNode follows an explorable V2 node and clears selected relation', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const start = { networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: 'into' };
   assert.deepEqual(core.selectNetworkNode(start, v2, 'into'), {
     networkSystem: 'space-relations', networkNode: 'into', explorePath: ['to'], networkRelation: null,
@@ -836,7 +935,7 @@ test('selectNetworkNode follows an explorable V2 node and clears selected relati
 });
 
 test('selectNetworkBack restores the last explored node and removes it from the path', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   assert.deepEqual(core.selectNetworkBack({ networkSystem: 'space-relations', networkNode: 'into', explorePath: ['to'] }, v2, network), {
     networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: null,
@@ -844,7 +943,7 @@ test('selectNetworkBack restores the last explored node and removes it from the 
 });
 
 test('selectNetworkSystem preserves the current node in the path for a system relation', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   const start = { networkSystem: 'space-relations', networkNode: 'at', explorePath: [] };
   const selected = core.selectNetworkSystem(start, v2, 'space-relations', true);
@@ -853,14 +952,14 @@ test('selectNetworkSystem preserves the current node in the path for a system re
 });
 
 test('selectNetworkDirect opens a course node without inheriting a prior explore path', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   assert.deepEqual(core.selectNetworkDirect({ networkSystem: 'space-relations', networkNode: 'to', explorePath: ['at'] }, v2, 'at'), {
     networkSystem: 'space-relations', networkNode: 'at', explorePath: [], networkRelation: null,
   });
 });
 
 test('renderNetworkContent shows only relations verified as explorable', () => {
-  const v2 = structuredClone(require('./v2-data.js'));
+  const v2 = structuredClone(runtimeV2());
   const network = require('./v2-network.js');
   v2.nodes.find(node => node.id === 'to').relations.push({
     type: 'contrast', target: 'missing-node', label: '不应出现的关系', explanation: '目标不存在。',
@@ -871,7 +970,7 @@ test('renderNetworkContent shows only relations verified as explorable', () => {
 });
 
 test('renderNetworkContent renders the selected real relation as a mind-map branch', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   const relation = network.nodeById(v2, 'to').relations.find(item => item.target === 'into');
   const markup = core.renderNetworkContent(v2, network, {
@@ -886,7 +985,7 @@ test('renderNetworkContent renders the selected real relation as a mind-map bran
 });
 
 test('network detail keeps all current-word relation choices beside the explanation', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   const inNode = network.nodeById(v2, 'in');
   const selected = inNode.relations.find(relation => relation.type === 'combination' && relation.target === 'into');
@@ -904,7 +1003,7 @@ test('network detail keeps all current-word relation choices beside the explanat
 });
 
 test('renderNetworkContent falls back to core origin for an invalid selected relation', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   const markup = core.renderNetworkContent(v2, network, {
     networkSystem: 'space-relations', networkNode: 'to', explorePath: [], networkRelation: 'not-a-relation', networkStep: 'detail',
@@ -914,7 +1013,7 @@ test('renderNetworkContent falls back to core origin for an invalid selected rel
 });
 
 test('renderNetworkContent keeps distinct same-target relations selectable by key', () => {
-  const v2 = structuredClone(require('./v2-data.js'));
+  const v2 = structuredClone(runtimeV2());
   const network = require('./v2-network.js');
   const inNode = v2.nodes.find(node => node.id === 'in');
   inNode.relations.push({
@@ -939,7 +1038,7 @@ test('renderNetworkContent keeps distinct same-target relations selectable by ke
 });
 
 test('renderNetworkContent safely handles null and throwing system node APIs', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   const network = require('./v2-network.js');
   [
     { ...network, nodesForSystem: () => null },
@@ -952,7 +1051,7 @@ test('renderNetworkContent safely handles null and throwing system node APIs', (
 });
 
 test('renderNetworkContent includes the current node core origin with safe HTML', () => {
-  const v2 = structuredClone(require('./v2-data.js'));
+  const v2 = structuredClone(runtimeV2());
   const network = require('./v2-network.js');
   v2.nodes.find(node => node.id === 'to').quick.origin = '<img src=x onerror=alert(1)>';
   const markup = core.renderNetworkContent(v2, { ...network, validateGraph: () => ({ errors: [] }) }, { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] });
@@ -962,7 +1061,7 @@ test('renderNetworkContent includes the current node core origin with safe HTML'
 });
 
 test('renderNetworkContent hides fully invalid relations behind a neutral message', () => {
-  const v2 = structuredClone(require('./v2-data.js'));
+  const v2 = structuredClone(runtimeV2());
   const network = require('./v2-network.js');
   v2.nodes.find(node => node.id === 'the').relations = [{ type: 'contrast', target: 'missing', label: '不应显示', explanation: '不应显示。' }];
   const markup = core.renderNetworkContent(v2, { ...network, validateGraph: () => ({ errors: [] }) }, { networkSystem: 'information-structure', networkNode: 'the', explorePath: [] });
@@ -971,7 +1070,7 @@ test('renderNetworkContent hides fully invalid relations behind a neutral messag
 });
 
 test('renderNetworkContent safely falls back when V2 data is invalid', () => {
-  const v2 = structuredClone(require('./v2-data.js'));
+  const v2 = structuredClone(runtimeV2());
   v2.nodes = [];
   const markup = core.renderNetworkContent(v2, require('./v2-network.js'), { networkSystem: 'space-relations', networkNode: 'to', explorePath: [] });
   assert.match(markup, /知识网络暂不可用/);
@@ -984,13 +1083,13 @@ test('returnTopButton renders an accessible return-to-top control', () => {
 });
 
 test('v2LessonFor rejects a malformed matching V2 node so V1 can render it', () => {
-  const invalid = structuredClone(require('./v2-data.js'));
+  const invalid = structuredClone(runtimeV2());
   invalid.nodes.find(node => node.id === 'to').deep.scenes = [];
   assert.equal(core.v2LessonFor(invalid, 'to'), null);
 });
 
 test('v2 scene groups keep each title, explanation, and example together', () => {
-  const v2 = require('./v2-data.js');
+  const v2 = runtimeV2();
   v2.nodes.forEach(node => {
     assert.ok(Array.isArray(node.deep.scenes));
     assert.ok(node.deep.scenes.length > 0);
@@ -1026,7 +1125,7 @@ test('parseStoredProgress normalizes malformed word record fields before feedbac
 });
 
 test('V2 graph contains thirteen complete nodes across the four learning systems', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   assert.equal(data.nodes.length, 13);
   assert.deepEqual(data.systems.map(system => system.id).sort(), [
     'attention',
@@ -1058,7 +1157,7 @@ test('V2 graph contains thirteen complete nodes across the four learning systems
 });
 
 test('V2 graph relations use supported types, explanations, and required learning links', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   const network = require('./v2-network.js');
   const relationKeys = data.nodes.flatMap(node => node.relations.map(relation => `${node.id}:${relation.type}:${relation.target}`));
   data.nodes.flatMap(node => node.relations).forEach(relation => {
@@ -1091,7 +1190,7 @@ test('V2 graph relations use supported types, explanations, and required learnin
 });
 
 test('validateGraph reports an unknown relation target and blank explanation', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   const network = require('./v2-network.js');
   const invalid = structuredClone(data);
   invalid.nodes[0].relations.push(
@@ -1106,7 +1205,7 @@ test('validateGraph reports an unknown relation target and blank explanation', (
 });
 
 test('V2 network helpers return nodes, relations, and immutable explore paths', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   const network = require('./v2-network.js');
   const inNode = network.nodeById(data, 'in');
   assert.equal(inNode.word, 'IN');
@@ -1125,6 +1224,7 @@ test('V2 browser scripts load after Level 1 data without CommonJS globals', () =
   ['data.js', 'v2-data.js', 'v2-network.js', 'v2-curriculum-data.js'].forEach(file => {
     vm.runInContext(fs.readFileSync(require.resolve(`./${file}`), 'utf8'), context, { filename: file });
   });
+  assert.doesNotThrow(() => vm.runInContext(fs.readFileSync(require.resolve('./app.js'), 'utf8'), context, { filename: 'app.js' }));
   assert.ok(context.ENGLISH850_DATA);
   assert.ok(context.ENGLISH850_V2_DATA);
   assert.ok(context.ENGLISH850_V2_NETWORK);
@@ -1132,8 +1232,17 @@ test('V2 browser scripts load after Level 1 data without CommonJS globals', () =
   assert.equal(typeof context.ENGLISH850_V2_NETWORK.validateGraph, 'function');
 });
 
+test('browser bootstrap fail-closes invalid derived V2 data with a truthful unavailable notice', () => {
+  const source = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
+  const unavailable = '扩展课程数据暂不可用，请尝试其他学习路径或稍后重试。';
+
+  assert.doesNotMatch(source, /已继续使用基础课程/);
+  assert.match(source, new RegExp(`catch\\(error\\) \\{ v2Notice='${unavailable}'; \\}`));
+  assert.match(source, new RegExp(`if\\(!isUsableV2Graph\\(V2,V2Network\\)\\) \\{ V2=null; v2Notice='${unavailable}'; \\}`));
+});
+
 test('V2 validation reports malformed relation values without throwing', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   const network = require('./v2-network.js');
   const invalid = {
     systems: data.systems.map(system => ({ ...system })),
@@ -1155,7 +1264,7 @@ test('V2 validation reports malformed relation values without throwing', () => {
 });
 
 test('V2 relation exploration ignores null, unknown, and incomplete relations', () => {
-  const data = require('./v2-data.js');
+  const data = runtimeV2();
   const network = require('./v2-network.js');
   assert.deepEqual(network.explorableRelations(data, null), []);
   assert.deepEqual(network.explorableRelations(data, 'missing'), []);
@@ -1168,7 +1277,7 @@ test('V2 relation exploration ignores null, unknown, and incomplete relations', 
 });
 
 test('knowledge network has one structured GO left-to-right mind-map sample, not a SimpleMindMap page', () => {
- const v2Data = require('./v2-data.js');
+ const v2Data = runtimeV2();
  assert.equal(typeof core.mindMapFor, 'function');
  assert.equal(typeof core.renderGoMindMap, 'function');
  const map = core.mindMapFor(v2Data, 'go-thinking-map');
@@ -1629,10 +1738,10 @@ test('Word Image completion remains isolated from V1, Culture, Camera, and World
 
 test('Word Image renders three low-density screens and leads into Sentence', () => {
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
- const first = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 0, core.emptyProgress());
- const second = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 1, core.emptyProgress());
+ const first = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 0, core.emptyProgress());
+ const second = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 1, core.emptyProgress());
  const complete = core.completeWordImageLesson(core.emptyProgress(), lesson.id);
- const final = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, complete);
+ const final = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 2, complete);
  assert.match(first, /先回到刚才的房间/);
  assert.match(first, /刚才在 World 里/);
  assert.match(first, /cup 和 table 之间存在一个关系/);
@@ -1656,7 +1765,7 @@ test('Word Image renders three low-density screens and leads into Sentence', () 
 
 test('Word Image third screen renders a lowercase handwriting guide, phonics groups, US IPA, and an accessible speech control', () => {
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
- const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ const markup = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  assert.match(markup, /class="wordImageHandwriting" aria-label="on"/);
  assert.match(markup, /class="handwritingLine handwritingLine-top"/);
  assert.match(markup, /class="phonicsLetter phonics-vowel" aria-hidden="true">o/);
@@ -1675,7 +1784,7 @@ test('Word Image ON gives the calendar sticky-note core visual priority with fou
   asset: 'assets/word-image-on-calendar-note-pro.png',
   alt: '橘橙色便利贴平整贴住蓝色月历表的表面，边缘接触清楚可见。',
  });
- const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ const markup = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  assert.match(markup, /class="wordImageCoreVisual"/);
  assert.match(markup, /src="assets\/word-image-on-calendar-note-pro\.png"/);
  assert.match(markup, /class="handwritingLine handwritingLine-top"/);
@@ -1699,7 +1808,7 @@ test('Word Image ON follows the 3D knowledge-card hierarchy with two visible con
   asset: 'assets/word-image-on-cup-table.png',
   alt: '蓝色杯子稳定接触木桌表面，清楚表现 The cup is on the table. 的 on 关系。',
  });
- const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ const markup = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  assert.match(markup, /<h2>ON<\/h2>/);
  assert.match(markup, /src="assets\/word-image-on-calendar-note-pro\.png"/);
  assert.match(markup, /src="assets\/word-image-on-cup-table\.png"/);
@@ -1717,7 +1826,7 @@ test('Word Image ON follows the 3D knowledge-card hierarchy with two visible con
 
 test('Word Image third screen renders a five-layer sentence flow sample with two explicit audio speeds', () => {
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
- const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ const markup = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  assert.match(markup, /The cup is on the table\./);
  assert.doesNotMatch(markup, /<h4>清晰美式音标<\/h4>/);
  assert.match(markup, /▶ 听完整句/);
@@ -1739,7 +1848,7 @@ test('Word Image third screen renders a five-layer sentence flow sample with two
 
 test('Word Image sentence audio separates full sentence, full IPA, word pairs, and natural flow controls', () => {
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
- const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
+ const markup = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 2, core.emptyProgress(), { supported: true, speaking: false });
  const english = markup.indexOf('<h4>英文原句</h4>');
  const wordPairs = markup.indexOf('<h4>单词与音标对应</h4>');
  const natural = markup.indexOf('<h4>自然语流</h4>');
@@ -1759,7 +1868,7 @@ test('Word Image sentence audio separates full sentence, full IPA, word pairs, a
 
 test('Word Image safely disables speech when the browser does not support speechSynthesis', () => {
  const lesson = core.wordImageLessonFor(curriculum, 'word-image-on-01');
- const markup = core.renderWordImageWorkspace(curriculum, require('./v2-data.js'), lesson.id, 2, core.emptyProgress(), { supported: false, speaking: false });
+ const markup = core.renderWordImageWorkspace(curriculum, runtimeV2(), lesson.id, 2, core.emptyProgress(), { supported: false, speaking: false });
  assert.match(markup, /data-action="play-word-image-speech"[^>]*disabled/);
  assert.match(markup, /data-action="play-word-image-sentence-clear"[^>]*disabled/);
  assert.match(markup, /data-action="play-word-image-sentence-natural"[^>]*disabled/);

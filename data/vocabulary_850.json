@@ -522,7 +522,70 @@
       "at",
       "to",
       "from"
-    ]
+    ],
+    "learning_layers": {
+      "review_status": "reviewed",
+      "quick": {
+        "hook": "ON = 先看接触点，再看承托面。",
+        "core_image": "物体落在并接触一个承托表面。",
+        "one_line": "ON = 接触并落在表面上。",
+        "prototype": "The cup is on the table."
+      },
+      "deep": {
+        "logic": "ON 的核心不是单纯在上方，而是物体接触并由一个表面承托。",
+        "scenes": [
+          {
+            "title": "接触 + 承托",
+            "body": "杯子接触桌面，桌面承托杯子；这个可看见的关系就是 ON。",
+            "example": "The cup is on the table."
+          }
+        ],
+        "structures": [
+          "be on + surface"
+        ],
+        "chinese_trap": "不要只背“在……上面”；先确认物体是否接触承托表面。",
+        "study_tip": "先画出物体和表面的接触点，再说 ON。"
+      },
+      "network": {
+        "system_id": "space-relations",
+        "relations": [
+          {
+            "type": "contrast",
+            "target": "in",
+            "label": "接触表面 vs 在边界内部",
+            "explanation": "ON 让物体接触表面；IN 让物体位于边界内部。"
+          },
+          {
+            "type": "contrast",
+            "target": "at",
+            "label": "接触表面 vs 点定位",
+            "explanation": "ON 保留接触表面的画面；AT 只把地点或目标锁定为一个点。"
+          }
+        ],
+        "next_recommended": [
+          "in",
+          "at"
+        ]
+      },
+      "assessment": {
+        "transfer": {
+          "asset": "assets/on-transfer-hat-bed.svg",
+          "alt": "一顶红帽子接触并放在床面上",
+          "prompt": "看新场景：帽子和床是什么关系？",
+          "answer": "on",
+          "feedback_correct": "对。帽子接触并落在床的表面上，所以用 on。",
+          "feedback_incorrect": "再看一眼：帽子没有进到床里面，它接触的是床的表面。"
+        },
+        "output": {
+          "prompt": "用刚才看见的关系补全句子：",
+          "before_blank": "The hat is ",
+          "after_blank": " the bed.",
+          "answer": "on",
+          "feedback_correct": "完成：你把 on 用到了一个新的场景。",
+          "feedback_incorrect": "提示：想想帽子是否接触并落在床的表面上。"
+        }
+      }
+    }
   },
   {
     "id": 36,
