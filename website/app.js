@@ -19,6 +19,32 @@ function escapeHtml(value) { return String(value??'').replace(/[&<>'"]/g,char=>(
 function html(value) { return escapeHtml(value); }
 function emptyProgress() { return { words:{}, studyDates:[] }; }
 function isPlainObject(value) { return value!==null&&typeof value==='object'&&!Array.isArray(value)&&Object.getPrototypeOf(value)===Object.prototype; }
+function cloneRuntimeValue(value) {
+ if(Array.isArray(value)) return value.map(cloneRuntimeValue);
+ if(isPlainObject(value)) return Object.fromEntries(Object.entries(value).map(([key,item])=>[key,cloneRuntimeValue(item)]));
+ return value;
+}
+function mergeRuntimeV2(baseV2, additions) {
+ if(!isPlainObject(baseV2)||!Array.isArray(baseV2.systems)||!Array.isArray(baseV2.nodes)) throw new Error('invalid base V2 data');
+ if(!Array.isArray(additions)) throw new Error('invalid runtime V2 additions');
+ const validateUniqueIds=(items,label)=>{
+  const ids=new Set();
+  items.forEach(item=>{
+   if(!isPlainObject(item)||typeof item.id!=='string'||!item.id.trim()) throw new Error(`invalid ${label} id`);
+   if(ids.has(item.id)) throw new Error(`duplicate ${label} id: ${item.id}`);
+   ids.add(item.id);
+  });
+  return ids;
+ };
+ validateUniqueIds(baseV2.systems,'V2 system');
+ const nodeIds=validateUniqueIds(baseV2.nodes,'V2 node');
+ additions.forEach(item=>{
+  if(!isPlainObject(item)||typeof item.id!=='string'||!item.id.trim()) throw new Error('invalid runtime V2 node id');
+  if(nodeIds.has(item.id)) throw new Error(`duplicate V2 node id: ${item.id}`);
+  nodeIds.add(item.id);
+ });
+ return {...cloneRuntimeValue(baseV2),systems:cloneRuntimeValue(baseV2.systems),nodes:[...baseV2.nodes,...additions].map(cloneRuntimeValue)};
+}
 function isProgressProfile(value) { return isPlainObject(value)&&isPlainObject(value.words)&&Array.isArray(value.studyDates); }
 function nonemptyText(value) { return typeof value==='string'&&value.trim().length>0; }
 function hasTextFields(value, fields) { return isPlainObject(value)&&fields.every(field=>nonemptyText(value[field])); }
@@ -827,14 +853,16 @@ function routeResumeFor(data, progress) {
 }
 function viewKind(view) { return ['today','roadmap','start','culture','camera','world','word-image','sentence','review','library','tree','compare','progress','network','lesson'].includes(view)?view:'today'; }
 function activeNavView(view) { if(['start','culture','camera','world','word-image','sentence'].includes(view)) return 'roadmap'; return ['today','roadmap','review','library','tree','compare','progress','network'].includes(view)?view:null; }
-if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,cameraProgressFor,completeCameraScene,worldProgressFor,completeWorldScene,wordImageProgressFor,completeWordImageLesson,sentenceProgressFor,completeSentenceLesson,preferredUSVoice,createWordImageSpeechController,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,isMindMapNode,mindMapFor,mindMapNodeFor,renderGoMindMap,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,renderStartWorkspace,cultureLessonsFor,cultureLessonFor,cultureObservationStepsFor,cultureObservationChoiceFor,renderCultureWorkspace,cameraScenesFor,cameraSceneFor,cameraStepsFor,cameraChoiceFor,cameraStepForAction,cameraVisualStateFor,renderCameraSceneVisual,renderCameraWorkspace,worldScenesFor,worldSceneFor,worldStepsFor,worldChoiceFor,worldStepForAction,renderWorldWorkspace,wordImageLessonsFor,wordImageLessonFor,renderWordImageWorkspace,isSentenceChoice,sentenceLessonsFor,sentenceLessonFor,sentenceStepsFor,sentenceStepForAction,sentenceFlowFor,renderSentenceWorkspace,shouldStopWordImageSpeech,shouldStopSentenceSpeech,routeStageComplete,routeResumeFor,viewKind,activeNavView};
+if(typeof module!=='undefined'&&module.exports) module.exports={cardFileName,localDate,addDays,escapeHtml,html,emptyProgress,parseStoredProgress,cultureProgressFor,completeCultureLesson,cameraProgressFor,completeCameraScene,worldProgressFor,completeWorldScene,wordImageProgressFor,completeWordImageLesson,sentenceProgressFor,completeSentenceLesson,preferredUSVoice,createWordImageSpeechController,applyFeedback,dueWords,filterWords,libraryWords,nextStudyDay,streak,masteryCounts,dayCompletion,todayCards,resolveStudyDay,lessonMeta,groupCategories,nextLibraryFilters,safeRemoveProgress,lessonFor,mergeRuntimeV2,isUsableV2Graph,isNetworkReady,networkNodeFor,relationSelectionKey,selectedNetworkRelation,selectNetworkNode,selectNetworkDirect,selectNetworkBack,networkStateFor,selectNetworkSystem,networkStepForAction,lessonLayerForAction,renderLessonMiniNetwork,renderV2LessonWorkspace,returnTopButton,renderNetworkContent,isMindMapNode,mindMapFor,mindMapNodeFor,renderGoMindMap,v2LessonFor,v2SystemTitleFor,feedbackButtonsFor,reviewContentFor,sceneGroupsFor,safePlanDay,learningRouteStages,renderLearningRoute,renderStartWorkspace,cultureLessonsFor,cultureLessonFor,cultureObservationStepsFor,cultureObservationChoiceFor,renderCultureWorkspace,cameraScenesFor,cameraSceneFor,cameraStepsFor,cameraChoiceFor,cameraStepForAction,cameraVisualStateFor,renderCameraSceneVisual,renderCameraWorkspace,worldScenesFor,worldSceneFor,worldStepsFor,worldChoiceFor,worldStepForAction,renderWorldWorkspace,wordImageLessonsFor,wordImageLessonFor,renderWordImageWorkspace,isSentenceChoice,sentenceLessonsFor,sentenceLessonFor,sentenceStepsFor,sentenceStepForAction,sentenceFlowFor,renderSentenceWorkspace,shouldStopWordImageSpeech,shouldStopSentenceSpeech,routeStageComplete,routeResumeFor,viewKind,activeNavView};
 
 if(typeof module!=='undefined'&&module.exports) Object.assign(module.exports,{beInteractiveFor,beProgressFor,beResumeStateFor,completeBeModule,recordBeModuleOneBranch,recordBeModuleTwoPosition,recordBeModuleTwoMatch,recordBeModuleTwoTimeShift,beFormFor,beMatchResultFor,beJudgementFeedbackFor,recordBeModuleThreePosition,completeBeModuleThree,beModuleOneFor,renderBeModuleOne,renderBeModuleTwo,renderBeModuleThree});
 
 if(typeof window!=='undefined'&&typeof document!=='undefined') {
 (()=>{
  const D=window.ENGLISH850_DATA, V2Network=window.ENGLISH850_V2_NETWORK, Curriculum=window.ENGLISH850_V2_CURRICULUM, app=document.getElementById('app');
- let V2=window.ENGLISH850_V2_DATA, v2Notice='';
+ let V2=null, v2Notice='';
+ try { V2=mergeRuntimeV2(window.ENGLISH850_V2_DATA,D?.proLessons||[]); }
+ catch(error) { v2Notice='扩展课程数据暂不可用，已继续使用基础课程。'; }
  if(!isUsableV2Graph(V2,V2Network)) { V2=null; v2Notice='扩展课程数据暂不可用，已继续使用基础课程。'; }
  const title=document.getElementById('pageTitle'), sub=document.getElementById('pageSub');
  const STORAGE_KEY='english850_level1_progress_v1';

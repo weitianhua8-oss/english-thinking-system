@@ -22,18 +22,6 @@ const payload = {
       ],
     },
     {
-      id: 'on', word: 'ON', systemId: 'space-relations',
-      coreMeaning: '与表面接触，并处于依附或支撑关系。',
-      coreImage: '一个球贴在桌面上，接触点发光。',
-      quick: { origin: '从表面接触的空间关系发展而来。', example: 'The book is on the table.', memoryHook: 'ON = 贴上、接上。' },
-      deep: { logic: 'ON 的核心不是“上方”，而是接触到承载表面。', scenes: [{ title: '表面接触', body: 'on the wall 和 on the table 都保留与承载表面接触的画面；the light is on 则延伸到接通或运行。', example: 'The book is on the table.' }], structures: 'be + on + 表面；turn + on。', chineseTrap: '“on”不只表示“在……上面”，还可表示接通或运行。', studyTip: '画出接触点，再判断是否该用 ON。' },
-      relations: [
-        { type: 'system', target: 'space-relations', label: '所属：空间关系', explanation: 'ON 用表面接触来表达空间关系。' },
-        { type: 'contrast', target: 'in', label: '表面接触 vs 内部', explanation: 'ON 在表面接触；IN 在边界内部。' },
-        { type: 'contrast', target: 'at', label: '表面画面 vs 点定位', explanation: 'ON 保留接触表面的画面；AT 只做点式定位。' },
-      ],
-    },
-    {
       id: 'in', word: 'IN', systemId: 'space-relations',
       coreMeaning: '处在一个边界的内部。',
       coreImage: '一个球已经在透明盒子的边界里面。',
