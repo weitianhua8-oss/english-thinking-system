@@ -581,6 +581,26 @@ test('lessonLayerForAction switches only among the three V2 learning layers', ()
   assert.equal(core.lessonLayerForAction(null, 'toString'), 'quick');
 });
 
+test('ON assessment validates transfer and output without persistent progress', () => {
+  const lesson = require('./data.js').proLessons[0];
+  assert.equal(core.onAssessmentResult(lesson.assessment, 'transfer', 'in').correct, false);
+  assert.equal(core.onAssessmentResult(lesson.assessment, 'transfer', 'on').correct, true);
+  assert.equal(core.onAssessmentResult(lesson.assessment, 'output', ' ON ').correct, true);
+  assert.equal(core.onAssessmentResult(lesson.assessment, 'output', '').correct, false);
+  const markup = core.renderOnAssessment(lesson, { transferAnswer: 'on', outputAnswer: 'on', outputChecked: true });
+  assert.match(markup, /你把 on 用到了一个新的场景/);
+  assert.match(markup, /assets\/on-transfer-hat-bed\.svg/);
+  assert.match(markup, /data-action="select-on-transfer" data-answer="on"/);
+  assert.match(markup, /data-on-output/);
+  assert.match(markup, /role="status"/);
+  assert.equal(core.renderOnAssessment({ id: 'in' }, {}), '');
+  const progress = core.applyFeedback(core.emptyProgress(), 'I', 'understood', new Date('2026-10-09T08:00:00Z'));
+  const before = structuredClone(progress);
+  core.onAssessmentResult(lesson.assessment, 'transfer', 'on');
+  core.renderOnAssessment(lesson, { transferAnswer: 'on', outputAnswer: 'on', outputChecked: true });
+  assert.deepEqual(progress, before);
+});
+
 test('renderLessonMiniNetwork shows the selected V2 lesson and safe network entry points', () => {
   const v2 = runtimeV2();
   const network = require('./v2-network.js');
