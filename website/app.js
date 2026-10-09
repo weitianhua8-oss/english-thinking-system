@@ -862,8 +862,8 @@ if(typeof window!=='undefined'&&typeof document!=='undefined') {
  const D=window.ENGLISH850_DATA, V2Network=window.ENGLISH850_V2_NETWORK, Curriculum=window.ENGLISH850_V2_CURRICULUM, app=document.getElementById('app');
  let V2=null, v2Notice='';
  try { V2=mergeRuntimeV2(window.ENGLISH850_V2_DATA,D?.proLessons||[]); }
- catch(error) { v2Notice='扩展课程数据暂不可用，已继续使用基础课程。'; }
- if(!isUsableV2Graph(V2,V2Network)) { V2=null; v2Notice='扩展课程数据暂不可用，已继续使用基础课程。'; }
+ catch(error) { v2Notice='扩展课程数据暂不可用，请尝试其他学习路径或稍后重试。'; }
+ if(!isUsableV2Graph(V2,V2Network)) { V2=null; v2Notice='扩展课程数据暂不可用，请尝试其他学习路径或稍后重试。'; }
  const title=document.getElementById('pageTitle'), sub=document.getElementById('pageSub');
  const STORAGE_KEY='english850_level1_progress_v1';
  let memoryProgress=emptyProgress(), storageNotice='';

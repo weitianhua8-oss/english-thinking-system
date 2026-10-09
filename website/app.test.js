@@ -1212,6 +1212,15 @@ test('V2 browser scripts load after Level 1 data without CommonJS globals', () =
   assert.equal(typeof context.ENGLISH850_V2_NETWORK.validateGraph, 'function');
 });
 
+test('browser bootstrap fail-closes invalid derived V2 data with a truthful unavailable notice', () => {
+  const source = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
+  const unavailable = '扩展课程数据暂不可用，请尝试其他学习路径或稍后重试。';
+
+  assert.doesNotMatch(source, /已继续使用基础课程/);
+  assert.match(source, new RegExp(`catch\\(error\\) \\{ v2Notice='${unavailable}'; \\}`));
+  assert.match(source, new RegExp(`if\\(!isUsableV2Graph\\(V2,V2Network\\)\\) \\{ V2=null; v2Notice='${unavailable}'; \\}`));
+});
+
 test('V2 validation reports malformed relation values without throwing', () => {
   const data = runtimeV2();
   const network = require('./v2-network.js');
