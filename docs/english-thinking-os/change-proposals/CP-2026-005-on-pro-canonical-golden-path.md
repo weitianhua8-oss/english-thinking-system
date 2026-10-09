@@ -2,7 +2,7 @@
 
 **Proposal ID:** CP-2026-005
 
-**Status:** Draft
+**Status:** Owner Approved
 
 **Requested By:** Project Owner
 
@@ -132,5 +132,4 @@ Independent reviewer required under docs/english-thinking-os/governance/REVIEW_P
 
 ## Owner Decision
 
-**Pending.** The Owner approved the direct-canonical integration design for an ON-only pilot on 2026-10-08. This CP records the exact schema, source-transition, runtime, migration, compatibility and rollback effects for a separate explicit approval before implementation.
-
+**Approved — 2026-10-09.** The Owner authorizes only the ON-only migration described in this CP. No additional word, teaching meaning, frozen rule, persistent-progress contract, or remote asset is authorized.
