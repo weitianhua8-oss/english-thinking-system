@@ -33,6 +33,7 @@
 | Sentence | 已实现且已验收 | 页面、数据与 [Sentence 审查](../project-os/reviews/2026-09-02-sentence-review.md) | 1 个句子样板，不是完整 Sentence 系统 |
 | Knowledge Network | 已实现且已验收 | 图校验、13 节点样板、Node 测试 | 不是 850 个完整网络节点 |
 | 3D 图卡视觉标准 | 已实现待验收 | BE 图卡标准、manifest 与回退逻辑 | 不能把资产数量表述为全量黄金课程 |
+| P3.x.1 ON Canonical Golden Path | 已实现待验收 | `on` canonical JSON → Derived `proLessons` → 13 节点 V2 合并；[CP-2026-005](change-proposals/CP-2026-005-on-pro-canonical-golden-path.md) 与 [独立审查](reviews/2026-10-09-p3x1-on-independent-review.md) | 仅 `on` 的接触+承托试点；无持久进度写入；等待 Owner 验收，尚未合入 main |
 
 ## 已确认方向，未形成产物
 
