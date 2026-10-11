@@ -39,6 +39,8 @@ This is an integration of Vocabulary V1.1 Step 1 only: it does not reorder the c
 
 Apply the 男哥式快记 method in section 7 of the linked mnemonic policy by default. Present one short, strong hook before the deep English-thinking explanation; when teaching useful roots or affixes, give the components their own hooks. Do not add a standalone spelling-reminder section.
 
+Ground explanations in evidenced historical settings or typical present-day usage, following the background-environment guidance in section 7 of the linked mnemonic policy. Make clear who needs the word, in what situation, and for what action or relation; do not infer an invented coinage story from a known root.
+
 ## Required learning-card fields
 - Word / structure
 - Core image
