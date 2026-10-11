@@ -64,3 +64,11 @@
 - [专项规范](HISTORICAL_SCENE_MNEMONICS_V1.md) 已形成文档候选并接入导航；状态为已实现待验收。
 - 文档验证见 [Builder 自查](reviews/2026-10-08-historical-scene-mnemonics-self-check.md)。独立 Review、Owner 成果验收、推送与主线合入未完成。
 - 词库、schema、Skill 正文、页面与既有课程未改；上传资料中的具体词源主张尚未在本任务核验。
+
+## 2026-10-11 英语思维输出与词汇竖版图卡
+
+- 状态：已实现待验收；保存在 `skill/nange-mnemonics-20261011` 分支，不表示 main 或全局 Skills 已更新。
+- 授权、范围与回退：[CP-20261011-output-card-layout](change-proposals/CP-20261011-output-card-layout.md)。
+- 七段正文、九种助记全列但突出主钩子、完整重点例句、回忆/辨析/迁移任务已写入现有 Skill。
+- 新词图卡默认 3:4，六区映射在既有 BE 视觉标准中；正文与图卡各司其职，不重写词库或课程数据。
+- LEARN：更新现有 Skill 和视觉标准；不引入新 schema、持久掌握状态或第二份内容真源。独立审查结果与检查证据记录在上述变更记录。
