@@ -1,4 +1,4 @@
-# 3D Knowledge Card Skill v1
+# 3D Knowledge Card Skill v1.1
 
 ## Purpose
 Convert reviewed structured learning content into a spatial visual summary for quick understanding, review, sharing or export. The image is part of the teaching model, not decoration, but this Skill is not a content source or a complete Pro teaching carrier.
@@ -41,18 +41,20 @@ Reviewed structured content
 4. Labels support the visual relationship; they must not replace it.
 5. Keep the visual hierarchy obvious at a glance.
 6. The card should help a learner infer the core logic without memorizing a Chinese translation list.
-7. Preserve the BE reference language: warm framed card, soft rounded 3D objects, navy high-contrast title, central semantic metaphor, modular lower explanation cards, meaningful connector paths and a strong final takeaway.
+7. Preserve the BE reference language: warm framed card, soft rounded 3D objects, navy high-contrast title, central semantic metaphor, modular lower explanation cards, meaningful connector paths and a strong core takeaway. For vocabulary portrait cards place that takeaway under the hero; reserve the bottom for the unanswered transfer task.
 8. Preserve comprehension before information completeness: when the source does not fit, remove lower-priority content instead of shrinking the core visual or making text unreadable.
 
 ## Reference composition logic
-The BE card demonstrates the preferred architecture:
+The original BE card is retained as the historical style exemplar. Newly requested vocabulary cards default to 3:4 portrait and follow the [canonical portrait mapping](../../visual/3d-card-standard/BE-reference/STYLE_GUIDE.md#vocabulary-portrait-mapping--owner-approved-2026-10-11). Read it before generation. It maps English Thinking lesson output into six visual zones and supersedes the square default for new vocabulary cards only.
+
+The original BE card demonstrates this architecture:
 - Top: concept title + one-line core logic.
 - Upper-middle: compact relationship formula.
 - Center: large spatial metaphor that physically embodies the concept.
 - Lower: 2–4 modular semantic branches with examples and visual scenes.
 - Bottom: one memorable summary sentence.
 
-This is a compositional grammar, not a rigid template. The number of branches and central metaphor may change according to the knowledge point.
+This is a compositional grammar, not a rigid template. For new vocabulary cards, keep the large core picture immediately after the title. Select the best hook and normally two full key example sentences from section 3 of the lesson; preserve their structures and Chinese meanings. Use a fresh, unanswered transfer prompt in the footer. Do not copy all nine mnemonic methods or generate a card unless the user requests one.
 
 ## Relationship to other systems
 - English Thinking Skill decides WHAT the knowledge means.
@@ -66,6 +68,10 @@ Before accepting a generated card, verify:
 - Can the core meaning be understood from the central visual relationship?
 - Does every arrow/path/object have a semantic role?
 - Are examples subordinate to the core concept rather than dominating the card?
+- Is the requested aspect ratio correct (default 3:4 portrait for vocabulary cards)?
+- For new vocabulary portrait cards: does the large core picture immediately follow the title?
+- For new vocabulary portrait cards: are the key examples complete and identical to the reviewed text lesson, with structures and Chinese meanings?
+- For new vocabulary portrait cards: does the footer ask a new transfer task without revealing its answer?
 - Is there visible safe space on all four sides?
 - Are text, arrows, people and the visual subject fully inside the canvas without crowded or cropped edges?
 - If content was removed, were decoration, low-frequency examples, secondary collocations, secondary comparisons, low-frequency meanings, non-essential etymology and website-expandable supplements reduced before the core understanding?
