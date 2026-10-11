@@ -1,16 +1,18 @@
 ---
 name: english-thinking
-description: 用英语思维讲解单词、短语和结构；用户要求学习英文单词或使用英语思维 Skill 时，先给男哥式快记，再讲核心画面、意义生长、真实用法与输出练习。
+description: 用英语思维讲解单词、短语和结构；用户要求学习英文单词或使用英语思维 Skill 时，先用短场景带入，突出最佳助记并全列九种方法，再按场景、结构与重点例句学用，最后回忆、辨析和迁移。
 ---
 
-# English Thinking Skill v1
+# English Thinking Skill v1.1
+
+Output update authorized by Owner on 2026-10-11; see repository change record `docs/english-thinking-os/change-proposals/CP-20261011-output-card-layout.md`. Mainline release and global installation remain separate from this branch.
 
 ## Invocation and loading
 Trigger on `$english-thinking`, “用英语思维 Skill 学习 …”, or “学习 + 英文单词/短语” in an English-learning context. Accept a word, phrase or structure; default to Chinese explanations with natural English examples. Ask for the target only if none is supplied.
 
 Before teaching a new word, read [teaching track](references/teaching-track.md) and [mnemonic policy](references/mnemonics.md). These bundled references are derived snapshots for portability; no access to the project repository is required for ordinary invocation. Their provenance links are for maintenance, not required runtime reads. Verify specific historical claims through reliable sources when using them; if verification is unavailable, use a modern scenario and label associations honestly.
 
-Produce the complete lesson inline by default. Do not generate a file, image, website or quiz widget unless requested. A requested saved note uses Markdown. End with one short expression or recall task. Do not claim the Skill is globally installed merely because this directory exists.
+Produce the complete lesson inline by default. Do not generate a file, image, website or quiz widget unless requested. A requested saved note uses Markdown. Finish with a concise recap and three brief retrieval/contrast/transfer prompts; withhold their answers until the learner attempts them. Do not claim the Skill is globally installed merely because this directory exists.
 
 ## Purpose
 Turn English learning from Chinese-translation memorization into scene-based conceptual understanding.
@@ -22,6 +24,19 @@ Turn English learning from Chinese-translation memorization into scene-based con
 4. One core image, many natural extensions: do not present a word as an unrelated list of Chinese meanings. Explain how meanings grow from one underlying image or logic.
 5. Spatial relations matter: for function words and prepositions, prioritize dimensions, direction, contact, containment, connection and separation.
 6. Etymology/root/affix is auxiliary: include it only when it materially helps explain the core image or supports transfer to related words. Never let etymology replace the modern semantic core.
+
+## Learner-facing output contract
+Use these seven sections for a complete word lesson. Keep full source coverage while making the display concise. Do not repeat the same explanation in multiple sections. These are presentation sections, not replacements for the Vocabulary V1.1 0–7 production steps. Perform classification and checks first; the opening scene is a short preview, and full core-image teaching remains after the memory hook.
+
+1. **先入场** — Show word, IPA, part of speech and main meaning. Give a concrete situation in 2–4 short sentences and one core-feeling sentence. Answer who needs this word, in what situation, and why. Expand historical background only when helpful and supported.
+2. **再快记** — Feature one user-effective primary hook (at most one backup). Then show background item 0 and all nine methods under the mnemonic policy. Summarize secondary applicable methods briefly; label inapplicable ones with one line only. User-confirmed hooks take priority for that user. Do not repeat the main hook under multiple headings.
+3. **学会用** — Integrate meaning growth, structures, collocations and examples by main use: situation → intended meaning → structure → complete English example → Chinese interpretation → one short explanation. Normally teach 1–3 essential uses and nominate two high-value sentences for the visual card. If the word has only one central use, choose a second natural transfer sentence, not an invented sense. Keep target phrases visibly emphasized. This section supplies the card's key examples verbatim.
+4. **划边界** — Address only the most likely 1–2 confusions or mistakes in the main flow. Add correct/incorrect contrasts when useful. Put necessary finer grammar under a short optional advanced note; never omit a condition whose absence makes the taught pattern misleading.
+5. **连网络** — Prefer 2–3 useful connections: a common word-family link, a meaning contrast, or a reusable collocation. Explain each relationship. Do not re-list examples or teach low-frequency relatives merely for completeness.
+6. **收成复习卡** — Give a compact recap: one core image, one hook, two selected patterns/examples, and one boundary. A requested 3D image is a separate visual summary, not the full lesson. Do not repeat the full usage explanations here; keep the recap brief.
+7. **当场检验** — End with three brief prompts: unaided recall of the core/hook; a contextual choice or comparison; and a new-situation utterance. Do not reveal their answers next to the prompts. After the learner responds, give targeted feedback and one retry when needed rather than repeating the whole lesson. Do not create a quiz widget unless explicitly requested. A static card permits looking back: for retrieval ask the learner to cover the example area or return after hiding it.
+
+After an actual learner attempt, optionally record in this conversation an evidence-based status: “看见能认”, “提示后能说”, or “换场景能用”, identifying the answer that supports it. Before an attempt say “未检验”; do not infer mastery from reading, willingness or agreement. Do not change the project's progress database/schema or claim cross-session persistence.
 
 ## Standard analysis pipeline
 Use this as the author's analysis workflow, not the learner-facing display order. For new-word teaching, follow [Vocabulary V1.1](references/teaching-track.md): classify the word, present the memory hook, then teach the core image, structure, meaning growth, contrasts, scenes/collocations and output task.
@@ -90,7 +105,7 @@ The purpose of these examples is not to freeze every usage into a slogan, but to
 
 ## Three learning layers
 ### Layer 1 — Quick understanding
-Show the minimum needed to grasp the word quickly: word + short memory hook + core image + one-sentence logic + one prototypical scene.
+Show word + brief scene preview/core feeling + primary memory hook. Expand the core image and usage in the lesson modules.
 
 ### Layer 2 — Deep learning
 Reveal meaning growth, scenes, collocations, examples, confusable contrasts, pitfalls and useful morphology/etymology.
