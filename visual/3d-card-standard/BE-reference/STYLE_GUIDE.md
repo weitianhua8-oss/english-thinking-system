@@ -15,7 +15,7 @@ Primary semantic flow:
 The bridge metaphor must remain visually dominant. BE is not shown as an action engine; it is shown as a connector that carries the subject toward identity, location or state information.
 
 ## Canvas and framing
-- Square educational knowledge-card composition.
+- Preserve the original BE reference as a square historical exemplar. For newly requested vocabulary cards, default to portrait 3:4 under the Owner-approved 2026-10-11 output update; an explicit user size overrides the default. Do not crop or rewrite existing accepted images.
 - Warm off-white / cream background.
 - Thick rounded outer frame with soft 3D depth and a subtle gold/cream edge.
 - Generous internal padding; content never touches the frame.
@@ -41,7 +41,8 @@ The bridge metaphor must remain visually dominant. BE is not shown as an action 
 
 Text must be short enough to read at a glance. Do not use long paragraphs inside the image.
 
-## Main composition
+## Original BE reference composition
+The following documents the original BE exemplar. New vocabulary cards follow the portrait mapping below; preserve the shared visual language and source meaning.
 ### Top zone — concept definition
 - Large title: `BE 动词 ①｜状态连接器`.
 - Immediately below: one-line source logic: `BE = 存在 / 处于 / 把主语连接到某个状态或信息`.
@@ -108,7 +109,7 @@ For a Pro static summary, preserve the core image, core structure, most importan
 6. non-essential etymology;
 7. supplementary information that can remain expandable on the website.
 
-Preserve comprehension before completeness. Never shrink the core visual into a minor illustration, reduce text to an unreadable size or fill every open area merely to retain more source content. These rules do not change the approved title, definition, formula and central-metaphor reading order above.
+Preserve comprehension before completeness. Never shrink the core visual into a minor illustration, reduce text to an unreadable size or fill every open area merely to retain more source content. For the original BE exemplar, retain its documented reading order. For new vocabulary cards, use the Owner-approved portrait mapping below: title immediately followed by the dominant core picture, then hook and usage modules.
 
 ## Image-generation rule
 Before generating any English 3D knowledge card:
@@ -129,7 +130,7 @@ Never begin with a decorative scene and force the knowledge into it afterward.
 - modular lower explanation cards
 - spatial arrows/paths with actual semantic meaning
 - short formula + example + visual scene combination
-- strong one-line takeaway at the bottom
+- one strong core takeaway: at the bottom of the original BE exemplar; under the hero or in the recap for vocabulary portrait cards, whose footer is reserved for an unanswered transfer task
 
 ## What may vary by knowledge point
 - central metaphor object (bridge, target, container, path, surface, hand/action, etc.)
@@ -154,3 +155,25 @@ The BE model should preserve the conceptual conclusion:
 - BE is not merely equivalent to Chinese `是`.
 - BE expresses existence / being in a condition and connects the subject to identity, location, feature or state information.
 - A useful learning hook is `BE = 处于` rather than forcing every use into `是`.
+
+## Vocabulary portrait mapping — Owner approved 2026-10-11
+
+Authority: [CP-20261011-output-card-layout](../../../docs/english-thinking-os/change-proposals/CP-20261011-output-card-layout.md). Scope: newly requested vocabulary cards only. Keep warm-white background, navy title, rounded tactile 3D, soft lighting, and all four safe margins. Preserve BE semantics and existing square images.
+
+Use portrait 3:4, e.g. 1536 × 2048 when supported. Treat these percentages as a flexible content-area budget after subtracting outer margins and gaps, not rigid pixel quotas:
+
+| Zone | Approx. height | Source in English Thinking lesson | Render |
+| --- | --- | --- | --- |
+| A Title | 8% | Word information | Word + accurate IPA + part of speech; very brief meaning only |
+| B Core picture | 32% | Scene/core feeling | Large semantic scene immediately after title, followed by one short core sentence; relation must be visible |
+| C Best mnemonic | 10% | Primary hook | One memorable chain + action/object cue; useful component hook only if it fits |
+| D Usage and key examples | 30% | Section 3 usage modules | Normally two modules; each: meaning label + structure + COMPLETE source English sentence + brief Chinese meaning + small contextual visual |
+| E Boundary/network | 12% | Sections 4–5 | One necessary contrast/error boundary; 2–3 short relationship-labeled links only if legible |
+| F Recall/transfer footer | 8% | Recap + assessment | One new-situation output prompt or unfilled sentence stem; no answer printed in the footer |
+
+- Choose the two high-value sentences from the completed text lesson verbatim; do not replace them with disconnected word lists. If the word has one main use, choose a second natural transfer example, not an invented branch. If a clearly necessary third use cannot fit, make a companion card only when requested or explain the selected scope.
+- Preserve a visually dominant picture and readable complete examples. If crowded, remove decoration and optional word-family links first; simplify secondary text next. Never shrink the hero or essential examples to unreadable size. Network is subordinate to the necessary boundary and can remain in the text lesson.
+- The visual card is a recall cue, not the full nine-method analysis. Exclude the nine-method list, inapplicable-method labels, long historical explanations, advanced grammar paragraphs and answers to the transfer prompt.
+- Keep semantic labels on knowledge connections; do not fabricate arrows or treat mnemonic similarity as linguistic ancestry. Main picture and examples must express the same target meaning.
+- For the footer, ask a fresh situation compared with the taught examples. Example for insist: after paying/right examples, ask “你坚持独自去，怎么说？” with “I insist on …”; do not print “going alone”.
+- Before delivery verify actual aspect ratio, visible whitespace on all four sides, title→picture order, readable IPA, intact English sentences, translations, consistent scenes, source-true relations and no revealed exercise answer. When no new image is requested, report the layout plan without generating an image.
