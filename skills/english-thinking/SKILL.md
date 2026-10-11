@@ -5,6 +5,13 @@ description: 用英语思维讲解单词、短语和结构；用户要求学习�
 
 # English Thinking Skill v1
 
+## Invocation and loading
+Trigger on `$english-thinking`, “用英语思维 Skill 学习 …”, or “学习 + 英文单词/短语” in an English-learning context. Accept a word, phrase or structure; default to Chinese explanations with natural English examples. Ask for the target only if none is supplied.
+
+Before teaching a new word, read [teaching track](references/teaching-track.md) and [mnemonic policy](references/mnemonics.md). These bundled references are derived snapshots for portability; no access to the project repository is required for ordinary invocation. Their provenance links are for maintenance, not required runtime reads. Verify specific historical claims through reliable sources when using them; if verification is unavailable, use a modern scenario and label associations honestly.
+
+Produce the complete lesson inline by default. Do not generate a file, image, website or quiz widget unless requested. A requested saved note uses Markdown. End with one short expression or recall task. Do not claim the Skill is globally installed merely because this directory exists.
+
 ## Purpose
 Turn English learning from Chinese-translation memorization into scene-based conceptual understanding.
 
@@ -17,7 +24,7 @@ Turn English learning from Chinese-translation memorization into scene-based con
 6. Etymology/root/affix is auxiliary: include it only when it materially helps explain the core image or supports transfer to related words. Never let etymology replace the modern semantic core.
 
 ## Standard analysis pipeline
-Use this as the author's analysis workflow, not the learner-facing display order. For new-word teaching, follow [Vocabulary V1.1](../../docs/english-thinking-os/vocabulary/NEW_WORD_TEACHING_STANDARD_V1_1.md): classify the word, present the memory hook, then teach the core image, structure, meaning growth, contrasts, scenes/collocations and output task.
+Use this as the author's analysis workflow, not the learner-facing display order. For new-word teaching, follow [Vocabulary V1.1](references/teaching-track.md): classify the word, present the memory hook, then teach the core image, structure, meaning growth, contrasts, scenes/collocations and output task.
 
 Input word / structure
 → identify core image
@@ -33,7 +40,7 @@ Input word / structure
 → optionally add useful root/prefix/suffix/etymology
 
 ## Memory-hook policy (Step 1 integration)
-The `memory hook` action above follows [Historical Scene Mnemonics V1](../../docs/english-thinking-os/HISTORICAL_SCENE_MNEMONICS_V1.md), the sole detailed policy for mnemonic-source priority, historical authenticity, and labels. Apply that policy rather than copying or inventing a competing rule here.
+The `memory hook` action above follows [Historical Scene Mnemonics V1](references/mnemonics.md), the sole detailed policy for mnemonic-source priority, historical authenticity, and labels. Apply that policy rather than copying or inventing a competing rule here.
 
 This is an integration of Vocabulary V1.1 Step 1 only: it does not reorder the confirmed 0–7 teaching track, replace the modern semantic core, or turn every word into an etymology lesson. When historical material is used, keep the canonical distinction between evidenced history, teaching reconstruction, mnemonic association, and uncertainty; when the evidence is insufficient, do not present a mnemonic as etymology.
 
