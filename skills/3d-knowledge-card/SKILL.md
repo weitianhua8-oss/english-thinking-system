@@ -107,3 +107,10 @@ If any answer fails, regenerate or redesign before publishing.
 5. 检查小屏阅读；若文字模糊或错字，必须重制，不能仅凭画面美观验收。
 
 此增补遵循原有 BE 参考视觉语言和 Lite/Pro 内容深度架构，不重新引入已废止的图卡模式。
+
+
+## Global palette scope clarification (2026-10-16)
+- The muted Morandi color system is a GLOBAL visual requirement for all 3D English knowledge cards across conversations, independent of any chat-local layout template.
+- Suggested palette: warm ivory #F7F3E8, mist blue #9DC2DE, sage green #98C39A, soft apricot #F2C69C, dusty lavender #AE98B6, dark blue-gray text #4C5561. These are reference values, not mandatory simultaneous use; adjust tones to maintain strong legibility.
+- Avoid large areas of high-saturation primaries, neon colors, harsh gradients, and weak text/background contrast. Preserve gentle 3D lighting, clean typography, and sufficient whitespace.
+- IMPORTANT SCOPE: The accept/manage conversation-specific V3.0 layout (four meaning panels, particular module ordering, etc.) is NOT a global template. Globalize only the color-system rule here; retain existing layout flexibility and the BE reference.
