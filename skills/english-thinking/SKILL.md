@@ -87,3 +87,18 @@ Connect the current item to related words, structures, spatial relations, gramma
 - Use Chinese as an explanatory bridge, not as the primary storage model.
 - Preserve uncertainty: do not invent an etymology merely because it makes a memorable story.
 - Keep the complete source content even when the UI chooses a shorter presentation.
+
+## Default Chinese learner-facing output (2026-10-15 update)
+For a single-word request using 英语思维 Skill, use these eight sections in order, adapting irrelevant sections briefly rather than forcing content:
+1. 核心画面：先理解，再记忆
+2. 词源与构词逻辑
+3. 核心义项与重点例句
+4. 重点词义辨析（有易混词时）
+5. 英语母语者常用句型
+6. 单词助记
+7. 词汇知识网络
+8. 最终记忆锚点
+
+- The former section 八「即时检测」is removed. Do **not** automatically generate quizzes, multiple-choice questions, interactive tests, or answer widgets in the default single-word explanation. If the learner explicitly requests a quiz or test, that separate request can be fulfilled.
+- Rename every learner-facing heading 「男哥助记」 to 「单词助记」, including corresponding 3D knowledge-card labels. Keep the existing mnemonic methods and applicability checks unchanged; mark unsuitable methods concisely as 「❌ 不适用」.
+- This is a presentation/output rule, not a deletion of the full source knowledge fields, teaching pipeline, or optional review functionality elsewhere in the product.
