@@ -114,3 +114,46 @@ If any answer fails, regenerate or redesign before publishing.
 - Suggested palette: warm ivory #F7F3E8, mist blue #9DC2DE, sage green #98C39A, soft apricot #F2C69C, dusty lavender #AE98B6, dark blue-gray text #4C5561. These are reference values, not mandatory simultaneous use; adjust tones to maintain strong legibility.
 - Avoid large areas of high-saturation primaries, neon colors, harsh gradients, and weak text/background contrast. Preserve gentle 3D lighting, clean typography, and sufficient whitespace.
 - IMPORTANT SCOPE: The accept/manage conversation-specific V3.0 layout (four meaning panels, particular module ordering, etc.) is NOT a global template. Globalize only the color-system rule here; retain existing layout flexibility and the BE reference.
+
+
+## V2.0｜莫兰迪协调配色系统（2026-10-16，强制执行）
+
+### 适用范围与版本关系
+- 本章是所有 3D 知识图卡的全局强制视觉规范，覆盖 Lite 与 Pro **内容来源**所生成的静态图卡，以及单词合集/Day 系列图卡。
+- Lite / Pro 仍表示教学内容深度，不重新设立相互冲突的两套制图模式；本配色系统对两者一视同仁。
+- 延续 BE 参考的语义优先、轻 3D、柔和圆角、清晰层级；默认优先 3:4 竖版，四周保留足够安全留白。核心画面紧跟主标题，必须是视觉焦点。
+
+### 色卡来源与可用色值
+参考用户提供的“配色灵感”色卡，选择低饱和、协调的莫兰迪/奶油色调，不强制一张图用齐所有颜色：
+- 雾蓝：#DDEFF6、#A8D8E2、#5B7288、#9DC2DE、#BADBE9
+- 鼠尾草绿：#6B8F78、#98C39A、#D2F1DC、#778E91
+- 奶油杏：#F4EAD3、#EFCFAC、#F8E5C2、#F2C69C
+- 烟紫：#E0C7E3、#AE98B6、#846E89、#EAE0E9
+- 珊瑚粉：#F39A8F、#F0C8B4、#D95475
+- 中性色：#ECEBE8、#E3E5DE、#4C5561、#F7F3E8
+- 强调黄：#F2C54E，仅小面积用于重点，禁止默认给所有释义套同一种亮黄色胶囊。
+
+### 全局色彩系统（必须联动，不可仅换背景）
+1. **整图先定调**：先选 1 个主色、2 个辅助色、1 个小面积强调色和 1 个中性色，建立统一色彩关系；多词合集可以在同一色系下按语义分组变换卡片局部配色。
+2. **标题联动**：英文标题/编号/标题装饰根据主色选深色或相应深阶色；不得机械地全用深蓝。
+3. **释义联动**：释义底色、文字色、边框与当前卡片色系呼应；禁止全部统一黄色标签。
+4. **3D人物联动**：人物服装、配件、肤色周边环境的可控颜色须与卡片主辅色协调，避免所有人物都穿高饱和蓝衣；肤色应自然且人物不固定成 IP。
+5. **3D物体联动**：物体材质、道具、环境与配色协调，但真实语义辨识优先（如苹果可以保留自然红，金属保持金属反光）。
+6. **装饰联动**：箭头、图标、序号、连接线、分隔线使用本卡色阶，不得出现随机高饱和点缀。
+7. **光影联动**：阴影、反射、高光与场景色温统一，使用柔和、低对比的环境光，保留必要的立体深度，避免塑料玩具质感。
+8. **对比度底线**：文字可读性高于低饱和美感；深色文字配浅底，重要文字尽量达到 WCAG AA 普通文字 4.5:1 的对比度。不得牺牲音标和中文释义的辨认度。
+
+### Day 系列多词图卡特别规则
+- 不允许“14 张同模板卡片只改底色”的伪升级；标题、释义、人物/物体、图标与阴影须成套变化。
+- 多词排列保持整体节奏与统一留白；避免彩虹式随机分色。建议按蓝、绿、杏、紫等协调小组编排。
+- 内容太密时拆分多张 3:4 图，不压缩到难以辨认；优先保住核心画面、单词、美式 IPA、核心释义。
+- 同一词有多个高频义项时，主画面突出核心义，其他义项用简短文字补足，不得让画面暗示只有一种意义。
+
+### 出图验收：V2.0 专项审核（任何一项失败必须修改）
+- 是否真实采用参考色卡的协调关系，而不只是给卡片背景换色？
+- 标题、释义、3D人物、物体、装饰和阴影六类元素是否同步完成配色设计？
+- 是否避免了整版固定深蓝标题、统一黄色释义、人物统一蓝衣的旧模板？
+- 是否兼顾语义真实、核心画面突出、清晰可读、3:4 竖版与四周留白？
+- 多词图卡是否有统一色彩节奏，而非随意拼色？
+
+本章优先于此前任何与之冲突的固定蓝白黄模板和仅更换背景的做法；其余内容真实性、BE 视觉参考及 Lite/Pro 内容深度规定保持有效。
