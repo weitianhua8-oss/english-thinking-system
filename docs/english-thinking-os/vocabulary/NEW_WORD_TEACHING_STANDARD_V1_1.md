@@ -1,12 +1,12 @@
 # 英语思维850 · 新单词教学标准 V1.1
 
-**Status:** Canonical Candidate / Owner Approved — recovered baseline
+**Status:** Superseded historical baseline
 
 **Version:** V1.1
 
-**Canonical authority:** 英语思维 850 新单词 0–7 教学轨及后台五项校验的唯一正文编辑源。
+**Replaced by:** [新单词教学标准 V1.3](NEW_WORD_TEACHING_STANDARD_V1_3.md)（2026-10-18）。V1.3 是新单词学习卡的唯一 canonical editing source；本文件仅保留 V1.1 恢复基线与迁移证据。
 
-**Mainline effect:** after `CP-2026-004` independent review passes and this candidate is merged. Until then, this branch is the only candidate copy.
+**Historical scope:** 本文件不再用于新内容生产或冲突裁决；仅用于理解 V1.3 迁移前的 0–7 基线。
 
 **Recovery disclosure:** `historical_original = not_found`。本文件不是历史原稿，不证明逐字还原；它只恢复并保存 Owner 已确认的 V1.1 基线。若以后取得历史原稿，必须做差异审查并保留本恢复版历史，不能静默替换。
 

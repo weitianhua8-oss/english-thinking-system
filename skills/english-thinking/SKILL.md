@@ -5,12 +5,12 @@ description: Use when teaching or understanding English words through scenes, me
 
 # English Thinking Skill v1.3
 
-更新日期：2026-10-10。兼容 v1 的完整知识卡字段、句子思维模型与分层展示；本次完成词汇助记流程的事实边界治理对齐。
+更新日期：2026-10-18。兼容 v1 的完整知识卡字段、句子思维模型与分层展示；本次完成 V1.3 八部分学习卡、词汇助记与事实边界治理对齐。
 
 ## 使用边界与真源
 
-适用：英语思维学英语、理解单词、词汇教学卡。输入：目标词、目标义项及儿童/成人深度；输出：0～7教学内容、必要助记和可观察输出任务。
-依照 [Project OS](../../docs/english-thinking-os/PROJECT_OS.md)、[Teaching OS](../../docs/english-thinking-os/TEACHING_OS_V2.md)、[新单词教学标准 V1.1](../../docs/english-thinking-os/vocabulary/NEW_WORD_TEACHING_STANDARD_V1_1.md) 与 [历史生活场景助记规范 V1](../../docs/english-thinking-os/HISTORICAL_SCENE_MNEMONICS_V1.md)。本次新增规则来自用户明确授权，不倒写为历史 V1.1 原文，不修改 Grammar Vision 冻结规则。
+适用：英语思维学英语、理解单词、词汇教学卡。输入：目标词、目标义项及儿童/成人深度；输出：按 V1.3 八部分组织的学习卡内容、必要助记与按需的学习者输出建议。
+依照 [Project OS](../../docs/english-thinking-os/PROJECT_OS.md)、[Teaching OS](../../docs/english-thinking-os/TEACHING_OS_V2.md)、[新单词教学标准 V1.3](../../docs/english-thinking-os/vocabulary/NEW_WORD_TEACHING_STANDARD_V1_3.md) 与 [历史生活场景助记规范 V1](../../docs/english-thinking-os/HISTORICAL_SCENE_MNEMONICS_V1.md)。本 Skill 是 V1.3 的 Derived 执行入口；不修改 Grammar Vision 冻结规则。
 
 目录：标准教学主轨 → 记忆外挂 → 构词助记子流程 → 分层展示 → 原有知识卡与理解模型 → 验收案例 → 版本记录。
 
@@ -25,24 +25,24 @@ Turn English learning from Chinese-translation memorization into scene-based con
 5. Spatial relations matter: for function words and prepositions, prioritize dimensions, direction, contact, containment, connection and separation.
 6. Etymology/root/affix is auxiliary: include it only when it materially helps explain the core image or supports transfer to related words. Never let etymology replace the modern semantic core.
 
-## Standard analysis pipeline｜V1.1 主轨
+## Standard analysis pipeline｜V1.3 八部分学习卡
 
-词汇教学固定保留以下顺序，不能把记忆外挂移到结尾：
+面向学习者的单词教学固定保留以下顺序；不适用部分简短说明并略过，不强行凑内容或调换顺序：
 
 | 步骤 | 模块 | 执行动作 |
 | --- | --- | --- |
-| 0 | 词型判断 | 判断目标词性、义项与学习深度，不机械填满模块。 |
-| 1 | 记忆外挂 | 选一个稳定入口；有可靠拆分时执行下方构词助记子流程。 |
-| 2 | 核心画面 | 建立目标义项的真实场景，不强造万能核心义。 |
-| 3 | 核心结构 | 呈现必要结构、形式与使用条件。 |
-| 4 | 意义生长 | 连接必要的现代语义分支，不把联想当语义证据。 |
-| 5 | 易混对比 | 在同一语境与维度比较容易混淆的词。 |
-| 6 | 真实场景 + 高频搭配 | 给自然例句与可迁移的高频搭配。 |
-| 7 | 压缩总结 + 输出测试 | 总结画面与用法，以选词、回忆或造句检查学习。 |
+| 1 | 核心画面 | 先建立目标义项的真实场景、动作、关系或状态，不强造万能核心义。 |
+| 2 | 词源与结构 | 仅展示经核验且有帮助的词源、真实构词、词性、形式或使用结构；没有可靠依据不硬拆。 |
+| 3 | 单词助记 | 择优融合熟词联想、真实词根、场景、谐音和自然字形联想；明确助记设计不等于词源事实。 |
+| 4 | 核心义项总览 | 按高频优先、具体到抽象列必要义项，并标出生长关系或独立分支。 |
+| 5 | 意义生长与易混辨析 | 为每个义项给画面、解释、搭配和例句；在同一场景对比真正易混词。 |
+| 6 | 母语者高频句型 | 给自然、可迁移的高频搭配和句型；避免以换名词的重复例句充数。 |
+| 7 | 词汇知识网络 | 连接有学习价值的词族、同源词、场景、搭配或对比词，并解释每条关系。 |
+| 8 | 最终记忆锚点 | 压缩核心画面、最佳助记、关键边界和一个高频用法，供隔天提取。 |
 
-后台仍做频率、词性、语域、语义分支、词源五项校验；没有可靠依据的语言事实标待审，不虚报通过。记忆联想不承担词源事实校验，但必须检查是否误导词义、拼写或发音。知识网络在需要时连接，不新增一条必学主轨。句子/结构任务继续使用下方原有模型，不强套词汇拆分。
+后台仍做频率、词性、语域、语义分支、词源五项校验；没有可靠依据的语言事实标待审，不虚报通过。记忆联想不承担词源事实校验，但必须检查是否误导词义、拼写或发音。句子/结构任务继续使用下方原有模型，不强套词汇拆分。
 
-## 步骤1｜Memory Hook 记忆外挂
+## 第 3 部分｜单词助记
 
 **正式原则：Memory Hook 不承担词源解释责任。** 首要目标是帮助学习者记住，不要求联想是真实词源。允许有意虚构的谐音、字形、拟声、故事、拆字和中文联想；不能把它们写成“这个词真正来自……”或语言规律。
 
@@ -54,7 +54,7 @@ Turn English learning from Chinese-translation memorization into scene-based con
 
 选择一个主类型，必要时补一个辅助类型，不把所有方法堆在同一课。此枚举用于教学内容标记，不自动新增或改动生产数据字段。
 
-### 单词助记 · 融合规则 V1.2
+### 单词助记 · 择优融合规则
 
 助记方法可以按实际记忆效果融合：拆词联想、谐音、词根、场景、故事、图像、对比等都可以组合使用。优先利用学习者熟悉的小词和自然的中文联想，把记忆链做成：**正确拼写 → 可回忆的画面或短故事 → 目标词义**。
 
@@ -231,21 +231,24 @@ Connect the current item to related words, structures, spatial relations, gramma
 
 构词依据：[语言学教学原文 Chapter 4](https://dingo.sbs.arizona.edu/~hharley/PDFs/WordsBook/Chapter4.pdf)；现代词义参照 [Cambridge unhappy / unhappiness](https://dictionary.cambridge.org/us/dictionary/english/unhappy)。supermarket 的构成与现代词义参照 [Dictionary.com](https://www.dictionary.com/browse/supermarket)。这些依据支持事实栏，不证明人为记忆画面是真实词源。
 
-## Default Chinese learner-facing output (2026-10-15 update)
+## Default Chinese learner-facing output (V1.3)
 For a single-word request using 英语思维 Skill, use these eight sections in order, adapting irrelevant sections briefly rather than forcing content:
-1. 核心画面：先理解，再记忆
-2. 词源与构词逻辑
-3. 核心义项与重点例句
-4. 重点词义辨析（有易混词时）
-5. 英语母语者常用句型
-6. 单词助记（如满足准入条件，随后追加「词根记忆锚点」）
+1. 核心画面
+2. 词源与结构
+3. 单词助记（如满足准入条件，随后追加「词根记忆锚点」）
+4. 核心义项总览
+5. 意义生长与易混辨析
+6. 母语者高频句型
 7. 词汇知识网络
 8. 最终记忆锚点
 
 - The former section 八「即时检测」is removed. Do **not** automatically generate quizzes, multiple-choice questions, interactive tests, or answer widgets in the default single-word explanation. If the learner explicitly requests a quiz or test, that separate request can be fulfilled.
 - Rename every learner-facing heading 「男哥助记」 to 「单词助记」, including corresponding 3D knowledge-card labels. Keep the existing mnemonic methods and applicability checks unchanged; mark unsuitable methods concisely as 「❌ 不适用」.
 - This is a presentation/output rule, not a deletion of the full source knowledge fields, teaching pipeline, or optional review functionality elsewhere in the product.
+- 每个进入“意义生长”的义项必须包含：核心画面、从画面到该义项的解释、至少一个自然搭配/结构、一条直接服务该义项的英文例句及中文。不同义项的例句必须承担不同语义或句型任务，不得只替换名词重复同一模板。
+- 单词助记在熟词联想、真实词根、场景、谐音与自然字形联想之间择优融合；不强行拆字母或凑方法。人为故事、谐音、字形和拆分均标“助记设计”；真实词源或构词关系另标“词源/构词事实”，两者不得互相证明。
 
 ## 版本与变更说明
 
 - **v1.2/v1.3 合并 + v1.4（2026-10-18）**：主分支补入已存在的 V1.2 融合助记规则及其后续事实边界治理；在“最佳融合助记”后新增条件式「词根记忆锚点」。仅当词根/词形家族经核验、可迁移且值得学习时，追加 2–3 个高价值同源词；不适合时不拆。以 complete、deplete、plenty、replenish 说明“填满 → 完整 / 充足 / 补回”的词形家族，同时明确 `plet → let` 是助记设计，不是词源事实。本次不修改课程主轨、冻结规则、数据或页面。
+- **V1.3 教学标准同步（2026-10-18）**：采用核心画面 → 词源与结构 → 单词助记 → 核心义项总览 → 意义生长与易混辨析 → 母语者高频句型 → 词汇知识网络 → 最终记忆锚点的八部分顺序；助记择优融合且与语言事实分层；每个义项要求画面、解释、搭配和不重复例句。详见 [新单词教学标准 V1.3](../../docs/english-thinking-os/vocabulary/NEW_WORD_TEACHING_STANDARD_V1_3.md) 与 [CP-2026-006](../../docs/english-thinking-os/change-proposals/CP-2026-006-vocabulary-v1-3-eight-part-standard.md)。
