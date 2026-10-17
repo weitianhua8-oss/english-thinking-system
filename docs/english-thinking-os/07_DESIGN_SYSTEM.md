@@ -49,3 +49,7 @@ Output Carrier
 3. 关键画面、文字和按钮的阅读顺序；
 4. 小屏宽度下是否仍能完成主要动作；
 5. 没有图像、语音或复杂交互时是否仍可理解核心内容。
+
+## 新词图卡输出映射（2026-10-11 Owner 已批准）
+
+新生成词汇图卡默认 3:4 竖版，原标题后紧接大幅核心画面；保留原 BE 方形样板。正文与图卡分工、六区布局、重点例句及无答案迁移题以 [BE 视觉标准的词汇竖版映射](../../visual/3d-card-standard/BE-reference/STYLE_GUIDE.md#vocabulary-portrait-mapping--owner-approved-2026-10-11) 为唯一布局正文。授权与迁移见 [变更记录](change-proposals/CP-20261011-output-card-layout.md)。分支实现待独立审查和主线验收，不表示全局 Skill 已发布。

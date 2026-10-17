@@ -1,0 +1,4 @@
+interface:
+  display_name: "英语思维"
+  short_description: "场景带入与最佳助记，九种方法全列，结合重点例句学用并检验迁移"
+  default_prompt: "请用 $english-thinking 学习 insist：短场景带入、最佳助记、重点例句和开口练习。"
